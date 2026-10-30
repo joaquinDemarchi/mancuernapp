@@ -31,7 +31,7 @@ Decisiones ya tomadas con Lio para este change:
 - Vercel tiene soporte sin configuración para `adapter-static`; no se agrega `vercel.json`.
 
 ### 2. `config/app.ts` como fuente única de marca
-Exporta `app = { nombre: "MancuernApp", nombreCorto, descripcion, colorFondo, colorTema, listaBlanca: [...] }`. `colorFondo`/`colorTema` repiten `--ground` del tema oscuro porque el manifest no puede leer CSS; se comenta al lado del valor. La lista blanca hoy tiene solo `joa.demarchi@gmail.com`. Se importa con el alias `$config` (definido en `svelte.config.js` → `kit.alias`).
+Exporta `app = { nombre: "MancuernApp", nombreCorto, descripcion, colorFondo, colorTema, listaBlanca: [...] }`. `colorFondo`/`colorTema` repiten `--ground` del tema oscuro porque el manifest no puede leer CSS; se comenta al lado del valor. La lista blanca hoy tiene solo `joa.demarchi@gmail.com`. Se importa con `#config/app` (alias en `package.json` → `imports`; SvelteKit 3 no usa `svelte.config.js`).
 
 ### 3. Manifest generado desde `config/app.ts`, íconos importados desde `design/icon/`
 - `src/routes/manifest.webmanifest/+server.ts` con `prerender = true` arma el JSON con `app` y con los PNG importados por Vite (`import icon192 from "../../../design/icon/icon-192.png"`). Vite los copia con hash al build: no hay copia manual en `static/`.
@@ -46,7 +46,7 @@ Exporta `app = { nombre: "MancuernApp", nombreCorto, descripcion, colorFondo, co
 - **Alternativa:** cargar desde Google Fonts → descartada: depende de terceros y no anda offline.
 
 ### 5. Service worker nativo de SvelteKit
-- `src/service-worker.ts` con `$service-worker`: precachea `build`, `files` y `prerendered` (shell, manifest, fuente, íconos) en una caché con nombre por `version`.
+- `src/service-worker/index.ts` (con su `tsconfig.json`) usa `$app/manifest`: precachea `immutable`, `assets` y `prerendered` (shell, manifest, fuente, íconos) en una caché con nombre por `version`.
 - `fetch`: solo `GET` del mismo origen. Assets precacheados → caché primero. Navegaciones → red y, si falla, el `/` cacheado. Todo lo demás (Firebase, Google) no se intercepta.
 - `install` hace `skipWaiting()`, `activate` borra cachés viejas y hace `clients.claim()`: la versión nueva queda activa en la siguiente apertura.
 - **Alternativa:** `@vite-pwa/sveltekit` (Workbox) → descartada por ahora: más dependencia y config para un caso que el SW nativo cubre en ~40 líneas.

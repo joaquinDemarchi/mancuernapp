@@ -1,7 +1,8 @@
 # Notas de traspaso — mvp-0-base
 
 ## Estado
-- Change propuesto (30/10/2026): `proposal.md`, `design.md`, `tasks.md` y specs `acceso`, `app-pwa` y delta de `design-system`. **0/11 tareas hechas.** Próxima: 1.1.
+- Change propuesto (30/10/2026): `proposal.md`, `design.md`, `tasks.md` y specs `acceso`, `app-pwa` y delta de `design-system`. Próxima: ver tasks.md.
+- 1.1 hecha: SvelteKit 3 + Svelte 5 + Vite 8, `adapter-static`, `ssr = false` / `prerender = true` en `src/routes/+layout.ts`. `npm run build` → `build/index.html`.
 
 ## Decisiones tomadas con Lio
 - Lista blanca en `config/app.ts` (UI) **y** en `firestore.rules` (seguridad). Email confirmado: `joa.demarchi@gmail.com` (único).
@@ -10,6 +11,7 @@
 - SvelteKit SPA estática (`adapter-static`, `ssr = false`), una sola ruta `/`.
 
 ## Gotchas previstos
+- **SvelteKit 3:** no hay `svelte.config.js`; la config (adapter) va en `vite.config.ts` y los alias en `package.json` → `imports`. Por eso el alias de config es `#config/*` (no `$config`), igual que `#lib`.
 - El `firebaseConfig` es público: va en `config/firebase.ts` commiteado; la seguridad está en las reglas.
 - Login con popup, no redirect (el redirect falla con cookies de terceros bloqueadas).
 - El dominio de Vercel hay que agregarlo en Firebase Auth → Authorized domains o el popup da `auth/unauthorized-domain`.

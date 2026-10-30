@@ -5,7 +5,7 @@
 
 ## 1. Esqueleto SvelteKit + marca + Saira (~15k)
 
-- [ ] 1.1 Crear el proyecto SvelteKit mínimo con TypeScript y npm en la raíz del repo (`npx sv create`, sin demo), cambiar a `@sveltejs/adapter-static`, poner `ssr = false` y `prerender = true` en `src/routes/+layout.ts` y el alias `$config` → `config/` en `svelte.config.js`; verificar que `npm run build` genera `build/index.html` (~5k)
+- [x] 1.1 Crear el proyecto SvelteKit mínimo con TypeScript y npm en la raíz del repo (`npx sv create`, sin demo), cambiar a `@sveltejs/adapter-static`, poner `ssr = false` y `prerender = true` en `src/routes/+layout.ts` y el alias `$config` → `config/` en `svelte.config.js`; verificar que `npm run build` genera `build/index.html` (~5k)
 - [ ] 1.2 Crear `config/app.ts` (nombre, nombre corto, descripción, `colorFondo`/`colorTema` = `--ground` oscuro con comentario, `listaBlanca: ["joa.demarchi@gmail.com"]`), usar `app.nombre` en `<svelte:head><title>`; importar `design/tokens.css` y `src/app.css` (reset mínimo, `body` con `--ground`/`--ink`/`--font-text`) en `+layout.svelte`; verificar con `npm run check` sin errores y el fondo grafito en `npm run dev` (~4k)
 - [ ] 1.3 Bajar Saira variable woff2 latín (`wdth` 75–100, `wght` 400–700) a `static/fonts/saira-latin-var.woff2` + `static/fonts/OFL.txt`, verificar que trae ambos ejes (si no, usar el de `@fontsource-variable/saira`), declarar `@font-face` en `app.css` y `preload` en `app.html`; verificar en `npm run dev` que un número con `--font-display` + `--stretch-condensed` se ve condensado y que la pestaña Network no pide fuentes a otros dominios; commit (~6k)
 

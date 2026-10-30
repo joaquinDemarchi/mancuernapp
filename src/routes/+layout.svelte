@@ -2,6 +2,8 @@
 	import '../../design/tokens.css';
 	import '../app.css';
 	import { app } from '#config/app';
+	import { sesion } from '#lib/acceso.ts';
+	import Login from '#lib/componentes/Login.svelte';
 	import icon192 from '../../design/icon/icon-192.png?no-inline';
 	import type { LayoutProps } from './$types';
 
@@ -16,4 +18,9 @@
 	<link rel="apple-touch-icon" href={icon192} />
 </svelte:head>
 
-{@render children()}
+<!-- Mientras carga solo se ve el fondo, así no parpadea el login. -->
+{#if $sesion.estado === 'sin-sesion'}
+	<Login />
+{:else if $sesion.estado === 'con-sesion'}
+	{@render children()}
+{/if}

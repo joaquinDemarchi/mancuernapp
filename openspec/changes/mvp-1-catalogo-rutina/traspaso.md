@@ -2,7 +2,8 @@
 
 ## Estado
 - Change propuesto (30/10/2026): `proposal.md`, `design.md`, `tasks.md`, specs nuevas `catalogo-ejercicios` y `rutina`, deltas de `app-pwa` y `acceso`. 
-- 1.1 hecha: vitest 5 (`npm test` = `vitest run`), `src/lib/texto.ts` y `src/lib/orden.ts` con tests al lado (`*.test.ts`). Próxima: 1.2.
+- 1.1 hecha: vitest 5 (`npm test` = `vitest run`), `src/lib/texto.ts` y `src/lib/orden.ts` con tests al lado (`*.test.ts`). 
+- 1.2 hecha: `Login.svelte`, decisión de sesión en `+layout.svelte`, `Cabecera.svelte` (título, `volver` como href, `meta`, snippet `accion`), rutas vacías `/ejercicios`, `/ejercicio`, `/rutina`; clases globales `.pantalla` y `.texto` en `app.css`; `BarraAccion` con dos botones en columnas iguales. Próxima: 2.1.
 
 ## Decisiones tomadas con Joa
 - Catálogo como acceso secundario "Ejercicios" en el inicio (sin pestañas abajo).
@@ -13,6 +14,8 @@
 - Rutina con guardado instantáneo; ejercicio con "Guardar"; "Salir" arriba a la derecha; días renombrables.
 
 ## Gotchas previstos
+- En el Browser pane no se puede entrar con Google (el popup no abre): para ver pantallas con sesión, en la consola `const m = await import('/src/lib/acceso.ts'); m.sesion.set({ estado: 'con-sesion', usuario: { uid: '...' } })`. Firestore no anda así (no hay token): las tareas con datos necesitan a Joa logueado o verificarse en el celu.
+- En dev, el primer `goto` a una ruta tarda (Vite compila el chunk): esperar ~1 s antes de leer la página.
 - `esDuplicado(a, b)` compara dos nombres; para el mensaje "Ya existe «X»" buscar con `catalogo.find(e => esDuplicado(e.nombre, nombre))`.
 - `parecidos` cuenta "con" como palabra de 3+ letras ("Curl con mancuerna" ≈ "Remo con mancuerna"); si molesta en uso, filtrar conectores.
 - Rutas con `?id=` en vez de `[id]` para seguir prerenderizando todo (ver design.md §1).

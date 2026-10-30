@@ -12,6 +12,9 @@
 		position: fixed;
 		inset: auto 0 0 0;
 		display: grid;
+		/* Con dos botones, dos columnas iguales */
+		grid-auto-flow: column;
+		grid-auto-columns: 1fr;
 		gap: var(--space-2);
 		padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
 		border-radius: var(--radius-none);

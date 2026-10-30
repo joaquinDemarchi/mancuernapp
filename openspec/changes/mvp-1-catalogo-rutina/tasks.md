@@ -6,7 +6,7 @@
 ## 1. Base: funciones puras, rutas y layout (~14k)
 
 - [x] 1.1 Instalar `vitest` (devDependency, script `npm test`); crear `src/lib/texto.ts` (`normalizar`, `coincide`, `parecidos`, `esDuplicado`) y `src/lib/orden.ts` (`mover`) con sus tests (`elongacion` encuentra "Elongación", "press inclinado" es parecido a "Press inclinado con mancuerna", "press banca" es duplicado de "Press Banca", `mover` sube/baja/extremos); verificar `npm test` en verde y `npm run check` sin errores; commit (~6k)
-- [ ] 1.2 Pasar el login a `src/lib/componentes/Login.svelte` y la decisión cargando/login/app a `+layout.svelte`; crear las rutas vacías `/ejercicios`, `/ejercicio`, `/rutina` (prerender) con cabecera y volver; inicio sin rutina según design.md §6 ("Salir" arriba, "Ejercicios" + "Crear rutina" abajo, todavía sin acción en "Crear rutina"); verificar en `npm run dev` a 390 px: login → inicio, "Ejercicios" navega y vuelve, "Salir" vuelve al login, `npm run build` genera las 4 páginas; commit (~8k)
+- [x] 1.2 Pasar el login a `src/lib/componentes/Login.svelte` y la decisión cargando/login/app a `+layout.svelte`; crear las rutas vacías `/ejercicios`, `/ejercicio`, `/rutina` (prerender) con cabecera y volver; inicio sin rutina según design.md §6 ("Salir" arriba, "Ejercicios" + "Crear rutina" abajo, todavía sin acción en "Crear rutina"); verificar en `npm run dev` a 390 px: login → inicio, "Ejercicios" navega y vuelve, "Salir" vuelve al login, `npm run build` genera las 4 páginas; commit (~8k)
 
 ## 2. Componentes compartidos (~12k)
 

@@ -26,3 +26,29 @@ body {
 	font-family: var(--font-text);
 	-webkit-tap-highlight-color: transparent;
 }
+
+/* Contenedor de cada pantalla: abajo deja lugar a la BarraAccion (botón + paddings + inset seguro) */
+.pantalla {
+	display: flex;
+	flex-direction: column;
+	min-height: 100dvh;
+	padding: 0 var(--space-4)
+		calc(var(--touch-primary) + var(--space-3) * 2 + var(--space-4) + env(safe-area-inset-bottom, 0px));
+}
+
+/* Botón de texto de la cabecera ("Salir", "Renombrar") */
+.texto {
+	min-width: var(--touch-min);
+	min-height: var(--touch-min);
+	padding: 0 var(--space-3);
+	border: 0;
+	border-radius: var(--radius);
+	background: transparent;
+	color: var(--accent-ink);
+	font: 600 var(--fs-body) / var(--lh-body) var(--font-text);
+	cursor: pointer;
+}
+.texto:focus-visible {
+	outline: 2px solid var(--focus);
+	outline-offset: 2px;
+}

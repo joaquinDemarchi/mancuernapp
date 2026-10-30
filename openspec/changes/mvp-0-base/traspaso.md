@@ -4,7 +4,7 @@
 - Change propuesto (30/10/2026): `proposal.md`, `design.md`, `tasks.md` y specs `acceso`, `app-pwa` y delta de `design-system`. **0/11 tareas hechas.** Próxima: 1.1.
 
 ## Decisiones tomadas con Lio
-- Lista blanca en `config/app.ts` (UI) **y** en `firestore.rules` (seguridad). Email asumido: `liodemarchi2000@gmail.com` → **confirmar en la tarea 1.2**.
+- Lista blanca en `config/app.ts` (UI) **y** en `firestore.rules` (seguridad). Email confirmado: `joa.demarchi@gmail.com` (único).
 - Firebase: proyecto nuevo creado por Lio en la consola; Firestore en `southamerica-east1`. Reglas pegadas a mano en la consola.
 - Vercel: import desde GitHub (`joaquinDemarchi/mancuernapp`), deploy al pushear `main`, dominio `*.vercel.app`.
 - SvelteKit SPA estática (`adapter-static`, `ssr = false`), una sola ruta `/`.

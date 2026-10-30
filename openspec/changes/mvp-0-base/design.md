@@ -31,7 +31,7 @@ Decisiones ya tomadas con Lio para este change:
 - Vercel tiene soporte sin configuración para `adapter-static`; no se agrega `vercel.json`.
 
 ### 2. `config/app.ts` como fuente única de marca
-Exporta `app = { nombre: "MancuernApp", nombreCorto, descripcion, colorFondo, colorTema, listaBlanca: [...] }`. `colorFondo`/`colorTema` repiten `--ground` del tema oscuro porque el manifest no puede leer CSS; se comenta al lado del valor. La lista blanca hoy tiene el email de Lio (`liodemarchi2000@gmail.com`, a confirmar al implementar). Se importa con el alias `$config` (definido en `svelte.config.js` → `kit.alias`).
+Exporta `app = { nombre: "MancuernApp", nombreCorto, descripcion, colorFondo, colorTema, listaBlanca: [...] }`. `colorFondo`/`colorTema` repiten `--ground` del tema oscuro porque el manifest no puede leer CSS; se comenta al lado del valor. La lista blanca hoy tiene solo `joa.demarchi@gmail.com`. Se importa con el alias `$config` (definido en `svelte.config.js` → `kit.alias`).
 
 ### 3. Manifest generado desde `config/app.ts`, íconos importados desde `design/icon/`
 - `src/routes/manifest.webmanifest/+server.ts` con `prerender = true` arma el JSON con `app` y con los PNG importados por Vite (`import icon192 from "../../../design/icon/icon-192.png"`). Vite los copia con hash al build: no hay copia manual en `static/`.
@@ -63,7 +63,7 @@ Exporta `app = { nombre: "MancuernApp", nombreCorto, descripcion, colorFondo, co
 ```
 function permitido() {
   return request.auth != null && request.auth.token.email_verified
-    && request.auth.token.email.lower() in ['liodemarchi2000@gmail.com'];
+    && request.auth.token.email.lower() in ['joa.demarchi@gmail.com'];
 }
 match /users/{uid}/{document=**} { allow read, write: if permitido() && request.auth.uid == uid; }
 ```

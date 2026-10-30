@@ -3,6 +3,7 @@
 ## Estado
 - Change propuesto (30/10/2026): `proposal.md`, `design.md`, `tasks.md` y specs `acceso`, `app-pwa` y delta de `design-system`. Próxima: ver tasks.md.
 - 1.1 hecha: SvelteKit 3 + Svelte 5 + Vite 8, `adapter-static`, `ssr = false` / `prerender = true` en `src/routes/+layout.ts`. `npm run build` → `build/index.html`.
+- 1.2 hecha: `config/app.ts` (`app.nombre`, colores, `listaBlanca`), `src/app.css` (reset + body con tokens), `+layout.svelte` importa `design/tokens.css` y pone el `<title>`. Verificado en dev: fondo `rgb(20,19,17)`, título "MancuernApp". `.claude/launch.json` con `dev` (5173) y `preview` (4173).
 
 ## Decisiones tomadas con Lio
 - Lista blanca en `config/app.ts` (UI) **y** en `firestore.rules` (seguridad). Email confirmado: `joa.demarchi@gmail.com` (único).
@@ -11,7 +12,7 @@
 - SvelteKit SPA estática (`adapter-static`, `ssr = false`), una sola ruta `/`.
 
 ## Gotchas previstos
-- **SvelteKit 3:** no hay `svelte.config.js`; la config (adapter) va en `vite.config.ts` y los alias en `package.json` → `imports`. Por eso el alias de config es `#config/*` (no `$config`), igual que `#lib`.
+- **SvelteKit 3:** no hay `svelte.config.js`; la config (adapter) va en `vite.config.ts` y los alias en `package.json` → `imports`. Por eso el alias de config es `#config/*` (no `$config`), igual que `#lib`. Mapea a `./config/*.ts`, así se importa `#config/app` sin extensión. `tsconfig.json` incluye `config`.
 - El `firebaseConfig` es público: va en `config/firebase.ts` commiteado; la seguridad está en las reglas.
 - Login con popup, no redirect (el redirect falla con cookies de terceros bloqueadas).
 - El dominio de Vercel hay que agregarlo en Firebase Auth → Authorized domains o el popup da `auth/unauthorized-domain`.

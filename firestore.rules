@@ -1,0 +1,18 @@
+rules_version = '2';
+
+// Se pegan a mano en la consola de Firebase (Firestore → Reglas).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Lista blanca repetida a mano desde config/app.ts: si cambia allá, cambiarla acá.
+    function permitido() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() in ['joa.demarchi@gmail.com'];
+    }
+
+    // En rules_version 2, {document=**} también cubre el propio users/{uid}.
+    match /users/{uid}/{document=**} {
+      allow read, write: if permitido() && request.auth.uid == uid;
+    }
+  }
+}

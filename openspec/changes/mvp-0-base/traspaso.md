@@ -8,7 +8,8 @@
 - 2.1 hecha: `src/routes/manifest.webmanifest/+server.ts` (prerender) arma el manifest desde `config/app.ts` con los PNG de `design/icon/` importados por Vite. `+layout.svelte` agrega `theme-color`, `manifest`, `icon` y `apple-touch-icon` en `<svelte:head>`. Verificado en `preview`: 200 `application/manifest+json`, standalone, 3 íconos cargan con su tamaño real.
 - 2.2 hecha: `src/service-worker/index.ts` precachea `immutable` + `assets` + `prerendered` (18 archivos: JS/CSS, ícono 192, Saira, `/`, manifest) en `cache-<version>`; caché primero para esos, red para el resto, fallback a `/` en navegaciones, no toca otros orígenes. Verificado en `preview`: SW `activated`, caché con la fuente; con el servidor apagado la app recarga con fondo grafito, Saira `loaded` e ícono.
 - 3.1 hecha: proyecto Firebase `mancuernapp1` (nombre público "MancuernApp", plan Spark), app web registrada, Google habilitado en Auth, Firestore en `southamerica-east1` modo producción (todo confirmado por Lio). `firebase` ^13.1 instalado; `config/firebase.ts` con el config público y `src/lib/firebase.ts` exporta `app`, `auth`, `db`. Verificado: `npm run check` 0 errores; en dev `await import('/src/lib/firebase.ts')` da `projectId: mancuernapp1` sin errores en consola (todavía no lo importa ninguna pantalla).
-- **Próxima: 3.2** (`firestore.rules`; Lio la pega en la consola y prueba en el Rules Playground).
+- 3.2 hecha: `firestore.rules` (rules_version 2, `permitido()` = auth + `email_verified` + email en minúsculas en la lista; `match /users/{uid}/{document=**}` con `request.auth.uid == uid`). Publicada por Lio en la consola (versión 30/10 3:15 p.m.). Verificado por Lio en la Zona de pruebas de reglas con uid de prueba `uidJoa`: get `users/uidJoa` como joa → permitido; como `otro@gmail.com` → denegado; `users/otroUid` como joa → denegado.
+- **Próxima: 3.3** (`src/lib/acceso.ts` + store de sesión; login real con popup).
 
 ## Decisiones tomadas con Lio
 - Lista blanca en `config/app.ts` (UI) **y** en `firestore.rules` (seguridad). Email confirmado: `joa.demarchi@gmail.com` (único).
@@ -23,6 +24,8 @@
 - `icon-192.png` pesa < 4 KB y Vite lo inlinea como data URI: se importa con `?no-inline` para que sea un archivo.
 - Con `ssr = false` los `<svelte:head>` no están en el HTML prerenderizado; se insertan al correr el JS (Chrome igual detecta el manifest).
 - **SvelteKit 3:** no hay `svelte.config.js`; la config (adapter) va en `vite.config.ts` y los alias en `package.json` → `imports`. Por eso el alias de config es `#config/*` (no `$config`), igual que `#lib`. Mapea a `./config/*.ts`, así se importa `#config/app` sin extensión. `tsconfig.json` incluye `config`.
+- **Rules Playground en la consola nueva:** el botón "Desarrollar y realizar pruebas" abre el Emulator Suite, no el Playground. El Playground es el panel "Zona de pruebas de reglas" abajo a la izquierda del editor de Firestore → Reglas.
+- Lio prefiere que los ejemplos y uids de prueba digan "joa" (p. ej. `uidJoa`), no "lio".
 - El "nombre público del proyecto" de Firebase es el que muestra el popup de Google ("Continuar a …"); se cambió a MancuernApp.
 - El `firebaseConfig` es público: va en `config/firebase.ts` commiteado; la seguridad está en las reglas.
 - Login con popup, no redirect (el redirect falla con cookies de terceros bloqueadas).

@@ -4,6 +4,7 @@
 - Change propuesto (30/10/2026): `proposal.md`, `design.md`, `tasks.md` y specs `acceso`, `app-pwa` y delta de `design-system`. Próxima: ver tasks.md.
 - 1.1 hecha: SvelteKit 3 + Svelte 5 + Vite 8, `adapter-static`, `ssr = false` / `prerender = true` en `src/routes/+layout.ts`. `npm run build` → `build/index.html`.
 - 1.2 hecha: `config/app.ts` (`app.nombre`, colores, `listaBlanca`), `src/app.css` (reset + body con tokens), `+layout.svelte` importa `design/tokens.css` y pone el `<title>`. Verificado en dev: fondo `rgb(20,19,17)`, título "MancuernApp". `.claude/launch.json` con `dev` (5173) y `preview` (4173).
+- 1.3 hecha: `static/fonts/saira-latin-var.woff2` (99 KB, de Google Fonts v23, subconjunto latín) + `OFL.txt`; `@font-face` en `app.css` y `preload` en `app.html`. Verificado en el navegador: a 96 px `1234567890` mide 595 px al 100 % y 462 px al 75 % (eje `wdth` activo), `wght` 400→700 cambia el ancho, `1111` = `0000` (cifras tabulares), única petición de fuente a `localhost`. No hizo falta fontsource.
 
 ## Decisiones tomadas con Lio
 - Lista blanca en `config/app.ts` (UI) **y** en `firestore.rules` (seguridad). Email confirmado: `joa.demarchi@gmail.com` (único).

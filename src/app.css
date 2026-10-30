@@ -1,3 +1,13 @@
+/* Saira autoalojada (OFL): un woff2 variable, latín, ancho 75–100 y peso 400–700 */
+@font-face {
+	font-family: 'Saira';
+	font-style: normal;
+	font-weight: 400 700;
+	font-stretch: 75% 100%;
+	font-display: swap;
+	src: url('/fonts/saira-latin-var.woff2') format('woff2');
+}
+
 *,
 *::before,
 *::after {

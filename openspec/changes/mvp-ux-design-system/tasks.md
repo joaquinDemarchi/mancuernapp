@@ -11,7 +11,7 @@
 ## 2. Design System (~11k)
 
 - [x] 2.1 Crear el artifact **Design System** desde la dirección elegida: tokens de color oscuro/claro (con contraste AA verificado), tipografía con números tabulares, escala de espaciado, radios y elevación (~6k)
-- [ ] 2.2 Documentar componentes base con estados: botón primario/secundario, stepper `−/+` editable, chip RPE 6–10, tarjeta de ejercicio (pendiente / hecho igual / ajustado), indicador de sobrecarga con etiqueta, barra de acción inferior; touch targets ≥ 48 px; commit (~5k)
+- [x] 2.2 Documentar componentes base con estados: botón primario/secundario, stepper `−/+` editable, chip RPE 6–10, tarjeta de ejercicio (pendiente / hecho igual / ajustado), indicador de sobrecarga con etiqueta, barra de acción inferior; touch targets ≥ 48 px; commit (~5k)
 
 ## 3. Ícono (~5k)
 

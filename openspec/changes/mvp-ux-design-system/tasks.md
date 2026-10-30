@@ -19,5 +19,5 @@
 
 ## 4. Handoff al repo (~5k)
 
-- [ ] 4.1 Escribir `design/tokens.css` (`:root` oscuro, `[data-theme="light"]` claro) con los tokens del Design System (~2k)
+- [x] 4.1 Escribir `design/tokens.css` (`:root` oscuro, `[data-theme="light"]` claro) con los tokens del Design System (~2k)
 - [ ] 4.2 Escribir `design/README.md`: links a los artifacts, resumen de componentes y reglas de uso (una mano, ≥ 48 px, indicador no solo por color); verificar contraste de pares clave; commit (~3k)

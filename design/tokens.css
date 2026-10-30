@@ -1,0 +1,96 @@
+/* MancuernApp · Pizarra — tokens del Design System
+   Fuente: artifact Design System (project/tokens.json). Cambios: ahí primero, después acá.
+   :root = tema oscuro (por defecto) · [data-theme="light"] = tema claro.
+   La fuente Saira se autoaloja en la app (mvp-0-base); este archivo solo nombra la familia. */
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Superficies: la elevación es un escalón de tono, sin bordes ni sombras */
+  --ground: #141311;      /* fondo de pantalla */
+  --surface: #1E1C19;     /* tarjetas, barra de acción inferior */
+  --raised: #2A2723;      /* campo del stepper, chip inactivo, presionado */
+  --control: #6E675D;     /* borde de controles secundarios (≥ 3:1) */
+
+  /* Texto */
+  --ink: #F2EEE8;         /* principal */
+  --ink-muted: #B5AEA4;   /* valores de la vez anterior, secundario */
+  --ink-faint: #968F85;   /* meta: fecha, semana, unidades */
+
+  /* Acción */
+  --accent: #FF7A3D;      /* relleno de la acción primaria y chip RPE activo */
+  --on-accent: #141311;   /* texto sobre accent */
+  --accent-ink: #FF7A3D;  /* acento como texto o trazo */
+  --focus: var(--accent-ink);
+
+  /* Indicador de sobrecarga (siempre con forma + palabra) */
+  --bajo: #5CC8F0;
+  --bajo-tint: #16262C;
+  --optimo: #4CC38A;
+  --optimo-tint: #17261E;
+  --alto: #F2667A;
+  --alto-tint: #2C1A1D;
+
+  --scrim: rgba(0, 0, 0, 0.6);
+  --elevation-float: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --ground: #F3F2EF;
+  --surface: #FFFFFF;
+  --raised: #E9E7E3;
+  --control: #8F887E;
+
+  --ink: #141311;
+  --ink-muted: #57524B;
+  --ink-faint: #665F56;
+
+  --accent: #FF7A3D;      /* en claro, nunca como texto (2,3:1 sobre ground) */
+  --on-accent: #141311;
+  --accent-ink: #B4440E;
+
+  --bajo: #0B6E99;
+  --bajo-tint: #E3F2F8;
+  --optimo: #1F7A4D;
+  --optimo-tint: #E2F3EA;
+  --alto: #B42339;
+  --alto-tint: #FBE6E8;
+
+  --scrim: rgba(20, 19, 17, 0.4);
+}
+
+:root {
+  /* Tipografía: una familia, Saira, en dos anchos. Números siempre con tabular-nums. */
+  --font-display: "Saira", "Saira Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-text: "Saira", system-ui, sans-serif;
+  --stretch-condensed: 75%;   /* números y títulos; el texto va a 100 % */
+
+  --fs-num-hero: 120px;  --lh-num-hero: 0.9;   /* % del resumen */
+  --fs-num-xl: 96px;     --lh-num-xl: 0.9;     /* kg en Ajustar */
+  --fs-num-l: 40px;      --lh-num-l: 1;        /* valores del stepper */
+  --fs-title: 28px;      --lh-title: 1.05;     /* "Hoy: Día A" */
+  --fs-heading: 20px;    --lh-heading: 1.15;   /* nombre de ejercicio */
+  --fs-body: 16px;       --lh-body: 24px;      /* texto; label = body en 600 */
+  --fs-meta: 13px;       --lh-meta: 18px;      /* meta */
+  --tracking-display: -0.02em;                 /* num-hero, num-xl */
+
+  /* Espaciado, base 4 px */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;   /* margen lateral de pantalla, padding de tarjeta */
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* Medidas táctiles */
+  --touch-min: 48px;
+  --touch-primary: 56px;
+
+  /* Radios: uno solo */
+  --radius: 4px;
+  --radius-none: 0px;
+}

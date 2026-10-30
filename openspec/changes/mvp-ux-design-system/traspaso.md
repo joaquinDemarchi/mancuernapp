@@ -1,10 +1,18 @@
 # Notas de traspaso — mvp-ux-design-system
 
 ## Estado
-- Change creado (proposal, specs, design, tasks). Ninguna tarea empezada.
+- 1.1 hecha (30/10/2026): artifact **Design** con 3 direcciones, cada una con Hoy / Ajustar / Resumen en oscuro (390×844):
+  https://claude.ai/artifact/9pXs4KnzeSYmDHSbgnCfKf (privado; fuente en el scratchpad de la sesión, no en el repo)
+  - **A · Negro puro** (`true-black-flat` de taste): fondo #000, elevación solo por luminosidad (#111/#2a2a2a), primario blanco invertido en píldora, celeste #5CC8F0 solo en marcas/datos. Inter Tight. Steppers horizontales −/valor/+.
+  - **B · Escalera celeste** (`accent-ladder` adaptado a oscuro): fondo azul noche #0B1520, celeste lleno en ✓/primario/RPE activo y sus tintes en áreas (tarjetas hechas). Manrope. Steppers verticales en 3 columnas (series/reps/kg), radios 16–20.
+  - **C · Pizarra** (`editorial-greeting` adaptado): grafito cálido #141311, esquinas 4 px, Barlow Condensed para números grandes (kg 96 px en Ajustar, % 120 px en Resumen), acento naranja disco #FF7A3D, carga visible en cada fila de Hoy.
+- Indicador en las 3: etiqueta + forma (▼ Bajo / ● Óptimo / ▲ Alto), no solo color.
+- Datos de ejemplo coherentes: volumen 2.980 kg vs 2.928 kg (+1,8 % Óptimo); banca +2,1 %, inclinado −8,3 %, laterales +25 %.
 
 ## Próximo paso
-- Tarea 1.1 en una sesión nueva de diseño.
+- 1.2: Lio abre el canvas, elige dirección (o mezcla) y se registran acá elección + ajustes; commit.
 
 ## Gotchas
-- Skill taste = `design-taste-frontend`. Artifact types Design y Design System disponibles (verificado 30/10/2026).
+- Skill taste = `design-taste-frontend`; para pantallas de app pide `draw.mjs --app --kind <x>` (usé `creator`). Solo 1 de 3 estilos sorteados era oscuro: B y C son adaptaciones.
+- El canvas no se pudo verificar visualmente desde el browser del panel (claude.ai pide login): revisarlo en la 1.2.
+- Costo real de 1.1 ≈ 30k tokens (estimado en tasks.md: 10k). Recalibrar 2.x hacia arriba.

@@ -33,8 +33,14 @@
   - Verificado con un script: 56 tokens comparados contra `tokens.json` del artifact, 0 diferencias.
   - No incluye `@font-face` (va en `mvp-0-base` al autoalojar Saira) ni las clases de componentes (`bundle.css` vive en el artifact).
 
+- 4.2 hecha (30/10/2026): `design/README.md` con links a los dos artifacts, cómo importar `tokens.css` y activar el tema claro, decisión de fuente (Saira con `wdth`, autoalojada en `mvp-0-base`), 6 reglas de uso, tabla de componentes y estados, contraste de 14 pares clave e ícono.
+  - Contraste recalculado con un script leyendo los valores de `tokens.css`: todos los pares pasan AA en ambos temas. Más justos: `accent-ink`/`raised` en claro 4,51 y `control`/`surface` en oscuro 3,04.
+
+## Estado del change
+- **7/7 tareas hechas.** Pendiente de Lio: abrir el Design System logueado y revisar las vistas previas (no se pudieron ver dentro del artifact).
+
 ## Próximo paso
-- 4.2: `design/README.md` con links a los artifacts (Design 1.1, Design System), resumen de componentes, reglas (una mano, ≥ 48 px, indicador no solo por color), decisión de fuente y contraste de pares clave; commit. Cierra el change (después: `/opsx:archive`).
+- Archivar el change con `/opsx:archive mvp-ux-design-system` (pasa el spec `design-system` a `openspec/specs/`). Después, `mvp-0-base` consume `design/tokens.css` y `design/icon/`.
 
 ## Gotchas
 - Skill taste = `design-taste-frontend`; para pantallas de app pide `draw.mjs --app --kind <x>` (usé `creator`). Solo 1 de 3 estilos sorteados era oscuro: B y C son adaptaciones.
@@ -45,5 +51,5 @@
 - `fontStretch` en los estilos de `tokens.json` puede no ser leído por la página del tipo; la regla está en el README y debe ir explícita en `design/tokens.css` (4.1).
 - Costo real de 2.2 ≈ 30k (estimado 5k). Lo caro: leer `format.md` del tipo (16 KB) y la ronda de inspección con capturas.
 - Para ver componentes sin login: un script (`build-test.mjs`, quedó en el scratchpad de la sesión, no persiste; ~20 líneas) arma `test/{dark,light}/index.html` con los tokens y `inspect.mjs --app` saca capturas (levantar `python -m http.server` fue bloqueado por permisos).
-- Exportar PNG de un SVG: Chrome headless con `--window-size=N,N` deja un viewport más bajo y el SVG sale corrido. Solución: página envoltorio con `<img width=N height=N>`, ventana N×(N+200) y recortar con PIL a N×N. Costo real de 3.1 ≈ 12k; de 4.1 ≈ 5k.
+- Exportar PNG de un SVG: Chrome headless con `--window-size=N,N` deja un viewport más bajo y el SVG sale corrido. Solución: página envoltorio con `<img width=N height=N>`, ventana N×(N+200) y recortar con PIL a N×N. Costo real de 3.1 ≈ 12k; de 4.1 ≈ 5k; de 4.2 ≈ 8k.
 - Para verificar fuentes: `fonttools` quedó instalado con pip; `curl` a fonts.googleapis.com con UA viejo devuelve TTF.

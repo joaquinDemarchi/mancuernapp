@@ -7,7 +7,8 @@
 - 1.3 hecha: `static/fonts/saira-latin-var.woff2` (99 KB, de Google Fonts v23, subconjunto latín) + `OFL.txt`; `@font-face` en `app.css` y `preload` en `app.html`. Verificado en el navegador: a 96 px `1234567890` mide 595 px al 100 % y 462 px al 75 % (eje `wdth` activo), `wght` 400→700 cambia el ancho, `1111` = `0000` (cifras tabulares), única petición de fuente a `localhost`. No hizo falta fontsource.
 - 2.1 hecha: `src/routes/manifest.webmanifest/+server.ts` (prerender) arma el manifest desde `config/app.ts` con los PNG de `design/icon/` importados por Vite. `+layout.svelte` agrega `theme-color`, `manifest`, `icon` y `apple-touch-icon` en `<svelte:head>`. Verificado en `preview`: 200 `application/manifest+json`, standalone, 3 íconos cargan con su tamaño real.
 - 2.2 hecha: `src/service-worker/index.ts` precachea `immutable` + `assets` + `prerendered` (18 archivos: JS/CSS, ícono 192, Saira, `/`, manifest) en `cache-<version>`; caché primero para esos, red para el resto, fallback a `/` en navegaciones, no toca otros orígenes. Verificado en `preview`: SW `activated`, caché con la fuente; con el servidor apagado la app recarga con fondo grafito, Saira `loaded` e ícono.
-- **Próxima: 3.1** (necesita que Lio cree el proyecto de Firebase).
+- 3.1 hecha: proyecto Firebase `mancuernapp1` (nombre público "MancuernApp", plan Spark), app web registrada, Google habilitado en Auth, Firestore en `southamerica-east1` modo producción (todo confirmado por Lio). `firebase` ^13.1 instalado; `config/firebase.ts` con el config público y `src/lib/firebase.ts` exporta `app`, `auth`, `db`. Verificado: `npm run check` 0 errores; en dev `await import('/src/lib/firebase.ts')` da `projectId: mancuernapp1` sin errores en consola (todavía no lo importa ninguna pantalla).
+- **Próxima: 3.2** (`firestore.rules`; Lio la pega en la consola y prueba en el Rules Playground).
 
 ## Decisiones tomadas con Lio
 - Lista blanca en `config/app.ts` (UI) **y** en `firestore.rules` (seguridad). Email confirmado: `joa.demarchi@gmail.com` (único).
@@ -22,6 +23,7 @@
 - `icon-192.png` pesa < 4 KB y Vite lo inlinea como data URI: se importa con `?no-inline` para que sea un archivo.
 - Con `ssr = false` los `<svelte:head>` no están en el HTML prerenderizado; se insertan al correr el JS (Chrome igual detecta el manifest).
 - **SvelteKit 3:** no hay `svelte.config.js`; la config (adapter) va en `vite.config.ts` y los alias en `package.json` → `imports`. Por eso el alias de config es `#config/*` (no `$config`), igual que `#lib`. Mapea a `./config/*.ts`, así se importa `#config/app` sin extensión. `tsconfig.json` incluye `config`.
+- El "nombre público del proyecto" de Firebase es el que muestra el popup de Google ("Continuar a …"); se cambió a MancuernApp.
 - El `firebaseConfig` es público: va en `config/firebase.ts` commiteado; la seguridad está en las reglas.
 - Login con popup, no redirect (el redirect falla con cookies de terceros bloqueadas).
 - El dominio de Vercel hay que agregarlo en Firebase Auth → Authorized domains o el popup da `auth/unauthorized-domain`.

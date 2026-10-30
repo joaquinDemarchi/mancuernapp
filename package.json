@@ -24,5 +24,8 @@
 		"#lib": "./src/lib/index.js",
 		"#lib/*": "./src/lib/*",
 		"#config/*": "./config/*.ts"
+	},
+	"dependencies": {
+		"firebase": "^13.1.0"
 	}
 }

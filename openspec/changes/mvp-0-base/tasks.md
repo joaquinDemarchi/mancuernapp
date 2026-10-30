@@ -28,7 +28,7 @@
 ## 5. Deploy y verificación en el celu (~11k)
 
 - [x] 5.1 Con OK de Lio: `git push` a `main`; guiar el import del repo en Vercel (preset SvelteKit, sin variables) y agregar `<proyecto>.vercel.app` en Firebase → Authentication → Authorized domains; verificar que el deploy queda en verde y la URL abre el login (~5k)
-- [ ] 5.2 Verificación integral en el celu de Lio (checklist en `traspaso.md`): instalar desde Chrome Android, ícono y nombre correctos (maskable sin recorte), login con Google, pantalla inicial, cerrar y reabrir sin volver a loguearse, abrir en modo avión con Saira, Lighthouse PWA sin errores de instalabilidad; anotar resultados y gotchas; commit (~6k)
+- [x] 5.2 Verificación integral en el celu de Lio (checklist en `traspaso.md`): instalar desde Chrome Android, ícono y nombre correctos (maskable sin recorte), login con Google, pantalla inicial, cerrar y reabrir sin volver a loguearse, abrir en modo avión con Saira, Lighthouse PWA sin errores de instalabilidad; anotar resultados y gotchas; commit (~6k)
 
 ## Workflow follow-up
 

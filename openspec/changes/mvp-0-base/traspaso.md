@@ -13,7 +13,8 @@
 - 4.1 hecha: `src/lib/componentes/Boton.svelte` (`variante` primario/secundario, `disabled`, `onclick`, children; reposo, presionado = escala 0,97 y secundario a `--raised`, foco = anillo `--focus` 2 px, deshabilitado = `--raised` + `--ink-faint`; respeta reduced-motion) y `BarraAccion.svelte` (`position: fixed` abajo, `--surface`, grid que estira el botón a todo el ancho, padding + `safe-area-inset-bottom`). Estilos tomados de `project/components/bundle.css` del artifact Design System (se lee con Artifact read + `paths`). Ambas variantes usan `--touch-primary` (56 px) como pide design.md §8, aunque el DS deja el secundario en 48. La página de prueba ya los usa. Verificado: `npm run check` 0 errores; en dev el botón mide 56 px de alto y la barra queda pegada al borde inferior.
 - 4.2 hecha: `src/routes/+page.svelte` con los tres estados: `cargando` → nada (solo fondo), login (ícono 192 de `design/icon/` con `?no-inline`, `app.nombre`, mensaje con `role="alert"`, `BarraAccion` + "Entrar con Google"), inicial (`app.nombre`, "Todavía no hay rutina" centrado en `--ink-muted`, `BarraAccion` + "Cerrar sesión" secundario). Solo tokens. `main` deja abajo el alto de la barra. Verificado: `npm run check` 0 errores; a 390 px sin scroll horizontal (estados forzados con `sesion.set` desde la consola de dev); Joa probó en Chrome login real → inicial, cerrar sesión → login, y reabrir la pestaña entra directo.
 - 5.1 hecha: push de `main` con OK de Joa (hasta `b13382a`). Vercel importó `joaquinDemarchi/mancuernapp` (preset SvelteKit, sin variables) → https://mancuernapp.vercel.app. `mancuernapp.vercel.app` agregado en Firebase Auth → Dominios autorizados. Verificado: la URL abre el login con título MancuernApp, `/manifest.webmanifest` 200 `application/manifest+json`, SW activo, consola sin errores; Joa entró con Google en producción y llegó a la inicial. Cada push a `main` despliega solo.
-- **Próxima: 5.2** (verificación en el celu con la checklist de abajo).
+- 5.2 hecha: Joa completó la checklist en su celu Android (todo OK, ver abajo). Instalabilidad revisada en Chrome escritorio → Application → Manifest: sin errores; solo avisos de "Richer PWA Install UI" (faltan `screenshots`) y la nota de que no hay `id` (usa `start_url`). Lighthouse ya no tiene categoría PWA, por eso se revisó en DevTools.
+- **Change completo (12/12).** Próximo paso: `/opsx:archive mvp-0-base`.
 
 ## Decisiones tomadas con Lio
 - Lista blanca en `config/app.ts` (UI) **y** en `firestore.rules` (seguridad). Email confirmado: `joa.demarchi@gmail.com` (único).
@@ -28,6 +29,7 @@
 - `icon-192.png` pesa < 4 KB y Vite lo inlinea como data URI: se importa con `?no-inline` para que sea un archivo.
 - Con `ssr = false` los `<svelte:head>` no están en el HTML prerenderizado; se insertan al correr el JS (Chrome igual detecta el manifest).
 - **SvelteKit 3:** no hay `svelte.config.js`; la config (adapter) va en `vite.config.ts` y los alias en `package.json` → `imports`. Por eso el alias de config es `#config/*` (no `$config`), igual que `#lib`. Mapea a `./config/*.ts`, así se importa `#config/app` sin extensión. `tsconfig.json` incluye `config`.
+- Posibles mejoras fuera de este change: `screenshots` en el manifest (cartel de instalación con imágenes) e `id` explícito.
 - En dev, el aviso de consola "Cross-Origin-Opener-Policy policy would block the window.closed call" es del popup de Firebase y es inofensivo.
 - Para probar estados de pantalla sin loguearse: en la consola de dev `(await import('/src/lib/acceso.ts')).sesion.set({...})` (misma instancia que usa la página).
 - **Imports `#lib`:** el alias `#lib/*` no agrega extensión: importar como `#lib/acceso.ts` (sin `.ts` svelte-check no lo encuentra). Dentro de `src/lib` usar imports relativos (`./firebase`).
@@ -40,9 +42,9 @@
 - `bundle.css` de los componentes vive en el artifact Design System (privado), no en el repo.
 - Costo: §9 estimaba ~15k para este change; con Saira, SW, auth y reglas queda en ~70k.
 
-## Checklist de verificación en el celu (5.2)
-- [ ] Instalar desde Chrome Android; nombre "MancuernApp" e ícono maskable sin recorte
-- [ ] Login con Google (email de la lista) → pantalla inicial con "Todavía no hay rutina"
-- [ ] Cerrar y reabrir → entra sin loguearse
-- [ ] Modo avión → abre con Saira e ícono
-- [ ] "Cerrar sesión" → vuelve al login
+## Checklist de verificación en el celu (5.2) — OK 30/10/2026
+- [x] Instalar desde Chrome Android; nombre "MancuernApp" e ícono maskable sin recorte
+- [x] Login con Google (email de la lista) → pantalla inicial con "Todavía no hay rutina"
+- [x] Cerrar y reabrir → entra sin loguearse
+- [x] Modo avión → abre con Saira e ícono
+- [x] "Cerrar sesión" → vuelve al login

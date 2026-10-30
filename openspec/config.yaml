@@ -1,32 +1,58 @@
 schema: spec-driven
 
-# Project context (optional)
-# Add only constraints that should guide OpenSpec artifacts and workflows.
-# Include constraints an agent cannot infer by reading the code.
-# Keep general project documentation and discoverable codebase facts out.
-# Example:
-#   context: |
-#     Designs and tasks must cover Windows, macOS, and Linux
-#     Write all artifacts in Spanish
+# Contexto de proyecto. Fuente de verdad completa: docs/decisiones-diseno-mancuernapp.md
+context: |
+  MancuernApp: PWA para registrar la rutina de gimnasio (reemplaza un Excel). Uso real, usuario único (Lio),
+  datos preparados para multiusuario/roles. Prioridad absoluta: cargar datos en el gym rápido y sin fricción
+  (día sin cambios ≈ 6 toques; con cambios ≈ 15).
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always state what is out of scope
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  Idioma: artefactos de OpenSpec, código, comentarios y commits en español (salvo que confunda o agregue esfuerzo).
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+  Stack:
+  - SvelteKit + Firebase (Auth + Firestore con persistencia offline) + deploy en Vercel.
+  - PWA instalable (manifest + service worker); debe funcionar offline y sincronizar.
+  - Login con Google + lista blanca de emails (hoy solo Lio).
+  - Nombre ("MancuernApp") e ícono (mancuernita celeste en diagonal sobre fondo blanco) definidos en un único
+    lugar: config/app.ts + manifest.
+
+  Modelo de dominio (Firestore, todo bajo users/{uid}):
+  - users/{uid}: { email, nombre, rol: "usuario" | "profe" (futuro), ajustes }
+  - users/{uid}/ejercicios/{id}: catálogo personal { nombre, tipo, saltoKg, saltoReps, saltoSeg, notas }.
+    Un ejercicio existe una vez; las rutinas lo referencian (evolución comparable entre rutinas).
+    Al crear/importar, sugerir emparejamiento con el catálogo.
+  - users/{uid}/rutinas/{id}: { nombre, inicio, fin?, estado: "activa" | "archivada" }
+    con dias[]: { nombre, orden, items[]: { ejercicioId, orden, objetivo? } }.
+    Una sola rutina activa; archivada = solo lectura ("desarchivar" escondido en Ajustes).
+  - users/{uid}/sesiones/{id}: { rutinaId, diaId, fecha (auto), registros[] }
+    registros[]: { ejercicioId, bloques[], rpe?, hecho, nota? }
+    bloques[]: { series, reps?, kg?, segundos?, minutos? } (desarmable en series individuales).
+    "Semana N" se calcula (N-ésima vez que se hace ese día en la rutina), no se guarda.
+    Sesiones de la rutina activa: editables y borrables (con confirmación). Se puede agregar un ejercicio extra.
+  - Tipos de ejercicio: peso (series×reps×kg), reps (banda/peso corporal), tiempo (series×segundos),
+    cardio (minutos), calentamiento (solo check). Solo "peso" entra en volumen e indicador.
+  - Saltos configurables por ejercicio: kg default 2,5 (mancuernas: mínimo y default 1); reps ±1; tiempo ±5 s.
+  - Métricas: volumen = Σ series×reps×kg; % vs vez anterior del mismo ejercicio/día;
+    indicador de sobrecarga Bajo < 0%, Óptimo 0–10%, Alto > 10% con umbrales en una constante.
+
+  UI/UX: tema oscuro por defecto (opción claro); uso con una mano (acciones principales en la mitad inferior);
+  touch targets ≥ 48 px; contraste pensado para el gym. Ciclo por MVP: mockup → Lio elige → handoff a
+  design.md del change → código → critique + accesibilidad + copy. Diseño y código en sesiones separadas.
+
+  Proceso de trabajo:
+  - Cada change dividido en tareas de ~10–20k tokens, cada una con costo estimado.
+  - 1 tarea = 1 commit local + marcar [x] en tasks.md.
+  - Al cerrar cada tarea: actualizar las notas de traspaso del change (traspaso.md: dónde quedó, qué falta, gotchas).
+  - Arranque de sesión: leer solo openspec/config.yaml + change activo + traspaso.md.
+  - Antes de cada tarea estimar su costo; si queda poco uso, elegir una más chica.
+  - Antes de escribir código, preguntar lo no definido, con costo estimado en tokens de cada decisión.
+  - Pedir OK antes de borrar, hacer git push o deploy. Lo demás (leer, editar, instalar, correr comandos) sin preguntar.
+  - Explicar a nivel medio (uso real, no cursada).
+  - Fuera del MVP (v2, no implementar): sugerir progresión, timer de descanso, import con IA, varias rutinas
+    activas, roles profe/alumno, umbrales configurables, 1RM/récords, dashboard ampliado.
+
+rules:
+  tasks:
+    - Cada tarea debe caber en 10–20k tokens e indicar su costo estimado entre paréntesis (ej. "(~12k)")
+    - Cada tarea termina con commit local, [x] en tasks.md y actualización de traspaso.md
+  proposal:
+    - Indicar explícitamente qué queda fuera de alcance

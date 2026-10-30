@@ -8,11 +8,12 @@
   - **C · Pizarra** (`editorial-greeting` adaptado): grafito cálido #141311, esquinas 4 px, Barlow Condensed para números grandes (kg 96 px en Ajustar, % 120 px en Resumen), acento naranja disco #FF7A3D, carga visible en cada fila de Hoy.
 - Indicador en las 3: etiqueta + forma (▼ Bajo / ● Óptimo / ▲ Alto), no solo color.
 - Datos de ejemplo coherentes: volumen 2.980 kg vs 2.928 kg (+1,8 % Óptimo); banca +2,1 %, inclinado −8,3 %, laterales +25 %.
+- 1.2 hecha (30/10/2026): **Lio eligió C · Pizarra con Saira Condensed** (display/números) + **Saira** (texto). Resto de C sin cambios: grafito #141311, esquinas 4 px, acento naranja #FF7A3D, kg 96 px en Ajustar, % grande en Resumen. Comparativa de fuentes en el tablero "C · Alternativas de fuente" del canvas.
 
 ## Próximo paso
-- 1.2: Lio abre el canvas, elige dirección (o mezcla) y se registran acá elección + ajustes; commit.
+- 2.1: artifact Design System desde C con Saira/Saira Condensed (verificar contraste AA y que Saira tenga tnum; decidir autoalojar la fuente para offline).
 
 ## Gotchas
 - Skill taste = `design-taste-frontend`; para pantallas de app pide `draw.mjs --app --kind <x>` (usé `creator`). Solo 1 de 3 estilos sorteados era oscuro: B y C son adaptaciones.
-- El canvas no se pudo verificar visualmente desde el browser del panel (claude.ai pide login): revisarlo en la 1.2.
+- El canvas no se pudo verificar visualmente desde el browser del panel (claude.ai pide login); Lio lo revisó a mano.
 - Costo real de 1.1 ≈ 30k tokens (estimado en tasks.md: 10k). Recalibrar 2.x hacia arriba.

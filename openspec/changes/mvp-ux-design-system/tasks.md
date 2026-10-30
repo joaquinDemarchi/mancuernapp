@@ -6,7 +6,7 @@
 ## 1. Direcciones visuales (~12k)
 
 - [x] 1.1 Con la skill taste, crear un artifact **Design** con 2–3 direcciones visuales, cada una mostrando "Hoy: Día X" (lista), tarjeta de ejercicio en modo Ajustar (stepper kg/reps, bloques, chips RPE) y resumen de sesión con indicador Bajo/Óptimo/Alto, en tema oscuro (~10k)
-- [ ] 1.2 Presentar las opciones a Lio, registrar la elección y ajustes pedidos en `traspaso.md`; commit (~2k)
+- [x] 1.2 Presentar las opciones a Lio, registrar la elección y ajustes pedidos en `traspaso.md`; commit (~2k)
 
 ## 2. Design System (~11k)
 

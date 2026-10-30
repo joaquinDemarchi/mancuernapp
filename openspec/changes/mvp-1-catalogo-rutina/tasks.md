@@ -11,7 +11,7 @@
 ## 2. Componentes compartidos (~12k)
 
 - [x] 2.1 Crear `Stepper.svelte` (de `.ma-step`: 56 px, valor editable con `inputmode`, `paso`/`min`/`max`/`decimales`, coma decimal, `−` deshabilitado en el mínimo, estado vacío "–") y `OpcionesChip.svelte` (radios con forma de chip, wrap, elegido en `--accent`); verificar en una página de prueba temporal en dev que el stepper de kg va 2,5 → 0,5 de a 0,5 y se frena, que escribir "1,5" lo toma, que los chips se recorren con flechas, y medir ≥ 48 px; borrar la página de prueba; commit (~7k)
-- [ ] 2.2 Crear `Hoja.svelte` (`<dialog>` con `showModal`, abajo, `--surface`, `--scrim`, `--elevation-float`, manija visual, cierra con `Esc`, tocando el fondo o con su botón X, título por prop); verificar en dev que el foco queda adentro y vuelve al botón que la abrió al cerrar; commit (~5k)
+- [x] 2.2 Crear `Hoja.svelte` (`<dialog>` con `showModal`, abajo, `--surface`, `--scrim`, `--elevation-float`, manija visual, cierra con `Esc`, tocando el fondo o con su botón X, título por prop); verificar en dev que el foco queda adentro y vuelve al botón que la abrió al cerrar; commit (~5k)
 
 ## 3. Catálogo de ejercicios (~17k)
 

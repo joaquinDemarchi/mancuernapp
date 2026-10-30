@@ -15,7 +15,7 @@
 
 ## 3. Catálogo de ejercicios (~17k)
 
-- [ ] 3.1 Crear `src/lib/catalogo.ts` (store `ejercicios` con `onSnapshot` de `users/{uid}/ejercicios`, orden alfabético `es`, alta/baja de la suscripción con la sesión; `crearEjercicio` con saltos por defecto, `guardarEjercicio`, `porId`) y la pantalla `/ejercicios` (buscador con `coincide`, filas con tipo y saltos, cantidad, estado vacío y sin resultados, "Nuevo ejercicio"); verificar en dev creando un doc a mano en la consola de Firestore que aparece en la lista sin recargar y que "elongacion" lo encuentra; commit (~8k)
+- [x] 3.1 Crear `src/lib/catalogo.ts` (store `ejercicios` con `onSnapshot` de `users/{uid}/ejercicios`, orden alfabético `es`, alta/baja de la suscripción con la sesión; `crearEjercicio` con saltos por defecto, `guardarEjercicio`, `porId`) y la pantalla `/ejercicios` (buscador con `coincide`, filas con tipo y saltos, cantidad, estado vacío y sin resultados, "Nuevo ejercicio"); verificar en dev creando un doc a mano en la consola de Firestore que aparece en la lista sin recargar y que "elongacion" lo encuentra; commit (~8k)
 - [ ] 3.2 Crear `/ejercicio` (variante A: nombre, tipo en `OpcionesChip`, saltos según tipo con `Stepper`, notas, "Guardar" deshabilitado sin nombre, error "Ya existe «X»" con `esDuplicado`, `?id=` para editar); verificar en dev los escenarios de `catalogo-ejercicios` (saltos según tipo, mancuernas a 1 kg, duplicado, renombrar se ve en la lista) y en Firestore que el doc tiene `{ nombre, tipo, saltoKg, saltoReps, saltoSeg, notas }`; commit (~9k)
 
 ## 4. Rutina (~48k)

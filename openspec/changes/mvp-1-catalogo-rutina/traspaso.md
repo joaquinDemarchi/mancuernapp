@@ -5,7 +5,8 @@
 - 1.1 hecha: vitest 5 (`npm test` = `vitest run`), `src/lib/texto.ts` y `src/lib/orden.ts` con tests al lado (`*.test.ts`). 
 - 1.2 hecha: `Login.svelte`, decisión de sesión en `+layout.svelte`, `Cabecera.svelte` (título, `volver` como href, `meta`, snippet `accion`), rutas vacías `/ejercicios`, `/ejercicio`, `/rutina`; clases globales `.pantalla` y `.texto` en `app.css`; `BarraAccion` con dos botones en columnas iguales. 
 - 2.1 hecha: `Stepper.svelte` (`bind:valor` `number | null`, `null` muestra "–" y el primer toque arranca en `min`; `oncambio` para guardado instantáneo) y `OpcionesChip.svelte` (genérico, `bind:valor`, `opciones: {valor, etiqueta}[]`, `leyenda`). 
-- 2.2 hecha: `Hoja.svelte` (`bind:abierta`, `titulo`, children; `<dialog>` con `showModal`, cierra con Esc/fondo/X y el navegador devuelve el foco al botón que la abrió). Sin barra de acciones propia todavía: agregarla (snippet) cuando la pidan 4.3/4.4. Próxima: 3.1.
+- 2.2 hecha: `Hoja.svelte` (`bind:abierta`, `titulo`, children; `<dialog>` con `showModal`, cierra con Esc/fondo/X y el navegador devuelve el foco al botón que la abrió). Sin barra de acciones propia todavía: agregarla (snippet) cuando la pidan 4.3/4.4. 
+- 3.1 hecha: `src/lib/catalogo.ts` (`ejercicios` es `null` hasta la primera lectura; `tipos` con etiquetas para los chips; `describir(e)` arma la meta "Peso · 2,5 kg · ±1 rep"; `crearEjercicio(nombre, tipo, datos?)` devuelve el id) y `/ejercicios`. Verificado en el Chrome de Joa: quedaron en su Firestore real "Elongación" (calentamiento) y "Press banca" (peso) como datos de prueba. Próxima: 3.2.
 
 ## Decisiones tomadas con Joa
 - Catálogo como acceso secundario "Ejercicios" en el inicio (sin pestañas abajo).
@@ -16,6 +17,7 @@
 - Rutina con guardado instantáneo; ejercicio con "Guardar"; "Salir" arriba a la derecha; días renombrables.
 
 ## Gotchas previstos
+- Verificación con Firestore: en el Chrome de Joa (Claude in Chrome), `http://localhost:5173` ya tiene sesión. Desde la consola: `const c = await import('/src/lib/catalogo.ts')`.
 - Browser pane: los clics por coordenada sobre un `<dialog>` modal (top layer) llegan a `<html>` con la emulación de viewport; probar las hojas con `el.click()` desde la consola. Al borrar y recrear una ruta, Vite puede servir la vieja: reiniciar el dev server.
 - Svelte 5 delega `change`/`click` en la raíz: al simular eventos desde la consola usar `new Event('change', { bubbles: true })`.
 - En el Browser pane no se puede entrar con Google (el popup no abre): para ver pantallas con sesión, en la consola `const m = await import('/src/lib/acceso.ts'); m.sesion.set({ estado: 'con-sesion', usuario: { uid: '...' } })`. Firestore no anda así (no hay token): las tareas con datos necesitan a Joa logueado o verificarse en el celu.

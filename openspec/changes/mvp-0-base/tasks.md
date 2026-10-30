@@ -22,7 +22,7 @@
 
 ## 4. Pantallas login e inicial (~12k)
 
-- [ ] 4.1 Crear `src/lib/componentes/Boton.svelte` (primario/secundario; reposo, presionado, foco, deshabilitado; alto `--touch-primary`) y `BarraAccion.svelte` (fija abajo, `--surface`, todo el ancho, con `safe-area-inset-bottom`) siguiendo `design/README.md` (y `bundle.css` del artifact Design System si hace falta el detalle); verificar con `npm run check` y midiendo en DevTools que el botón mide ≥ 56 px de alto (~5k)
+- [x] 4.1 Crear `src/lib/componentes/Boton.svelte` (primario/secundario; reposo, presionado, foco, deshabilitado; alto `--touch-primary`) y `BarraAccion.svelte` (fija abajo, `--surface`, todo el ancho, con `safe-area-inset-bottom`) siguiendo `design/README.md` (y `bundle.css` del artifact Design System si hace falta el detalle); verificar con `npm run check` y midiendo en DevTools que el botón mide ≥ 56 px de alto (~5k)
 - [ ] 4.2 Armar `src/routes/+page.svelte`: `cargando` → solo fondo; login (ícono + nombre, mensaje de error si hay, `BarraAccion` con "Entrar con Google"); inicial (nombre, "Todavía no hay rutina", `BarraAccion` con "Cerrar sesión"); solo tokens, sin valores visuales a mano; verificar los escenarios de `acceso` y `app-pwa` en `npm run dev` a 390 px de ancho, y que reabrir con sesión entra directo; commit (~7k)
 
 ## 5. Deploy y verificación en el celu (~11k)

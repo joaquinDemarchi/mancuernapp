@@ -11,7 +11,7 @@
 
 ## 2. PWA: manifest, íconos y service worker (~14k)
 
-- [ ] 2.1 Crear `src/routes/manifest.webmanifest/+server.ts` (prerender) que arma el manifest desde `config/app.ts` con los PNG de `design/icon/` importados por Vite (192, 512 `any`; 512 maskable); enlazarlo en `app.html` junto con `theme-color` y `apple-touch-icon`; verificar con `npm run build && npm run preview` que `/manifest.webmanifest` responde y que DevTools → Application → Manifest no muestra errores (~6k)
+- [x] 2.1 Crear `src/routes/manifest.webmanifest/+server.ts` (prerender) que arma el manifest desde `config/app.ts` con los PNG de `design/icon/` importados por Vite (192, 512 `any`; 512 maskable); enlazarlo en `app.html` junto con `theme-color` y `apple-touch-icon`; verificar con `npm run build && npm run preview` que `/manifest.webmanifest` responde y que DevTools → Application → Manifest no muestra errores (~6k)
 - [ ] 2.2 Crear `src/service-worker.ts` (precache de `build` + `files` + `prerendered` por `version`; caché primero para assets, red con fallback a `/` en navegaciones; no intercepta otros orígenes; `skipWaiting` + `clients.claim` + limpieza de cachés viejas); verificar en `npm run preview` que con "Offline" en DevTools la app recarga con Saira e ícono, y que la fuente figura en Cache Storage; commit (~8k)
 
 ## 3. Firebase y acceso (~18k)

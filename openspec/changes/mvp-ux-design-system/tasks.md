@@ -15,7 +15,7 @@
 
 ## 3. Ícono (~5k)
 
-- [ ] 3.1 Dibujar `design/icon/icon.svg` (mancuernita celeste en diagonal, fondo blanco) y exportar `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` (zona segura 80%); mostrar a Lio y commit (~5k)
+- [x] 3.1 Dibujar `design/icon/icon.svg` (mancuernita celeste en diagonal, fondo blanco) y exportar `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` (zona segura 80%); mostrar a Lio y commit (~5k)
 
 ## 4. Handoff al repo (~5k)
 

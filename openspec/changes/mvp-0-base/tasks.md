@@ -18,7 +18,7 @@
 
 - [x] 3.1 Guiar a Lio para crear el proyecto en la consola de Firebase (app web, Authentication → Google habilitado, Firestore en `southamerica-east1` en modo producción) y pegar el `firebaseConfig` en `config/firebase.ts`; instalar `firebase` y crear `src/lib/firebase.ts` (`app`, `auth`, `db`); verificar con `npm run check` y que la app arranca sin errores en consola (~4k)
 - [x] 3.2 Escribir `firestore.rules` (lista blanca con `email_verified`, cada uno solo `users/{uid}/**`, comentario cruzado con `config/app.ts`); que Lio la pegue en la consola y verificar en el Rules Playground: lectura de `users/{uidLio}` como Lio → permitida, como otro email → denegada, `users/{otroUid}` como Lio → denegada (~5k)
-- [ ] 3.3 Crear `src/lib/acceso.ts` (`entrar` con popup, `salir`, `emailPermitido` en minúsculas, `asegurarUsuario` que crea `users/{uid}` solo si no existe) y el store de sesión (`cargando` / `sin-sesion` + mensaje / `con-sesion`) con `onAuthStateChanged`; verificar en `npm run dev` con una página mínima: login con el email de Lio crea el doc en Firestore (visible en consola) y un segundo login no lo pisa; con otra cuenta queda deslogueado con "Esta cuenta no tiene acceso"; commit (~9k)
+- [x] 3.3 Crear `src/lib/acceso.ts` (`entrar` con popup, `salir`, `emailPermitido` en minúsculas, `asegurarUsuario` que crea `users/{uid}` solo si no existe) y el store de sesión (`cargando` / `sin-sesion` + mensaje / `con-sesion`) con `onAuthStateChanged`; verificar en `npm run dev` con una página mínima: login con el email de Lio crea el doc en Firestore (visible en consola) y un segundo login no lo pisa; con otra cuenta queda deslogueado con "Esta cuenta no tiene acceso"; commit (~9k)
 
 ## 4. Pantallas login e inicial (~12k)
 

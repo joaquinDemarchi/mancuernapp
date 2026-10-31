@@ -2,13 +2,14 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { desdeObjetivo, formatear, formatearVolumen, hoy, semana, sesionDeHoy, ultimaVez, volumen, type Bloque } from '#lib/calculos.ts';
-	import { ejercicios } from '#lib/catalogo.ts';
+	import { ejercicios, type Tipo } from '#lib/catalogo.ts';
 	import { formatearObjetivo, rutinaActiva, type Objetivo } from '#lib/rutina.ts';
 	import { guardarRegistro, quitarRegistro, sesiones, terminar } from '#lib/sesion.ts';
 	import Boton from '#lib/componentes/Boton.svelte';
 	import BarraAccion from '#lib/componentes/BarraAccion.svelte';
 	import Cabecera from '#lib/componentes/Cabecera.svelte';
 	import Hoja from '#lib/componentes/Hoja.svelte';
+	import HojaAgregar from '#lib/componentes/HojaAgregar.svelte';
 	import HojaAjustar from '#lib/componentes/HojaAjustar.svelte';
 
 	$effect(() => {
@@ -48,7 +49,8 @@
 		if (r) {
 			const ajustado = !iguales(r.bloques, u) || r.rpe !== undefined || !!r.nota;
 			const rpe = r.rpe !== undefined ? ` · RPE ${r.rpe}` : '';
-			return { texto: formatear(tipo, r.bloques) + rpe, clase: ajustado ? 'ajustado' : 'hecho' };
+			const extra = f.extra ? 'Extra · ' : '';
+			return { texto: extra + formatear(tipo, r.bloques) + rpe, clase: ajustado ? 'ajustado' : 'hecho' };
 		}
 		if (u) return { texto: `${f.extra ? 'Extra · última' : 'Última'}: ${formatear(tipo, u)}`, clase: '' };
 		if (f.extra) return { texto: 'Extra', clase: '' };
@@ -84,6 +86,14 @@
 	function tocarCuerpo(f: Fila) {
 		if (tipoDe(f.ejercicioId) === 'calentamiento') tocarCheck(f);
 		else ajustar(f);
+	}
+
+	// Extra: queda solo en la sesión, al final; arranca de su última vez en cualquier día o del tipo.
+	let agregando = $state(false);
+	function agregarExtra(id: string, tipo: Tipo) {
+		if (!ctx || !$sesiones) return;
+		const bloques = ultimaVez($sesiones, ctx.diaId, id, hoy(), true) ?? [desdeObjetivo(tipo)];
+		guardarRegistro(ctx, { ejercicioId: id, bloques, hecho: true });
 	}
 
 	let resumen = $state(false);
@@ -130,6 +140,14 @@
 				</li>
 			{/each}
 		</ul>
+		<button type="button" class="agregar" onclick={() => (agregando = true)}>+ Agregar ejercicio</button>
+		<HojaAgregar
+			bind:abierta={agregando}
+			titulo="Agregar a la sesión"
+			yaEstan={new Set(filas.map((f) => f.ejercicioId))}
+			contexto="sesion"
+			onagregar={agregarExtra}
+		/>
 
 		{#if ajustando && ejercicio(ajustando.ejercicioId)}
 			{@const f = ajustando}
@@ -221,6 +239,20 @@
 	}
 	.cuerpo:focus-visible,
 	.check:focus-visible {
+		outline: 2px solid var(--focus);
+		outline-offset: 2px;
+	}
+	.agregar {
+		min-height: 64px;
+		margin-top: var(--space-1);
+		border: 2px dashed var(--control);
+		border-radius: var(--radius);
+		background: transparent;
+		color: var(--ink);
+		font: 600 var(--fs-body) / var(--lh-body) var(--font-text);
+		cursor: pointer;
+	}
+	.agregar:focus-visible {
 		outline: 2px solid var(--focus);
 		outline-offset: 2px;
 	}

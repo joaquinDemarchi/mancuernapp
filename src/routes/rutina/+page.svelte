@@ -5,6 +5,7 @@
 	import { ejercicios } from '#lib/catalogo.ts';
 	import {
 		agregarDia,
+		agregarItem,
 		borrarDia,
 		fechaCorta,
 		formatearObjetivo,
@@ -171,7 +172,13 @@
 				<Boton variante="secundario" onclick={borrar}>{confirmando ? 'Sí, borrar día' : 'Borrar día'}</Boton>
 			{/if}
 		</Hoja>
-		<HojaAgregar bind:abierta={agregando} {dia} />
+		<HojaAgregar
+			bind:abierta={agregando}
+			titulo="Agregar a {dia.nombre}"
+			yaEstan={new Set(dia.items.map((i) => i.ejercicioId))}
+			contexto="dia"
+			onagregar={(id) => agregarItem(dia.id, id).catch(console.error)}
+		/>
 		<HojaObjetivo bind:abierta={fijando} {dia} indice={indiceObjetivo} />
 	{/if}
 </main>

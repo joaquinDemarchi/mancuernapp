@@ -1,13 +1,28 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { crearEjercicio, describir, ejercicios, tipos, type Tipo } from '#lib/catalogo.ts';
-	import { agregarItem, type Dia } from '#lib/rutina.ts';
 	import { coincide, esDuplicado, parecidos } from '#lib/texto.ts';
 	import Boton from '#lib/componentes/Boton.svelte';
 	import Hoja from '#lib/componentes/Hoja.svelte';
 	import OpcionesChip from '#lib/componentes/OpcionesChip.svelte';
 
-	let { abierta = $bindable(false), dia }: { abierta: boolean; dia: Dia } = $props();
+	let {
+		abierta = $bindable(false),
+		titulo,
+		yaEstan,
+		contexto,
+		onagregar
+	}: {
+		abierta: boolean;
+		titulo: string;
+		/** Ids que no se pueden volver a agregar. */
+		yaEstan: Set<string>;
+		contexto: 'dia' | 'sesion';
+		/** Con el tipo: un ejercicio recién creado todavía puede no estar en el store. */
+		onagregar: (ejercicioId: string, tipo: Tipo) => void;
+	} = $props();
+
+	const yaEsta = $derived(contexto === 'dia' ? 'ya está en este día' : 'ya está en la sesión');
 
 	// Dos pasos en la misma hoja: buscar en el catálogo o crear uno nuevo.
 	let paso: 'buscar' | 'nuevo' = $state('buscar');
@@ -25,7 +40,6 @@
 	});
 
 	const catalogo = $derived($ejercicios ?? []);
-	const enDia = $derived(new Set(dia.items.map((i) => i.ejercicioId)));
 	const similares = $derived(parecidos(busqueda, catalogo));
 	const resultados = $derived([
 		...similares,
@@ -34,9 +48,9 @@
 	const exacto = $derived(catalogo.find((e) => esDuplicado(e.nombre, busqueda)));
 	const duplicadoNuevo = $derived(catalogo.find((e) => esDuplicado(e.nombre, nombre)));
 
-	function agregar(id: string) {
-		if (enDia.has(id)) return;
-		agregarItem(dia.id, id);
+	function agregar(id: string, tipo: Tipo) {
+		if (yaEstan.has(id)) return;
+		onagregar(id, tipo);
 		abierta = false;
 	}
 
@@ -55,12 +69,12 @@
 	// Sin await: sin señal las escrituras no resuelven hasta sincronizar.
 	function crearYAgregar() {
 		if (!nombre.trim() || duplicadoNuevo) return;
-		agregarItem(dia.id, crearEjercicio(nombre, tipo)).catch(console.error);
+		onagregar(crearEjercicio(nombre, tipo), tipo);
 		abierta = false;
 	}
 </script>
 
-<Hoja bind:abierta titulo={paso === 'buscar' ? `Agregar a ${dia.nombre}` : 'Nuevo ejercicio'}>
+<Hoja bind:abierta titulo={paso === 'buscar' ? titulo : 'Nuevo ejercicio'}>
 	{#if paso === 'buscar'}
 		<label class="buscador">
 			<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
@@ -82,12 +96,12 @@
 			<ul>
 				{#each resultados as e (e.id)}
 					<li>
-						<button type="button" class="fila" aria-disabled={enDia.has(e.id)} onclick={() => agregar(e.id)}>
+						<button type="button" class="fila" aria-disabled={yaEstan.has(e.id)} onclick={() => agregar(e.id, e.tipo)}>
 							<span class="textos">
 								<span class="nombre">{e.nombre}</span>
-								<span class="meta">{enDia.has(e.id) ? 'ya está en este día' : describir(e)}</span>
+								<span class="meta">{yaEstan.has(e.id) ? yaEsta : describir(e)}</span>
 							</span>
-							{#if !enDia.has(e.id)}
+							{#if !yaEstan.has(e.id)}
 								<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
 									<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
 								</svg>

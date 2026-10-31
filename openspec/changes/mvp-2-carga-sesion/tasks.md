@@ -21,7 +21,7 @@
 
 ## 4. Extra y sesión de hoy (~14k)
 
-- [ ] 4.1 Generalizar `HojaAgregar.svelte` (props `titulo`, `yaEstan`, `onagregar`, texto "ya está en este día"/"ya está en la sesión") sin romper el editor de rutina; "+ Agregar ejercicio" al pie de `/sesion` agrega un extra (bloque inicial de su última vez en cualquier día o del tipo) al final, marcado "Extra"; verificar en dev "Agregar extra" (la rutina no cambia), crear un extra al vuelo y que "Agregar ejercicio" del editor de rutina sigue andando; commit (~9k)
+- [x] 4.1 Generalizar `HojaAgregar.svelte` (props `titulo`, `yaEstan`, `onagregar`, texto "ya está en este día"/"ya está en la sesión") sin romper el editor de rutina; "+ Agregar ejercicio" al pie de `/sesion` agrega un extra (bloque inicial de su última vez en cualquier día o del tipo) al final, marcado "Extra"; verificar en dev "Agregar extra" (la rutina no cambia), crear un extra al vuelo y que "Agregar ejercicio" del editor de rutina sigue andando; commit (~9k)
 - [ ] 4.2 "Borrar" en la cabecera de `/sesion` (solo si la sesión existe) con la hoja de confirmación de design.md §7; sesión terminada: "Terminar sesión" pasa a "Listo" y se puede seguir editando; verificar en dev "Borrar" y editar una sesión terminada desde "Ver sesión"; commit (~5k)
 
 ## 5. Cierre (~14k)

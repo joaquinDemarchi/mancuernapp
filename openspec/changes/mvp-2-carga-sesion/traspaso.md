@@ -10,7 +10,9 @@
 - **Datos de prueba en Firestore de Joa** (borrar al final del change): sesión `joa-prueba-ayer` (Día 1, 30/10, creada por REST) y la sesión de hoy (31/10, terminada). Para borrarlas: REST `DELETE` o `borrarSesion(id)` desde la consola.
 - 3.2 hecha: `HojaAjustar.svelte` (bloques como `role="radio"`, editor en `--ground`, + Bloque, Desarmar, quitar, Listo). Copia los valores al abrir (`untrack`) y la página la envuelve en `{#key ejercicioId}`. `Stepper` suma la prop `detalle` ("±2,5" a la derecha). Verificado: subir kg, desarmar y última serie distinta con datos reales; 360 px sin cortes (nombre largo y 122,5 kg) y cardio sin lista.
 - 3.3 hecha: RPE (botones `aria-pressed` en grilla de 5; tocar el elegido lo borra) y nota (`change`) en `HojaAjustar`; el registro se arma desde el estado de la hoja (rpe/nota vacíos se limpian en `sesion.ts`). Verificado en el Chrome de Joa: "· RPE 8", borrar el RPE y nota + RPE persisten al recargar.
-- Próxima: 4.1.
+- 4.1 hecha: `HojaAgregar` con props `titulo`, `yaEstan`, `contexto` y `onagregar(id, tipo)` (el tipo viaja porque un ejercicio recién creado puede no estar todavía en el store). Extra al pie de `/sesion`: se guarda hecho al instante y la fila dice "Extra · …". Verificado en el Chrome de Joa: agregar "Remo con mancuerna" (la rutina no cambia), crear al vuelo "Joa plancha prueba" (tiempo → "Extra · 3×30 s") y "Agregar ejercicio" del editor (agregado y quitado de nuevo).
+- **Más datos de prueba**: ejercicio `Joa plancha prueba` en el catálogo (no hay borrar en la app: REST `DELETE` en `users/<uid>/ejercicios/<id>`).
+- Próxima: 4.2.
 
 ## Decisiones tomadas con Joa (31/10/2026)
 - Bloques: "+ Bloque", quitar y **desarmar** en series sueltas (sin "Juntar").

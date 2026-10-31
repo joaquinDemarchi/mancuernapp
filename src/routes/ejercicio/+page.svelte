@@ -35,7 +35,8 @@
 		if (!nombre.trim() || duplicado) return;
 		const datos = { nombre, tipo, saltoKg: saltoKg ?? 2.5, saltoReps: saltoReps ?? 1, saltoSeg: saltoSeg ?? 5, notas };
 		// Sin await: Firestore lo aplica al instante en el store y confirma con el servidor después.
-		(id ? guardarEjercicio(id, datos) : crearEjercicio(nombre, tipo, datos)).catch(console.error);
+		if (id) guardarEjercicio(id, datos).catch(console.error);
+		else crearEjercicio(nombre, tipo, datos);
 		goto('/ejercicios');
 	}
 </script>

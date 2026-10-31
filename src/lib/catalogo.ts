@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, onSnapshot, updateDoc, type Unsubscribe } from 'firebase/firestore';
+import { collection, doc, onSnapshot, updateDoc, setDoc, type Unsubscribe } from 'firebase/firestore';
 import { get, writable } from 'svelte/store';
 import { sesion } from './acceso';
 import { db } from './firebase';
@@ -58,10 +58,12 @@ export function describir(e: DatosEjercicio): string {
 	return tipo;
 }
 
-/** Crea con los saltos por defecto y devuelve el id. */
-export async function crearEjercicio(nombre: string, tipo: Tipo, datos: Partial<DatosEjercicio> = {}) {
+/** Crea con los saltos por defecto y devuelve el id al instante (sin señal, la escritura queda pendiente). */
+export function crearEjercicio(nombre: string, tipo: Tipo, datos: Partial<DatosEjercicio> = {}) {
 	const nuevo: DatosEjercicio = { nombre: nombre.trim(), tipo, saltoKg: 2.5, saltoReps: 1, saltoSeg: 5, notas: '', ...datos };
-	return (await addDoc(coleccion(), nuevo)).id;
+	const ref = doc(coleccion());
+	setDoc(ref, nuevo).catch(console.error);
+	return ref.id;
 }
 
 export function guardarEjercicio(id: string, datos: DatosEjercicio) {

@@ -1,7 +1,9 @@
 # Notas de traspaso — mvp-2-carga-sesion
 
 ## Estado
-- Change propuesto (31/10/2026): `proposal.md`, `design.md` (handoff en §7), `tasks.md`, spec nueva `sesion` y deltas de `rutina` y `app-pwa`. Sin código todavía. Próxima: 1.1 (pide OK de Joa para borrar `/prototipo`).
+- Change propuesto (31/10/2026): `proposal.md`, `design.md` (handoff en §7), `tasks.md`, spec nueva `sesion` y deltas de `rutina` y `app-pwa`.
+- 1.1 hecha: `/prototipo` borrado (OK de Joa), Firestore con `persistentLocalCache`, `crearEjercicio` devuelve el id sin `await`, `asegurarUsuario` no se espera. Catálogo y rutina cargan en dev (Chrome de Joa).
+- Próxima: 1.2.
 
 ## Decisiones tomadas con Joa (31/10/2026)
 - Bloques: "+ Bloque", quitar y **desarmar** en series sueltas (sin "Juntar").
@@ -13,6 +15,7 @@
 - Del prototipo: Ajustar en hoja abajo, steppers apilados, sin contador de toques, ✓ = igual, tocar el nombre para ajustar, chips para cambiar el día.
 
 ## Gotchas previstos
+- `crearRutina` todavía hace `await addDoc` (solo la primera vez, con señal): fuera del alcance de este change.
 - Offline: no hacer `await` de `setDoc`/`updateDoc`/`addDoc` en la UI (sin señal no resuelven hasta sincronizar). Aplica también a `crearEjercicio` del MVP 1.
 - La sesión se crea al primer toque, no en "Empezar": `/sesion` sin doc es un estado válido.
 - Sin índices compuestos: una sola consulta `where('rutinaId','==',…)` y todo lo demás en `calculos.ts`.

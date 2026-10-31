@@ -14,7 +14,6 @@
 	let busqueda = $state('');
 	let nombre = $state('');
 	let tipo: Tipo = $state('peso');
-	let creando = $state(false);
 	let buscador: HTMLInputElement | undefined = $state();
 
 	// Cada vez que se abre arranca limpia, con el foco en el buscador.
@@ -53,16 +52,11 @@
 		paso = 'nuevo';
 	}
 
-	async function crearYAgregar() {
+	// Sin await: sin señal las escrituras no resuelven hasta sincronizar.
+	function crearYAgregar() {
 		if (!nombre.trim() || duplicadoNuevo) return;
-		creando = true;
-		try {
-			const id = await crearEjercicio(nombre, tipo);
-			await agregarItem(dia.id, id);
-			abierta = false;
-		} finally {
-			creando = false;
-		}
+		agregarItem(dia.id, crearEjercicio(nombre, tipo)).catch(console.error);
+		abierta = false;
 	}
 </script>
 
@@ -126,7 +120,7 @@
 		{:else if tipo === 'reps' || tipo === 'tiempo'}
 			<p class="meta">Salto por defecto: {tipo === 'reps' ? '±1 rep' : '±5 s'}. Se cambia después en Ejercicios.</p>
 		{/if}
-		<Boton disabled={!nombre.trim() || !!duplicadoNuevo || creando} onclick={crearYAgregar}>Crear y agregar</Boton>
+		<Boton disabled={!nombre.trim() || !!duplicadoNuevo} onclick={crearYAgregar}>Crear y agregar</Boton>
 	{/if}
 </Hoja>
 

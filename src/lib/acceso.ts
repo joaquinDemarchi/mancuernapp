@@ -19,15 +19,20 @@ export function emailPermitido(email: string | null): boolean {
 }
 
 // Crea users/{uid} solo la primera vez; los ingresos siguientes no lo pisan.
-export async function asegurarUsuario(usuario: User) {
+// No se espera: sin señal no debe bloquear la entrada.
+export function asegurarUsuario(usuario: User) {
 	const ref = doc(db, 'users', usuario.uid);
-	if ((await getDoc(ref)).exists()) return;
-	await setDoc(ref, {
-		email: usuario.email,
-		nombre: usuario.displayName ?? '',
-		rol: 'usuario',
-		ajustes: {}
-	});
+	getDoc(ref)
+		.then((d) => {
+			if (d.exists()) return;
+			return setDoc(ref, {
+				email: usuario.email,
+				nombre: usuario.displayName ?? '',
+				rol: 'usuario',
+				ajustes: {}
+			});
+		})
+		.catch(console.error);
 }
 
 // Popup y no redirect: el redirect falla con cookies de terceros bloqueadas.
@@ -55,6 +60,6 @@ onAuthStateChanged(auth, async (usuario) => {
 		await salir();
 		return;
 	}
-	await asegurarUsuario(usuario);
+	asegurarUsuario(usuario);
 	sesion.set({ estado: 'con-sesion', usuario });
 });

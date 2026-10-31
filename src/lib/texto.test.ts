@@ -40,6 +40,9 @@ describe('parecidos', () => {
 			'Remo con mancuerna'
 		]);
 	});
+	it('los conectores no cuentan como palabra en común', () => {
+		expect(parecidos('Curl con barra', [{ nombre: 'Remo con' }])).toEqual([]);
+	});
 	it('sin texto no hay parecidos', () => {
 		expect(parecidos(' ', catalogo)).toEqual([]);
 	});

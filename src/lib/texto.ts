@@ -20,10 +20,13 @@ export function coincide(nombre: string, busqueda: string): boolean {
 	return palabras(busqueda).every((b) => delNombre.some((p) => p.startsWith(b)));
 }
 
-// Coincide en algún sentido, o comparten al menos la mitad de las palabras de 3+ letras.
+// Conectores que no dicen nada del ejercicio ("Curl con mancuerna").
+const conectores = new Set(['con', 'del', 'las', 'los', 'para', 'sin']);
+
+// Coincide en algún sentido, o comparten al menos la mitad de las palabras de 3+ letras (sin conectores).
 export function parecidos<T extends { nombre: string }>(nombre: string, catalogo: T[]): T[] {
 	if (!normalizar(nombre)) return [];
-	const largas = (s: string) => new Set(palabras(s).filter((p) => p.length >= 3));
+	const largas = (s: string) => new Set(palabras(s).filter((p) => p.length >= 3 && !conectores.has(p)));
 	const buscadas = largas(nombre);
 	return catalogo.filter((e) => {
 		if (coincide(e.nombre, nombre) || coincide(nombre, e.nombre)) return true;

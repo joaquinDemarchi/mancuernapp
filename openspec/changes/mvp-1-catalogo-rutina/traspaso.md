@@ -43,7 +43,6 @@
 - En el Browser pane no se puede entrar con Google (el popup no abre): para ver pantallas con sesión, en la consola `const m = await import('/src/lib/acceso.ts'); m.sesion.set({ estado: 'con-sesion', usuario: { uid: '...' } })`. Firestore no anda así (no hay token): las tareas con datos necesitan a Joa logueado o verificarse en el celu.
 - En dev, el primer `goto` a una ruta tarda (Vite compila el chunk): esperar ~1 s antes de leer la página.
 - `esDuplicado(a, b)` compara dos nombres; para el mensaje "Ya existe «X»" buscar con `catalogo.find(e => esDuplicado(e.nombre, nombre))`.
-- `parecidos` cuenta "con" como palabra de 3+ letras ("Curl con mancuerna" ≈ "Remo con mancuerna"); si molesta en uso, filtrar conectores.
 - Rutas con `?id=` en vez de `[id]` para seguir prerenderizando todo (ver design.md §1).
 - `bundle.css` del Design System se lee con Artifact read + `paths: ["project/components/bundle.css"]` de https://claude.ai/artifact/GB9FbyJPzAdy3jsURqYKhP.
 - Los mockups usan clases propias en `project/mvp1.css` del canvas (`.row`, `.chip`, `.sheet`, `.slot`…): son referencia visual, en la app cada componente lleva sus estilos con tokens.

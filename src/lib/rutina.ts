@@ -121,3 +121,12 @@ export function fijarObjetivo(diaId: string, indice: number, objetivo?: Objetivo
 		})
 	}));
 }
+
+/** "4×10", "3×40 s", "15 min"; vacío sin objetivo. */
+export function formatearObjetivo(o?: Objetivo): string {
+	if (!o) return '';
+	if (o.minutos) return `${o.minutos} min`;
+	if (o.series && o.segundos) return `${o.series}×${o.segundos} s`;
+	if (o.series && o.reps) return `${o.series}×${o.reps}`;
+	return '';
+}

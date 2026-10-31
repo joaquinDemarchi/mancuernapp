@@ -52,6 +52,9 @@
 		return partes.join(' · ');
 	});
 
+	let verDias = $state(false);
+	const nombreDe = (id: string) => $ejercicios?.find((e) => e.id === id)?.nombre ?? '…';
+
 	function hechoEl(id: string) {
 		const s = $sesiones?.findLast((s) => s.diaId === id);
 		return s ? ` · hecho el ${diaMes(s.fecha)}` : '';
@@ -85,21 +88,23 @@
 				{/if}
 			</section>
 		{/if}
-		<ul>
-			{#each $rutinaActiva.dias as dia (dia.id)}
-				<li>
-					<a href="/rutina?dia={dia.id}">
-						<span>
-							<span class="nombre">{dia.nombre}</span>
-							<span class="meta">{cantidad(dia.items.length)}{hechoEl(dia.id)}</span>
-						</span>
-						<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
-							<path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
-						</svg>
-					</a>
-				</li>
-			{/each}
-		</ul>
+		<!-- Solo para mirar: editar va por "Editar rutina". -->
+		<button class="texto ver" aria-expanded={verDias} onclick={() => (verDias = !verDias)}>
+			{verDias ? 'Ocultar días' : 'Ver días'}
+		</button>
+		{#if verDias}
+			<ul>
+				{#each $rutinaActiva.dias as dia (dia.id)}
+					<li>
+						<span class="nombre">{dia.nombre}</span>
+						<span class="meta">{cantidad(dia.items.length)}{hechoEl(dia.id)}</span>
+						{#if dia.items.length}
+							<span class="ejercicios">{dia.items.map((i) => nombreDe(i.ejercicioId)).join(' · ')}</span>
+						{/if}
+					</li>
+				{/each}
+			</ul>
+		{/if}
 	{:else if $rutinaActiva === null}
 		<div class="vacio">
 			<p class="titulo">Todavía no hay rutina</p>
@@ -163,28 +168,20 @@
 		padding: 0;
 		list-style: none;
 	}
-	a {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: var(--space-2);
-		min-height: 64px;
-		padding: var(--space-2) var(--space-4);
+	.ver {
+		justify-self: start;
+		align-self: flex-start;
+		margin-left: calc(var(--space-3) * -1);
+	}
+	li {
+		display: grid;
+		padding: var(--space-3) var(--space-4);
 		border-radius: var(--radius);
 		background: var(--surface);
-		color: var(--ink);
-		text-decoration: none;
 	}
-	a > span {
-		display: grid;
-	}
-	a:focus-visible {
-		outline: 2px solid var(--focus);
-		outline-offset: 2px;
-	}
-	svg {
-		flex: none;
+	.ejercicios {
 		color: var(--ink-muted);
+		font: 400 var(--fs-meta) / var(--lh-meta) var(--font-text);
 	}
 	.nombre {
 		font: 600 var(--fs-heading) / var(--lh-heading) var(--font-display);

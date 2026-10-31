@@ -15,7 +15,8 @@
 - 5.1 hecha: offline simulado en el Chrome de Joa con `disableNetwork(db)` (importando `/node_modules/.vite/deps/firebase_firestore.js?v=…`, la misma instancia de la app): Empezar, 2 ✓, crear un extra al vuelo y Terminar responden en <100 ms y el servidor no tiene nada; con `enableNetwork` aparecen la sesión terminada y el ejercicio nuevo. No cubre modo avión real (service worker + Auth): queda para la checklist del celu en 5.2. Modelo actualizado en `openspec/config.yaml` y `docs/decisiones-diseno-mancuernapp.md §4`.
 - Datos de prueba borrados con OK de Joa (31/10): Firestore quedó sin sesiones y con el catálogo original (4 ejercicios).
 - 5.2 hecha: push a `main` con OK de Joa (31/10, 3d4f190), deploy de Vercel en verde y checklist del celu OK (Joa, 31/10).
-- Feedback del celu → grupo 6 en tasks.md (design.md §8): "Cargar un día anterior" (elegir fecha; Joa eligió esto antes que permitir otra sesión hoy) y lista de días plegable "Ver días", solo lectura. Próxima: 6.1.
+- Feedback del celu → grupo 6 en tasks.md (design.md §8): "Cargar un día anterior" (elegir fecha; Joa eligió esto antes que permitir otra sesión hoy) y lista de días plegable "Ver días", solo lectura. 
+- 6.1 hecha: lista de días plegada detrás de "Ver días" (`.texto`, `aria-expanded`), cada día con meta y nombres de ejercicios, sin link al editor. Verificado a 390 px en el Browser pane. Próxima: 6.2.
 
 ## Checklist en el celu (5.2)
 Reinstalar o recargar la PWA para tomar el service worker nuevo. Joa la hizo completa el 31/10:

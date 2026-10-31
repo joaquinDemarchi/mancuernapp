@@ -13,7 +13,7 @@
 - Para borrar datos de prueba: REST `DELETE` en `users/<uid>/sesiones/<id>` o `users/<uid>/ejercicios/<id>` (la app no borra ejercicios).
 - 4.2 hecha: "Borrar" en la cabecera de `/sesion` (solo con sesión) con hoja de confirmación (aviso `--alto`, Cancelar + "Sí, borrar sesión"). "Listo" en la sesión terminada ya venía de 3.1. Verificado en el Chrome de Joa: "Ver sesión" → editar (sigue `terminada`) → Borrar → inicio con "Empezar Día 2"; en el servidor solo queda `joa-prueba-ayer` (la sesión de hoy de prueba ya no está).
 - 5.1 hecha: offline simulado en el Chrome de Joa con `disableNetwork(db)` (importando `/node_modules/.vite/deps/firebase_firestore.js?v=…`, la misma instancia de la app): Empezar, 2 ✓, crear un extra al vuelo y Terminar responden en <100 ms y el servidor no tiene nada; con `enableNetwork` aparecen la sesión terminada y el ejercicio nuevo. No cubre modo avión real (service worker + Auth): queda para la checklist del celu en 5.2. Modelo actualizado en `openspec/config.yaml` y `docs/decisiones-diseno-mancuernapp.md §4`.
-- **Datos de prueba en Firestore de Joa** (pendientes de borrar, con OK de Joa): sesiones `joa-prueba-ayer` (30/10) y la de hoy 31/10 (creada en la prueba offline, terminada, 3 ejercicios); ejercicios `Joa plancha prueba` y `Joa extra offline`. La de hoy hace que el inicio diga "Terminada": borrarla antes de que Joa entrene.
+- Datos de prueba borrados con OK de Joa (31/10): Firestore quedó sin sesiones y con el catálogo original (4 ejercicios).
 - Próxima: 5.2 (solo con OK de Joa: push a `main`, deploy en Vercel y checklist en el celu).
 
 ## Decisiones tomadas con Joa (31/10/2026)

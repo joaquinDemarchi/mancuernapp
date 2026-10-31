@@ -6,7 +6,7 @@
 ## 1. Base: limpieza, offline y cálculos (~16k)
 
 - [x] 1.1 Con OK de Joa, borrar `src/routes/prototipo/` y la excepción de login de `src/routes/+layout.svelte`; `firebase.ts` con `initializeFirestore` + `persistentLocalCache` (`persistentMultipleTabManager`); `crearEjercicio` sin `await` (`doc(collection())` + `setDoc`, devuelve el id al instante) y revisar que `asegurarUsuario` no bloquee sin señal; verificar `npm run check`, `npm test` y `npm run build` sin errores y que catálogo y rutina siguen cargando en dev; commit (~7k)
-- [ ] 1.2 Crear `src/lib/calculos.ts` (`hoy`, `sesionDeHoy`, `diaSugerido`, `ultimaVez`, `semana`, `desdeObjetivo`, `desarmar`, `volumen`, `formatear`; design.md §2) con `calculos.test.ts`: rotación y vuelta al primero, día borrado, última vez del mismo día y de cualquier día para extras, semana con y sin sesión actual, desarmar 3×10 · 40 → tres 1×10 · 40, volumen 4×10·40 + 3×10·60 = 3400, formatos `3×10 · 60 kg + 1×8 · 70 kg`, `3×40 s`, `15 min`; verificar `npm test` en verde; commit (~9k)
+- [x] 1.2 Crear `src/lib/calculos.ts` (`hoy`, `sesionDeHoy`, `diaSugerido`, `ultimaVez`, `semana`, `desdeObjetivo`, `desarmar`, `volumen`, `formatear`; design.md §2) con `calculos.test.ts`: rotación y vuelta al primero, día borrado, última vez del mismo día y de cualquier día para extras, semana con y sin sesión actual, desarmar 3×10 · 40 → tres 1×10 · 40, volumen 4×10·40 + 3×10·60 = 3400, formatos `3×10 · 60 kg + 1×8 · 70 kg`, `3×40 s`, `15 min`; verificar `npm test` en verde; commit (~9k)
 
 ## 2. Datos de sesión e inicio (~16k)
 

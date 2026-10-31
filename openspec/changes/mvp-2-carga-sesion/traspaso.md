@@ -3,7 +3,8 @@
 ## Estado
 - Change propuesto (31/10/2026): `proposal.md`, `design.md` (handoff en §7), `tasks.md`, spec nueva `sesion` y deltas de `rutina` y `app-pwa`.
 - 1.1 hecha: `/prototipo` borrado (OK de Joa), Firestore con `persistentLocalCache`, `crearEjercicio` devuelve el id sin `await`, `asegurarUsuario` no se espera. Catálogo y rutina cargan en dev (Chrome de Joa).
-- Próxima: 1.2.
+- 1.2 hecha: `calculos.ts` con 19 tests. Los tipos `Bloque`, `Registro` y `Sesion` viven ahí (puros); `Sesion.creada` es un número en ms (lo convierte `sesion.ts`). `ultimaVez(..., cualquierDia)` para extras; `volumen(registros, tipoDe)` recibe una función. `desdeObjetivo` sin objetivo usa 3×10 / 30 s / 10 min, y peso arranca con `kg: 0`.
+- Próxima: 2.1.
 
 ## Decisiones tomadas con Joa (31/10/2026)
 - Bloques: "+ Bloque", quitar y **desarmar** en series sueltas (sin "Juntar").

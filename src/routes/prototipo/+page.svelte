@@ -6,7 +6,7 @@
 	import Hoja from '#lib/componentes/Hoja.svelte';
 	import OpcionesChip from '#lib/componentes/OpcionesChip.svelte';
 	import Stepper from '#lib/componentes/Stepper.svelte';
-	import { dias, diaSugerido, formatear, indicador, n, volumen, type Bloque, type EjercicioP } from './datos.ts';
+	import { dias, diaSugerido, formatear, n, volumen, type Bloque, type EjercicioP } from './datos.ts';
 
 	type Registro = { bloques: Bloque[]; hecho: boolean; ajustado: boolean };
 
@@ -73,20 +73,10 @@
 		hojaAjustar = false;
 	}
 
-	const resumen = $derived.by(() => {
-		const pesos = dia.ejercicios.filter((e) => e.tipo === 'peso');
-		const antes = pesos.reduce((t, e) => t + volumen(e.ultima), 0);
-		const ahora = pesos.reduce((t, e) => t + (registros[e.id].hecho ? volumen(registros[e.id].bloques) : 0), 0);
-		const pct = antes ? ((ahora - antes) / antes) * 100 : 0;
-		const filas = pesos.map((e) => {
-			const a = volumen(e.ultima);
-			const h = registros[e.id].hecho ? volumen(registros[e.id].bloques) : 0;
-			return { nombre: e.nombre, volumen: h, pct: a ? ((h - a) / a) * 100 : 0, hecho: registros[e.id].hecho };
-		});
-		return { ahora, pct, ind: indicador(pct), filas };
-	});
-
-	const signo = (pct: number) => `${pct > 0 ? '+' : ''}${n(pct)} %`;
+	// Solo los ejercicios de peso hechos (§6).
+	const volumenTotal = $derived(
+		dia.ejercicios.reduce((t, e) => t + (e.tipo === 'peso' && registros[e.id].hecho ? volumen(registros[e.id].bloques) : 0), 0)
+	);
 </script>
 
 <svelte:document onclick={contar} />
@@ -168,19 +158,7 @@
 <Hoja bind:abierta={hojaResumen} titulo="Sesión terminada" meta="{dia.nombre} · {toques} toques">
 	<div class="resumen">
 		<p class="meta">Volumen</p>
-		<p class="grande">{n(resumen.ahora)} kg</p>
-		<p class="pct">
-			{signo(resumen.pct)} vs la vez anterior
-			<span class="ind {resumen.ind.clase}">{resumen.ind.texto}</span>
-		</p>
-		<ul class="detalle">
-			{#each resumen.filas as f (f.nombre)}
-				<li>
-					<span>{f.nombre}</span>
-					<span class="meta">{f.hecho ? `${n(f.volumen)} kg · ${signo(f.pct)}` : 'No hecho'}</span>
-				</li>
-			{/each}
-		</ul>
+		<p class="grande">{n(volumenTotal)} kg</p>
 		<div class="resumen" data-sin-contar><Boton onclick={reiniciar}>Probar de nuevo</Boton></div>
 	</div>
 </Hoja>
@@ -304,39 +282,5 @@
 		font: 700 var(--fs-num-xl) / 1 var(--font-display);
 		font-stretch: var(--stretch-condensed);
 		font-variant-numeric: tabular-nums;
-	}
-	.pct {
-		display: flex;
-		align-items: center;
-		gap: var(--space-2);
-		font: 400 var(--fs-body) / var(--lh-body) var(--font-text);
-	}
-	.ind {
-		padding: var(--space-1) var(--space-3);
-		border-radius: var(--radius);
-		font-weight: 600;
-	}
-	.ind.bajo {
-		background: var(--bajo-tint);
-		color: var(--bajo);
-	}
-	.ind.optimo {
-		background: var(--optimo-tint);
-		color: var(--optimo);
-	}
-	.ind.alto {
-		background: var(--alto-tint);
-		color: var(--alto);
-	}
-	.detalle {
-		margin: var(--space-2) 0 var(--space-2);
-	}
-	.detalle li {
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
-		gap: var(--space-2);
-		padding: var(--space-2) var(--space-3);
-		background: var(--raised);
 	}
 </style>

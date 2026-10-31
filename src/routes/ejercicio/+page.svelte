@@ -77,7 +77,7 @@
 		</label>
 	</form>
 </main>
-<BarraAccion><Boton disabled={!nombre.trim()} onclick={guardar}>Guardar</Boton></BarraAccion>
+<BarraAccion><Boton disabled={!nombre.trim() || !!duplicado} onclick={guardar}>Guardar</Boton></BarraAccion>
 
 <style>
 	form {

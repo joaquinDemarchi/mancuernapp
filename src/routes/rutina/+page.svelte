@@ -16,6 +16,7 @@
 	import Cabecera from '#lib/componentes/Cabecera.svelte';
 	import Hoja from '#lib/componentes/Hoja.svelte';
 	import HojaAgregar from '#lib/componentes/HojaAgregar.svelte';
+	import HojaObjetivo from '#lib/componentes/HojaObjetivo.svelte';
 
 	// `?dia=` abre en ese día; si no existe (o se borró), el primero.
 	let diaId = $state(page.url.searchParams.get('dia'));
@@ -37,6 +38,8 @@
 	// Hoja "Renombrar": nombre del día y "Borrar día" (con confirmación si tiene ejercicios).
 	let renombrando = $state(false);
 	let agregando = $state(false);
+	let fijando = $state(false);
+	let indiceObjetivo = $state(0);
 	let confirmando = $state(false);
 
 	function abrirRenombrar() {
@@ -98,8 +101,17 @@
 				<ul>
 					{#each dia.items as item, i (`${item.ejercicioId}-${i}`)}
 						<li>
-							<span class="nombre">{nombreDe(item.ejercicioId)}</span>
-							<span class="objetivo">{formatearObjetivo(item.objetivo)}</span>
+							<button
+								type="button"
+								class="fila"
+								onclick={() => {
+									indiceObjetivo = i;
+									fijando = true;
+								}}
+							>
+								<span class="nombre">{nombreDe(item.ejercicioId)}</span>
+								<span class="objetivo">{formatearObjetivo(item.objetivo)}</span>
+							</button>
 						</li>
 					{/each}
 				</ul>
@@ -123,6 +135,7 @@
 			{/if}
 		</Hoja>
 		<HojaAgregar bind:abierta={agregando} {dia} />
+		<HojaObjetivo bind:abierta={fijando} {dia} indice={indiceObjetivo} />
 	{/if}
 </main>
 <BarraAccion><Boton onclick={() => (agregando = true)}>Agregar ejercicio</Boton></BarraAccion>
@@ -203,8 +216,13 @@
 		padding: 0;
 		list-style: none;
 	}
-	li {
+	.fila {
 		display: flex;
+		width: 100%;
+		border: 0;
+		color: var(--ink);
+		text-align: left;
+		cursor: pointer;
 		align-items: center;
 		justify-content: space-between;
 		gap: var(--space-2);

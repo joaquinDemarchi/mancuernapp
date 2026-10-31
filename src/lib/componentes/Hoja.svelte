@@ -4,10 +4,12 @@
 	let {
 		abierta = $bindable(false),
 		titulo,
+		meta,
 		children
 	}: {
 		abierta: boolean;
 		titulo: string;
+		meta?: string;
 		children: Snippet;
 	} = $props();
 
@@ -30,7 +32,10 @@
 	<div class="contenido">
 		<span class="manija" aria-hidden="true"></span>
 		<header>
-			<h2 {id}>{titulo}</h2>
+			<div class="titulos">
+				<h2 {id}>{titulo}</h2>
+				{#if meta}<p>{meta}</p>{/if}
+			</div>
 			<button type="button" aria-label="Cerrar" onclick={() => (abierta = false)}>
 				<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
 					<path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
@@ -74,8 +79,16 @@
 		align-items: center;
 		gap: var(--space-2);
 	}
-	h2 {
+	.titulos {
 		flex: 1;
+		min-width: 0;
+	}
+	.titulos p {
+		margin: 0;
+		color: var(--ink-faint);
+		font: 400 var(--fs-meta) / var(--lh-meta) var(--font-text);
+	}
+	h2 {
 		margin: 0;
 		font: 600 var(--fs-heading) / var(--lh-heading) var(--font-display);
 		font-stretch: var(--stretch-condensed);

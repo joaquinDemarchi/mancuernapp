@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <!-- Variante maskable: misma figura, toda dentro del círculo seguro del 80 % (radio 205; esquina más lejana a 196). -->
-  <rect width="512" height="512" fill="#FFFFFF"/>
-  <g fill="#5CC8F0" transform="translate(256 256) scale(1.05) rotate(-45) translate(-256 -256)">
+  <rect width="512" height="512" fill="#FF7A3D"/>
+  <g fill="#141311" transform="translate(256 256) scale(1.05) rotate(-45) translate(-256 -256)">
     <rect x="184" y="240" width="144" height="32" rx="4"/>
     <rect x="170" y="226" width="14" height="60" rx="4"/>
     <rect x="328" y="226" width="14" height="60" rx="4"/>

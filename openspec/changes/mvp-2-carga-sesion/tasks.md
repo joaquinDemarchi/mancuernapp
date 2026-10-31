@@ -37,6 +37,7 @@
 - [x] 6.2 "Cargar un día anterior" (link sutil bajo la tarjeta Hoy): hoja con fecha (Ayer, Anteayer u otra, entre el inicio de la rutina y ayer) y día (sugerido para esa fecha); abre `/sesion?dia=&fecha=`; la sesión se guarda con esa fecha (última vez, semana y rotación la toman); si ya hay sesión esa fecha, la abre para editar; título "Ayer: Día 1" / "29/10: Día 1"; verificar en dev con Joa logueado cargar la de ayer y que el inicio sugiere el día siguiente; commit (~10k)
 - [x] 6.3 Ajustar más limpio (pedido de Joa desde el celu): por defecto solo la lista de bloques; tocar un bloque abre su editor y tocarlo de nuevo lo cierra (cardio siempre abierto); "+ Bloque" oculto por ahora; RPE y nota plegados detrás de un botón "Opcional" (abierto si ya tienen algo; muestra "· RPE 8 · nota"); verificar en dev a 390 px; commit (~4k)
 - [x] 6.4 Inicio más limpio (pedido de Joa): "Rutina activa · desde" bajo el nombre; "Ejercicios" y "Editar rutina" plegados con los días detrás de "Ver rutina" (la barra solo queda sin rutina); en "Cargar un día anterior", "Otra fecha" es un chip al lado de Ayer/Anteayer y recién ahí aparece el campo de fecha; verificar en dev a 390 px; commit (~4k)
+- [x] 6.5 Ícono unificado con la interfaz (elegido por Joa): mancuernita negra `--ground` sobre naranja `--accent` en `icon.svg` e `icon-maskable.svg`, PNG 192/512/maskable reexportados; deltas de `app-pwa` y `design-system`, `config.yaml`, decisiones y README de design; commit (~4k)
 
 ## Workflow follow-up
 

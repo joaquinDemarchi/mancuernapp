@@ -12,3 +12,12 @@ Después de la primera carga con conexión, la app SHALL mostrar la rutina, el c
 #### Scenario: Crear un extra sin señal
 - **WHEN** sin conexión el usuario crea al vuelo un ejercicio extra
 - **THEN** queda agregado a la sesión al instante y en el catálogo al sincronizar
+
+## MODIFIED Requirements
+
+### Requirement: App instalable
+La app SHALL publicarse como PWA instalable con nombre "MancuernApp", ícono de `design/icon/` (incluida la versión maskable), modo standalone y colores de fondo y tema tomados de los tokens oscuros.
+
+#### Scenario: Instalar en Android
+- **WHEN** el usuario elige "Instalar app" desde Chrome en Android
+- **THEN** queda instalada como "MancuernApp" con la mancuernita negra sobre naranja y abre sin barra del navegador

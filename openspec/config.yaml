@@ -12,7 +12,7 @@ context: |
   - SvelteKit + Firebase (Auth + Firestore con persistencia offline) + deploy en Vercel.
   - PWA instalable (manifest + service worker); debe funcionar offline y sincronizar.
   - Login con Google + lista blanca de emails (hoy solo Lio).
-  - Nombre ("MancuernApp") e ícono (mancuernita celeste en diagonal sobre fondo blanco) definidos en un único
+  - Nombre ("MancuernApp") e ícono (mancuernita negra en diagonal sobre el naranja de la app) definidos en un único
     lugar: config/app.ts + manifest.
 
   Modelo de dominio (Firestore, todo bajo users/{uid}):

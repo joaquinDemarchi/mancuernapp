@@ -69,4 +69,4 @@ Límite conocido: `--accent` sobre `--ground` en claro da 2,3:1. Por eso el prim
 
 ## Ícono
 
-`icon/icon.svg` es la fuente: mancuernita de mango corto, celeste `#5CC8F0` plano, en diagonal sobre blanco. Exportados: `icon-192.png`, `icon-512.png` e `icon-maskable-512.png` (de `icon-maskable.svg`, con toda la figura dentro del círculo seguro del 80 %). El manifest y `config/app.ts` los referencian desde acá; el nombre de la app es "MancuernApp".
+`icon/icon.svg` es la fuente: mancuernita de mango corto, negro `--ground` #141311 plano, en diagonal sobre `--accent` #FF7A3D (los colores de la interfaz). Exportados: `icon-192.png`, `icon-512.png` e `icon-maskable-512.png` (de `icon-maskable.svg`, con toda la figura dentro del círculo seguro del 80 %). El manifest y `config/app.ts` los referencian desde acá; el nombre de la app es "MancuernApp".

@@ -20,6 +20,7 @@
 - 6.2 hecha: "Cargar un día anterior" junto a "Ver días" (oculto si la rutina empezó hoy): hoja con chips Ayer/Anteayer (desde el inicio de la rutina), campo de fecha y chips de día con el sugerido para esa fecha; si la fecha ya tiene sesión, "Abrir la sesión del dd/mm". `/sesion?fecha=` (validada, anterior a hoy; si no, hoy), título "Ayer: Día 1" / "29/10: Día 1", última vez anterior a esa fecha; `Contexto` suma `fecha`; `diasAntes(n)` en `calculos.ts`. Verificado en el Browser pane con stores falsos (sin tocar el Firestore de Joa): cargar Día 1 de ayer → "Hoy: Día 2 · la última fue Día 1" y reabrir ofrece "Abrir la sesión del 30/10". Pusheado con OK de Joa (b03f9ad), deploy OK.
 - 6.3 hecha: Ajustar plegado (`editando` + `tocarBloque`), "+ Bloque" fuera de la vista (volver a mostrarlo = el botón y `agregarBloque` del commit de 3.2), RPE y nota detrás de "Opcional". Verificado a 390 px en el Browser pane. Sin pushear.
 - 6.4 hecha: inicio con la meta bajo el nombre, "Ver rutina" pliega días + Ejercicios + Editar rutina (sin `BarraAccion` si hay rutina), chip "Otra fecha" que despliega el campo. Verificado a 390 px en el Browser pane. Sin pushear.
+- 6.5 hecha: ícono con mancuernita negra sobre naranja. Gotchas al exportar PNG con Chrome headless: ventana (N+200)×(N+200) y recortar (con ancho N el borde derecho sale blanco); no poner `--` dentro de un comentario del SVG (XML inválido, no renderiza). Sin pushear.
 
 ## Checklist en el celu (5.2)
 Reinstalar o recargar la PWA para tomar el service worker nuevo. Joa la hizo completa el 31/10:

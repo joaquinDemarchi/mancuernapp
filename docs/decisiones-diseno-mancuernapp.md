@@ -98,7 +98,7 @@ Saltos: **configurables por ejercicio**; default **2,5 kg**; mínimo y default p
 - Tema **oscuro por defecto**, opción claro.
 - **Uso con una mano**: acciones principales en la mitad inferior, botones táctiles ≥ 48 px.
 - Sin referencias visuales previas → en el MVP UX se proponen 2–3 direcciones para elegir.
-- Nombre: **MancuernApp**. Ícono: **mancuernita celeste en diagonal sobre fondo blanco**.
+- Nombre: **MancuernApp**. Ícono: **mancuernita negra en diagonal sobre el naranja de la app** (31/10/2026: antes celeste sobre blanco; se unificó con los colores de la interfaz).
 
 Herramientas de diseño (verificar disponibilidad en la sesión de PC2):
 | Herramienta | Uso | Cuándo |

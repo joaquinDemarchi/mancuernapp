@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- MancuernApp: mancuernita celeste en diagonal sobre blanco. Celeste #5CC8F0 (token `bajo` oscuro). -->
-  <rect width="512" height="512" fill="#FFFFFF"/>
-  <g fill="#5CC8F0" transform="translate(256 256) scale(1.2) rotate(-45) translate(-256 -256)">
+  <!-- MancuernApp: mancuernita negra #141311 (ground) en diagonal sobre naranja #FF7A3D (accent). -->
+  <rect width="512" height="512" fill="#FF7A3D"/>
+  <g fill="#141311" transform="translate(256 256) scale(1.2) rotate(-45) translate(-256 -256)">
     <rect x="184" y="240" width="144" height="32" rx="4"/>
     <rect x="170" y="226" width="14" height="60" rx="4"/>
     <rect x="328" y="226" width="14" height="60" rx="4"/>

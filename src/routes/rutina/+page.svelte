@@ -7,6 +7,8 @@
 		borrarDia,
 		fechaCorta,
 		formatearObjetivo,
+		moverDia,
+		moverItem,
 		renombrarDia,
 		renombrarRutina,
 		rutinaActiva
@@ -17,6 +19,7 @@
 	import Hoja from '#lib/componentes/Hoja.svelte';
 	import HojaAgregar from '#lib/componentes/HojaAgregar.svelte';
 	import HojaObjetivo from '#lib/componentes/HojaObjetivo.svelte';
+	import ListaOrdenable from '#lib/componentes/ListaOrdenable.svelte';
 
 	// `?dia=` abre en ese día; si no existe (o se borró), el primero.
 	let diaId = $state(page.url.searchParams.get('dia'));
@@ -74,17 +77,28 @@
 		</label>
 
 		<div class="pestanas">
-			<div role="tablist" aria-label="Días">
-				{#each $rutinaActiva.dias as d (d.id)}
+			<!-- Mantener apretado el chip ~300 ms lo arrastra; un toque corto elige el día. -->
+			<ListaOrdenable
+				items={$rutinaActiva.dias}
+				clave={(d) => d.id}
+				nombre={(d) => d.nombre}
+				eje="x"
+				demora={300}
+				rol="tablist"
+				etiqueta="Días"
+				onmover={moverDia}
+			>
+				{#snippet fila(d, manija)}
 					<button
+						{...manija}
 						type="button"
 						role="tab"
 						aria-selected={d.id === dia.id}
 						aria-controls="dia-panel"
 						onclick={() => (diaId = d.id)}>{d.nombre}</button
 					>
-				{/each}
-			</div>
+				{/snippet}
+			</ListaOrdenable>
 			<button type="button" class="mas" aria-label="Agregar día" onclick={() => (diaId = agregarDia())}>
 				<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
 					<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
@@ -98,23 +112,33 @@
 				<button type="button" class="texto" onclick={abrirRenombrar}>Renombrar</button>
 			</div>
 			{#if dia.items.length}
-				<ul>
-					{#each dia.items as item, i (`${item.ejercicioId}-${i}`)}
-						<li>
+				<ListaOrdenable
+					items={dia.items.map((item, indice) => ({ ...item, indice }))}
+					clave={(it) => it.ejercicioId}
+					nombre={(it) => nombreDe(it.ejercicioId)}
+					onmover={(desde, hasta) => moverItem(dia.id, desde, hasta)}
+				>
+					{#snippet fila(item, manija)}
+						<div class="item">
+							<button {...manija} type="button" class="manija" aria-label="Mover {nombreDe(item.ejercicioId)}">
+								<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+									<path d="M5 9h14M5 15h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
+								</svg>
+							</button>
 							<button
 								type="button"
 								class="fila"
 								onclick={() => {
-									indiceObjetivo = i;
+									indiceObjetivo = item.indice;
 									fijando = true;
 								}}
 							>
 								<span class="nombre">{nombreDe(item.ejercicioId)}</span>
 								<span class="objetivo">{formatearObjetivo(item.objetivo)}</span>
 							</button>
-						</li>
-					{/each}
-				</ul>
+						</div>
+					{/snippet}
+				</ListaOrdenable>
 			{:else}
 				<p class="vacio">Este día no tiene ejercicios</p>
 			{/if}
@@ -176,9 +200,10 @@
 		margin-bottom: var(--space-3);
 		overflow-x: auto;
 	}
-	[role='tablist'] {
-		display: flex;
-		gap: var(--space-2);
+	[role='tab'] {
+		/* Mantener apretado arrastra: sin menú contextual ni selección */
+		-webkit-touch-callout: none;
+		user-select: none;
 	}
 	[role='tab'],
 	.mas {
@@ -209,14 +234,28 @@
 		justify-content: space-between;
 		margin-bottom: var(--space-2);
 	}
-	ul {
+	.item {
+		display: flex;
+		border-radius: var(--radius);
+		background: var(--surface);
+	}
+	.manija {
+		flex: none;
 		display: grid;
-		gap: var(--space-1);
-		margin: 0;
-		padding: 0;
-		list-style: none;
+		place-items: center;
+		width: var(--touch-min);
+		min-height: 64px;
+		border: 0;
+		border-radius: var(--radius);
+		background: transparent;
+		color: var(--ink-muted);
+		cursor: grab;
+		/* Solo la manija bloquea el scroll: el resto de la fila se desplaza normal */
+		touch-action: none;
 	}
 	.fila {
+		flex: 1;
+		min-width: 0;
 		display: flex;
 		width: 100%;
 		border: 0;
@@ -227,9 +266,9 @@
 		justify-content: space-between;
 		gap: var(--space-2);
 		min-height: 64px;
-		padding: var(--space-2) var(--space-4);
+		padding: var(--space-2) var(--space-4) var(--space-2) 0;
 		border-radius: var(--radius);
-		background: var(--surface);
+		background: transparent;
 	}
 	.nombre {
 		font: 600 var(--fs-heading) / var(--lh-heading) var(--font-display);

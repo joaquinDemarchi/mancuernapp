@@ -2,6 +2,8 @@
 
 ## Estado
 - 1 hecha (31/10/2026): change propuesto. Formato, alcance, variantes y datos elegidos por Joa (ver abajo).
+- 2 hecha: `/prototipo` (`datos.ts` con 3 días falsos; Día 2 sugerido con los 5 tipos y Sentadilla en 2 bloques). Sin login (excepción en `+layout.svelte`, sacarla al borrar). Contador de toques en la cabecera ("Reiniciar" y el selector de variante no cuentan). Cada −/+ marca hecho; destildar vuelve a la última vez. Verificado en el Browser pane a 375 px: día sin cambios = 8 toques (7 ✓ + Terminar); ajustes en A y B; resumen con % e indicador.
+- Al arrancar `mvp-2-carga-sesion`: borrar `src/routes/prototipo/` y la excepción del layout.
 
 ## Decisiones previas (Joa, 31/10/2026)
 - Formato: ruta descartable en la app con los componentes reales (no canvas ni HTML suelto).

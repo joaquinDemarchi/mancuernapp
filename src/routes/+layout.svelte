@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../../design/tokens.css';
 	import '../app.css';
+	import { page } from '$app/state';
 	import { app } from '#config/app';
 	import { sesion } from '#lib/acceso.ts';
 	import Login from '#lib/componentes/Login.svelte';
@@ -19,7 +20,10 @@
 </svelte:head>
 
 <!-- Mientras carga solo se ve el fondo, así no parpadea el login. -->
-{#if $sesion.estado === 'sin-sesion'}
+<!-- /prototipo (descartable, datos falsos) no pide login: se prueba en el celu sin Firebase. -->
+{#if page.url.pathname.startsWith('/prototipo')}
+	{@render children()}
+{:else if $sesion.estado === 'sin-sesion'}
 	<Login />
 {:else if $sesion.estado === 'con-sesion'}
 	{@render children()}

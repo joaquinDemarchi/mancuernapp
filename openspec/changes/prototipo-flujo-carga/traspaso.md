@@ -12,4 +12,6 @@
 - Datos falsos en memoria, sin Firestore.
 
 ## Decisiones para el MVP 2
-(pendiente: después de la prueba en el celu)
+- Ajustar: variante **B** (hoja abajo), elegida por Joa en el celu (31/10/2026).
+- Bug de la prueba: dos `Stepper` lado a lado (series y reps) cortaban el número detrás del `+` en el celu de Joa. En el prototipo se apilaron en una columna (sin cortes a 360 px; con 2 bloques la hoja hace scroll). En el MVP 2: steppers apilados, o achicar el número del `Stepper` si se quieren dos columnas.
+- (pendiente: el resto de las impresiones de Joa)

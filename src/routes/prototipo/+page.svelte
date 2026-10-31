@@ -261,7 +261,8 @@
 	}
 	.steppers {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		/* Dos columnas cortaban el número en celus angostos (prueba de Joa) */
+		grid-template-columns: 1fr;
 		gap: var(--space-3);
 	}
 	.ancho {

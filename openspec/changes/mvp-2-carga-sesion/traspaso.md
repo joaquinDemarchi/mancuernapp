@@ -12,7 +12,8 @@
 - 3.3 hecha: RPE (botones `aria-pressed` en grilla de 5; tocar el elegido lo borra) y nota (`change`) en `HojaAjustar`; el registro se arma desde el estado de la hoja (rpe/nota vacíos se limpian en `sesion.ts`). Verificado en el Chrome de Joa: "· RPE 8", borrar el RPE y nota + RPE persisten al recargar.
 - 4.1 hecha: `HojaAgregar` con props `titulo`, `yaEstan`, `contexto` y `onagregar(id, tipo)` (el tipo viaja porque un ejercicio recién creado puede no estar todavía en el store). Extra al pie de `/sesion`: se guarda hecho al instante y la fila dice "Extra · …". Verificado en el Chrome de Joa: agregar "Remo con mancuerna" (la rutina no cambia), crear al vuelo "Joa plancha prueba" (tiempo → "Extra · 3×30 s") y "Agregar ejercicio" del editor (agregado y quitado de nuevo).
 - **Más datos de prueba**: ejercicio `Joa plancha prueba` en el catálogo (no hay borrar en la app: REST `DELETE` en `users/<uid>/ejercicios/<id>`).
-- Próxima: 4.2.
+- 4.2 hecha: "Borrar" en la cabecera de `/sesion` (solo con sesión) con hoja de confirmación (aviso `--alto`, Cancelar + "Sí, borrar sesión"). "Listo" en la sesión terminada ya venía de 3.1. Verificado en el Chrome de Joa: "Ver sesión" → editar (sigue `terminada`) → Borrar → inicio con "Empezar Día 2"; en el servidor solo queda `joa-prueba-ayer` (la sesión de hoy de prueba ya no está).
+- Próxima: 5.1.
 
 ## Decisiones tomadas con Joa (31/10/2026)
 - Bloques: "+ Bloque", quitar y **desarmar** en series sueltas (sin "Juntar").

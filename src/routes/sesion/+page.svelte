@@ -3,8 +3,8 @@
 	import { page } from '$app/state';
 	import { desdeObjetivo, formatear, formatearVolumen, hoy, semana, sesionDeHoy, ultimaVez, volumen, type Bloque } from '#lib/calculos.ts';
 	import { ejercicios, type Tipo } from '#lib/catalogo.ts';
-	import { formatearObjetivo, rutinaActiva, type Objetivo } from '#lib/rutina.ts';
-	import { guardarRegistro, quitarRegistro, sesiones, terminar } from '#lib/sesion.ts';
+	import { fechaCorta, formatearObjetivo, rutinaActiva, type Objetivo } from '#lib/rutina.ts';
+	import { borrarSesion, guardarRegistro, quitarRegistro, sesiones, terminar } from '#lib/sesion.ts';
 	import Boton from '#lib/componentes/Boton.svelte';
 	import BarraAccion from '#lib/componentes/BarraAccion.svelte';
 	import Cabecera from '#lib/componentes/Cabecera.svelte';
@@ -101,6 +101,12 @@
 		deHoy ? formatearVolumen(volumen(deHoy.registros, (id) => tipoDe(id))) : formatearVolumen(0)
 	);
 
+	let borrando = $state(false);
+	function borrar() {
+		if (deHoy) borrarSesion(deHoy.id);
+		goto('/');
+	}
+
 	function terminarSesion() {
 		if (!deHoy) return;
 		if (deHoy.terminada) return goto('/');
@@ -116,7 +122,11 @@
 			titulo="Hoy: {dia.nombre}"
 			meta="{$rutinaActiva.nombre} · semana {n} · {hechos}/{filas.length} hechos"
 			volver="/"
-		/>
+		>
+			{#snippet accion()}
+				{#if deHoy}<button class="texto" onclick={() => (borrando = true)}>Borrar</button>{/if}
+			{/snippet}
+		</Cabecera>
 		<ul>
 			{#each filas as f (f.ejercicioId)}
 				{@const v = valores(f)}
@@ -163,6 +173,23 @@
 					onguardar={(r) => ctx && guardarRegistro(ctx, r)}
 				/>
 			{/key}
+		{/if}
+
+		{#if deHoy}
+			<Hoja
+				bind:abierta={borrando}
+				titulo="Sesión de hoy"
+				meta="{dia.nombre} · {fechaCorta(deHoy.fecha)} · {deHoy.terminada ? 'terminada' : 'en curso'}"
+			>
+				<p class="aviso" role="alert">
+					{hechos === 1 ? 'Se borra el ejercicio cargado hoy.' : `Se borran los ${hechos} ejercicios cargados hoy.`} No se puede
+					deshacer.
+				</p>
+				<div class="acciones">
+					<Boton variante="secundario" onclick={() => (borrando = false)}>Cancelar</Boton>
+					<Boton onclick={borrar}>Sí, borrar sesión</Boton>
+				</div>
+			</Hoja>
 		{/if}
 
 		<Hoja bind:abierta={resumen} titulo="Sesión terminada" meta="{dia.nombre} · semana {n} · {hechos} de {filas.length} ejercicios">
@@ -260,6 +287,16 @@
 		margin: 0;
 		color: var(--ink-faint);
 		font: 400 var(--fs-meta) / var(--lh-meta) var(--font-text);
+	}
+	.aviso {
+		margin: 0;
+		color: var(--alto);
+		font: 600 var(--fs-body) / var(--lh-body) var(--font-text);
+	}
+	.acciones {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--space-2);
 	}
 	.volumen {
 		display: grid;

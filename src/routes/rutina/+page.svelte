@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { ejercicios } from '#lib/catalogo.ts';
@@ -45,9 +46,14 @@
 	let indiceObjetivo = $state(0);
 	let confirmando = $state(false);
 
-	function abrirRenombrar() {
+	let campoDia: HTMLInputElement | undefined = $state();
+
+	// showModal enfoca la X; se viene a escribir el nombre.
+	async function abrirRenombrar() {
 		confirmando = false;
 		renombrando = true;
+		await tick();
+		campoDia?.focus();
 	}
 
 	function cambiarNombreDia(e: Event & { currentTarget: HTMLInputElement }) {
@@ -148,7 +154,7 @@
 		<Hoja bind:abierta={renombrando} titulo="Renombrar día">
 			<label class="campo">
 				<span>Nombre del día</span>
-				<input value={dia.nombre} onchange={cambiarNombreDia} autocomplete="off" />
+				<input bind:this={campoDia} value={dia.nombre} onchange={cambiarNombreDia} autocomplete="off" />
 			</label>
 			{#if $rutinaActiva.dias.length > 1}
 				<p class="meta">Para moverlo, mantené apretado el día en las pestañas.</p>

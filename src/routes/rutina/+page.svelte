@@ -151,6 +151,7 @@
 				<input value={dia.nombre} onchange={cambiarNombreDia} autocomplete="off" />
 			</label>
 			{#if $rutinaActiva.dias.length > 1}
+				<p class="meta">Para moverlo, mantené apretado el día en las pestañas.</p>
 				{#if confirmando}
 					<p class="aviso" role="alert">
 						«{dia.nombre}» tiene {cantidad(dia.items.length)}. Tocá de nuevo para borrarlo.

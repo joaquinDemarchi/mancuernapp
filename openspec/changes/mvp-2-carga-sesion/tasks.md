@@ -10,7 +10,7 @@
 
 ## 2. Datos de sesión e inicio (~16k)
 
-- [ ] 2.1 Crear `src/lib/sesion.ts` (tipos `Sesion`, `Registro`, `Bloque`; store `sesiones` con `onSnapshot` de `where('rutinaId','==',…)`, re-suscripción al cambiar la rutina, baja al salir, `serverTimestamps: 'estimate'`; `guardarRegistro` que crea el doc en el primer toque, `quitarRegistro`, `terminar`, `borrarSesion`, todas sin `await`); verificar en dev desde la consola con Joa logueado que crear, editar y borrar una sesión de prueba se refleja en el store y en Firestore, y dejar Firestore como estaba; commit (~8k)
+- [x] 2.1 Crear `src/lib/sesion.ts` (tipos `Sesion`, `Registro`, `Bloque`; store `sesiones` con `onSnapshot` de `where('rutinaId','==',…)`, re-suscripción al cambiar la rutina, baja al salir, `serverTimestamps: 'estimate'`; `guardarRegistro` que crea el doc en el primer toque, `quitarRegistro`, `terminar`, `borrarSesion`, todas sin `await`); verificar en dev desde la consola con Joa logueado que crear, editar y borrar una sesión de prueba se refleja en el store y en Firestore, y dejar Firestore como estaba; commit (~8k)
 - [ ] 2.2 Inicio con rutina (variante B): tarjeta "Hoy" con día sugerido, semana, chips y "Empezar Día X" → `/sesion?dia=`; estados "Seguir Día X" (en curso) y "Ver sesión" (terminada, con volumen); días con "hecho el dd/mm"; barra con "Ejercicios" y "Editar rutina" secundarias; ruta `/sesion` vacía con volver; verificar en dev a 390 px los escenarios "Rotación" y "Cambiar el día" y el inicio sin sesiones ("Primera vez"); commit (~8k)
 
 ## 3. Pantalla de sesión y Ajustar (~32k)

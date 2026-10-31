@@ -47,10 +47,10 @@ Tocar el nombre de un ejercicio (salvo calentamiento) SHALL abrir la hoja Ajusta
 - **THEN** se marca o desmarca como hecho sin abrir Ajustar
 
 ### Requirement: Bloques y desarmar
-En Ajustar, el usuario SHALL poder agregar un bloque (copia del último), quitar un bloque (salvo el único) y desarmar un bloque de 2 o más series en bloques de 1 serie con los mismos valores.
+En Ajustar, el usuario SHALL poder quitar un bloque (salvo el único) y desarmar un bloque de 2 o más series en bloques de 1 serie con los mismos valores; el editor de un bloque SHALL abrirse al tocarlo. Agregar un bloque queda oculto por ahora.
 
 #### Scenario: Desarmar
-- **WHEN** Press banca tiene un bloque 3×10 · 40 kg y el usuario toca "Desarmar"
+- **WHEN** Press banca tiene un bloque 3×10 · 40 kg y el usuario lo toca y toca "Desarmar"
 - **THEN** quedan tres filas "Serie 1", "Serie 2", "Serie 3" de 1×10 · 40 kg
 
 #### Scenario: Última serie distinta
@@ -58,7 +58,7 @@ En Ajustar, el usuario SHALL poder agregar un bloque (copia del último), quitar
 - **THEN** la fila de la sesión muestra "1×10 · 40 kg + 1×10 · 40 kg + 1×8 · 40 kg"
 
 ### Requirement: RPE y nota opcionales
-Ajustar SHALL ofrecer RPE con chips 6 a 10 (tocar el elegido lo borra) y una nota de texto, ambos opcionales y guardados con el ejercicio.
+Ajustar SHALL ofrecer, detrás de un botón "Opcional", RPE con chips 6 a 10 (tocar el elegido lo borra) y una nota de texto, ambos opcionales y guardados con el ejercicio.
 
 #### Scenario: RPE
 - **WHEN** el usuario elige RPE 8 en Sentadilla

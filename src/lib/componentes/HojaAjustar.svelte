@@ -28,12 +28,17 @@
 	// Se monta una vez por ejercicio abierto (la página la envuelve en un #key): copia los valores al abrir.
 	let bloques = $state<Bloque[]>(untrack(() => structuredClone($state.snapshot(registro?.bloques ?? inicial))));
 	let elegido = $state(0);
+	// Por defecto solo se ven los bloques: tocar uno abre su editor (y tocarlo de nuevo lo cierra).
+	let editando = $state(false);
+	// RPE y nota plegados; abiertos si ya tienen algo.
+	let opcional = $state(untrack(() => registro?.rpe !== undefined || !!registro?.nota));
 	let hecho = $state(untrack(() => !!registro));
 	let rpe = $state(untrack(() => registro?.rpe));
 	let nota = $state(untrack(() => registro?.nota ?? ''));
 
 	const tipo = $derived(ejercicio.tipo);
-	const b = $derived(bloques[elegido]);
+	// Cardio no tiene lista de bloques: su editor (minutos) se ve siempre.
+	const b = $derived(editando || ejercicio.tipo === 'cardio' ? bloques[elegido] : undefined);
 	const kg = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 1 });
 	const nombreBloque = (x: Bloque, i: number) => `${x.series === 1 ? 'Serie' : 'Bloque'} ${i + 1}`;
 
@@ -55,9 +60,9 @@
 		guardar(bloques.map((x, i) => (i === elegido ? { ...x, [campo]: valor } : x)));
 	}
 
-	function agregarBloque() {
-		guardar([...bloques, { ...bloques[bloques.length - 1] }]);
-		elegido = bloques.length - 1;
+	function tocarBloque(i: number) {
+		editando = !(editando && i === elegido);
+		elegido = i;
 	}
 
 	function quitarBloque() {
@@ -81,12 +86,17 @@
 	{#if tipo !== 'cardio'}
 		<div class="bloques" role="radiogroup" aria-label="Bloques">
 			{#each bloques as x, i (i)}
-				<button type="button" role="radio" aria-checked={i === elegido} class="bloque" onclick={() => (elegido = i)}>
+				<button
+					type="button"
+					role="radio"
+					aria-checked={editando && i === elegido}
+					class="bloque"
+					onclick={() => tocarBloque(i)}
+				>
 					<span class="etiqueta">{nombreBloque(x, i)}</span>
 					<span class="valor">{formatear(tipo, [x])}</span>
 				</button>
 			{/each}
-			<button type="button" class="agregar" onclick={agregarBloque}>+ Bloque</button>
 		</div>
 	{/if}
 
@@ -140,19 +150,24 @@
 		</section>
 	{/if}
 
-	<fieldset class="rpe">
-		<legend>RPE (opcional)</legend>
-		<div>
-			{#each [6, 7, 8, 9, 10] as n (n)}
-				<button type="button" aria-pressed={rpe === n} onclick={() => elegirRpe(n)}>{n}</button>
-			{/each}
-		</div>
-	</fieldset>
+	<button type="button" class="texto opcional" aria-expanded={opcional} onclick={() => (opcional = !opcional)}>
+		Opcional{rpe !== undefined ? ` · RPE ${rpe}` : ''}{nota.trim() ? ' · nota' : ''}
+	</button>
+	{#if opcional}
+		<fieldset class="rpe">
+			<legend>RPE</legend>
+			<div>
+				{#each [6, 7, 8, 9, 10] as n (n)}
+					<button type="button" aria-pressed={rpe === n} onclick={() => elegirRpe(n)}>{n}</button>
+				{/each}
+			</div>
+		</fieldset>
 
-	<label class="nota">
-		<span>Nota (opcional)</span>
-		<textarea bind:value={nota} onchange={() => guardar()}></textarea>
-	</label>
+		<label class="nota">
+			<span>Nota</span>
+			<textarea bind:value={nota} onchange={() => guardar()}></textarea>
+		</label>
+	{/if}
 
 	<Boton onclick={listo}>Listo</Boton>
 </Hoja>
@@ -191,14 +206,9 @@
 		font-stretch: var(--stretch-condensed);
 		font-variant-numeric: tabular-nums;
 	}
-	.agregar {
-		min-height: var(--touch-min);
-		border: 2px dashed var(--control);
-		border-radius: var(--radius);
-		background: transparent;
-		color: var(--ink);
-		font: 600 var(--fs-body) / var(--lh-body) var(--font-text);
-		cursor: pointer;
+	.opcional {
+		justify-self: start;
+		margin-left: calc(var(--space-3) * -1);
 	}
 	.editor {
 		display: grid;
@@ -283,7 +293,6 @@
 	.rpe button:focus-visible,
 	textarea:focus-visible,
 	.bloque:focus-visible,
-	.agregar:focus-visible,
 	.quitar:focus-visible {
 		outline: 2px solid var(--focus);
 		outline-offset: 2px;

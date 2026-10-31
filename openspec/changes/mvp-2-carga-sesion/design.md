@@ -95,6 +95,7 @@ Medidas comunes del MVP 1: margen `--space-4`, cabecera 64 px, filas de 64 px m�
 - **Cargar un día anterior**: link sutil (botón texto) bajo la tarjeta Hoy → hoja "Cargar un día anterior" con chips de fecha "Ayer", "Anteayer" y un campo de fecha (mín. el inicio de la rutina, máx. ayer) y chips de días con el sugerido para esa fecha (`diaSugerido(rutina, sesiones, fecha)`). Botón "Cargar Día X" → `/sesion?dia=&fecha=`. Si esa fecha ya tiene sesión: "Abrir la sesión del dd/mm" (se edita igual que la de hoy). Sigue habiendo una sesión por fecha; la sesión lleva su fecha real, así la rotación, la semana y la "última vez" la toman en orden.
 - `/sesion` toma `?fecha=` (por defecto `hoy()`): título "Hoy: Día 1", "Ayer: Día 1" o "29/10: Día 1"; la "última vez" es la anterior a esa fecha; el resumen dice solo "Queda guardada." si no es hoy. `Contexto` suma `fecha`.
 - **Inicio más limpio**: la lista de días se oculta detrás de "Ver días" (botón texto); desplegada muestra cada día con "N ejercicios · hecho el dd/mm" y los nombres de sus ejercicios, solo lectura. Editar sigue en "Editar rutina".
+- **Ajustar más limpio** (6.3): al abrir solo se ven los bloques; tocar uno abre su editor (tocarlo de nuevo lo cierra); cardio muestra siempre sus minutos. "+ Bloque" se oculta por ahora (Joa no lo usa; la función se puede volver a mostrar). RPE y nota van plegados detrás de "Opcional" (abierto al entrar si ya tienen algo; el botón resume "· RPE 8 · nota").
 
 ## Risks / Trade-offs
 

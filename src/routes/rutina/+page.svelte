@@ -141,7 +141,12 @@
 								}}
 							>
 								<span class="nombre">{nombreDe(item.ejercicioId)}</span>
-								<span class="objetivo">{formatearObjetivo(item.objetivo)}</span>
+								{#if formatearObjetivo(item.objetivo)}
+									<span class="objetivo">{formatearObjetivo(item.objetivo)}</span>
+								{:else if $ejercicios?.find((e) => e.id === item.ejercicioId)?.tipo !== 'calentamiento'}
+									<!-- Sin esto no se nota que la fila se toca para fijarlo -->
+									<span class="sin-objetivo">Sin objetivo</span>
+								{/if}
 							</button>
 						</div>
 					{/snippet}
@@ -288,6 +293,11 @@
 		font: 700 var(--fs-heading) / var(--lh-heading) var(--font-display);
 		font-stretch: var(--stretch-condensed);
 		font-variant-numeric: tabular-nums;
+	}
+	.sin-objetivo {
+		flex: none;
+		color: var(--ink-faint);
+		font: 400 var(--fs-meta) / var(--lh-meta) var(--font-text);
 	}
 	.vacio {
 		padding: var(--space-6) 0;

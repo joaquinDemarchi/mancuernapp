@@ -8,7 +8,8 @@
 - 2.2 hecha: tarjeta "Hoy" en el inicio (chips con binding de función `bind:valor={() => dia.id, (v) => (elegido = v)}`), estados Empezar/Seguir/Ver sesión, "hecho el dd/mm", barra con dos secundarias, `/sesion` vacía. `formatearVolumen` y `diaMes` sumados a `calculos.ts`. Verificado: rotación, cambiar el día, primera vez, en curso y terminada (Chrome de Joa con el store forzado) y 390 px en el Browser pane.
 - 3.1 hecha: `/sesion` con filas, ✓, calentamiento por el nombre, Terminar con hoja de resumen. El ✓ de primera vez y el cuerpo ponen `ajustando = fila` (la hoja llega en 3.2). Verificado en el Chrome de Joa: sin cambios, destildar, entrar y salir sin cargar (0 docs de hoy en el servidor), cerrar a mitad ("Seguir Día 1") y volumen 3.400 kg.
 - **Datos de prueba en Firestore de Joa** (borrar al final del change): sesión `joa-prueba-ayer` (Día 1, 30/10, creada por REST) y la sesión de hoy (31/10, terminada). Para borrarlas: REST `DELETE` o `borrarSesion(id)` desde la consola.
-- Próxima: 3.2.
+- 3.2 hecha: `HojaAjustar.svelte` (bloques como `role="radio"`, editor en `--ground`, + Bloque, Desarmar, quitar, Listo). Copia los valores al abrir (`untrack`) y la página la envuelve en `{#key ejercicioId}`. `Stepper` suma la prop `detalle` ("±2,5" a la derecha). Verificado: subir kg, desarmar y última serie distinta con datos reales; 360 px sin cortes (nombre largo y 122,5 kg) y cardio sin lista.
+- Próxima: 3.3.
 
 ## Decisiones tomadas con Joa (31/10/2026)
 - Bloques: "+ Bloque", quitar y **desarmar** en series sueltas (sin "Juntar").

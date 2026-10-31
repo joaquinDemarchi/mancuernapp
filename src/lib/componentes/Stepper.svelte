@@ -6,6 +6,7 @@
 		max = Infinity,
 		decimales = 0,
 		etiqueta,
+		detalle,
 		oncambio
 	}: {
 		/** `null` = vacío: muestra "–" hasta el primer toque. */
@@ -15,6 +16,8 @@
 		max?: number;
 		decimales?: number;
 		etiqueta: string;
+		/** Texto chico a la derecha de la etiqueta (p. ej. el salto "±2,5"). */
+		detalle?: string;
 		oncambio?: (valor: number) => void;
 	} = $props();
 
@@ -42,7 +45,10 @@
 </script>
 
 <div class="stepper">
-	<label for={id}>{etiqueta}</label>
+	<div class="etiquetas">
+		<label for={id}>{etiqueta}</label>
+		{#if detalle}<span>{detalle}</span>{/if}
+	</div>
 	<div class="fila">
 		<button type="button" aria-label="Bajar {etiqueta}" disabled={valor !== null && valor <= min} onclick={bajar}
 			>−</button
@@ -65,6 +71,14 @@
 	.stepper {
 		display: grid;
 		gap: var(--space-1);
+	}
+	.etiquetas {
+		display: flex;
+		justify-content: space-between;
+	}
+	span {
+		color: var(--ink-faint);
+		font: 400 var(--fs-meta) / var(--lh-meta) var(--font-text);
 	}
 	label {
 		color: var(--ink-muted);

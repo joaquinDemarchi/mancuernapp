@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { formatear, formatearVolumen, hoy, semana, sesionDeHoy, ultimaVez, volumen, type Bloque } from '#lib/calculos.ts';
+	import { desdeObjetivo, formatear, formatearVolumen, hoy, semana, sesionDeHoy, ultimaVez, volumen, type Bloque } from '#lib/calculos.ts';
 	import { ejercicios } from '#lib/catalogo.ts';
 	import { formatearObjetivo, rutinaActiva, type Objetivo } from '#lib/rutina.ts';
 	import { guardarRegistro, quitarRegistro, sesiones, terminar } from '#lib/sesion.ts';
@@ -9,6 +9,7 @@
 	import BarraAccion from '#lib/componentes/BarraAccion.svelte';
 	import Cabecera from '#lib/componentes/Cabecera.svelte';
 	import Hoja from '#lib/componentes/Hoja.svelte';
+	import HojaAjustar from '#lib/componentes/HojaAjustar.svelte';
 
 	$effect(() => {
 		if ($rutinaActiva === null) goto('/');
@@ -64,6 +65,11 @@
 
 	// Ejercicio abierto en Ajustar.
 	let ajustando = $state<Fila>();
+	let ajustarAbierta = $state(false);
+	function ajustar(f: Fila) {
+		ajustando = f;
+		ajustarAbierta = true;
+	}
 
 	// ✓: hecho → lo quita; con última vez → la copia; primera vez → abre Ajustar.
 	function tocarCheck(f: Fila) {
@@ -71,13 +77,13 @@
 		if (registro(f.ejercicioId)) return quitarRegistro(ctx, f.ejercicioId);
 		const u = tipoDe(f.ejercicioId) === 'calentamiento' ? [{ series: 1 }] : ultima(f);
 		if (u) return guardarRegistro(ctx, { ejercicioId: f.ejercicioId, bloques: u, hecho: true });
-		ajustando = f;
+		ajustar(f);
 	}
 
 	// Cuerpo: el calentamiento se marca/desmarca; el resto abre Ajustar.
 	function tocarCuerpo(f: Fila) {
 		if (tipoDe(f.ejercicioId) === 'calentamiento') tocarCheck(f);
-		else ajustando = f;
+		else ajustar(f);
 	}
 
 	let resumen = $state(false);
@@ -124,6 +130,22 @@
 				</li>
 			{/each}
 		</ul>
+
+		{#if ajustando && ejercicio(ajustando.ejercicioId)}
+			{@const f = ajustando}
+			{@const e = ejercicio(f.ejercicioId)!}
+			{@const u = ultima(f)}
+			{#key f.ejercicioId}
+				<HojaAjustar
+					bind:abierta={ajustarAbierta}
+					ejercicio={e}
+					registro={registro(f.ejercicioId)}
+					ultima={u}
+					inicial={u ?? [desdeObjetivo(e.tipo, f.objetivo)]}
+					onguardar={(r) => ctx && guardarRegistro(ctx, r)}
+				/>
+			{/key}
+		{/if}
 
 		<Hoja bind:abierta={resumen} titulo="Sesión terminada" meta="{dia.nombre} · semana {n} · {hechos} de {filas.length} ejercicios">
 			<div class="volumen">

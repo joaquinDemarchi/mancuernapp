@@ -121,7 +121,11 @@
 		</label>
 		{#if duplicadoNuevo}<p class="error" role="alert">Ya existe «{duplicadoNuevo.nombre}»</p>{/if}
 		<OpcionesChip bind:valor={tipo} opciones={tipos} leyenda="Tipo" />
-		<p class="meta">Saltos por defecto: 2,5 kg y ±1 rep. Se cambian después en Ejercicios.</p>
+		{#if tipo === 'peso'}
+			<p class="meta">Saltos por defecto: 2,5 kg y ±1 rep. Se cambian después en Ejercicios.</p>
+		{:else if tipo === 'reps' || tipo === 'tiempo'}
+			<p class="meta">Salto por defecto: {tipo === 'reps' ? '±1 rep' : '±5 s'}. Se cambia después en Ejercicios.</p>
+		{/if}
 		<Boton disabled={!nombre.trim() || !!duplicadoNuevo || creando} onclick={crearYAgregar}>Crear y agregar</Boton>
 	{/if}
 </Hoja>

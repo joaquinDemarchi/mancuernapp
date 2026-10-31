@@ -48,7 +48,7 @@ Decisiones tomadas con Joa (30/10/2026):
 - La manija (botón de 48 × 64 px con ícono de dos rayas) es el único lugar que arranca el arrastre: `pointerdown` → `setPointerCapture`, `touch-action: none` solo en la manija (el resto de la fila hace scroll normal).
 - Mientras arrastra: la fila sigue al dedo (`transform`), queda con `--raised` + `--elevation-float`, y en su lugar queda un hueco (borde punteado `--control`, 64 px). Al cruzar la mitad de la vecina se intercambian. `pointerup` → `onmover(desde, hasta)` una sola vez (una escritura).
 - Eje `y` para ejercicios, eje `x` para las pestañas de días (mismo componente con prop `eje`).
-- Teclado: con la manija enfocada, `↑/↓` (o `←/→`) mueve un lugar; `aria-label="Mover <nombre>"` y un `aria-live` que anuncia la nueva posición.
+- Teclado: con la manija enfocada, `↑/↓` mueve un lugar (en las pestañas `←/→` cambian de día, como en cualquier tablist, y `Alt+←/→` lo mueve); `aria-label="Mover <nombre>"` y un `aria-live` que anuncia la nueva posición.
 - Respeta `prefers-reduced-motion` (sin rotación ni transición de vuelta).
 - **Alternativa:** `svelte-dnd-action` → descartada: arrastra desde toda la fila (pelea con el scroll) y suma una dependencia para ~120 líneas.
 

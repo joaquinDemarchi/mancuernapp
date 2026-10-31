@@ -155,6 +155,13 @@
 		const i = vista.findIndex((it) => clave(it) === k);
 		const j = e.key === atras ? i - 1 : i + 1;
 		if (j < 0 || j >= vista.length) return;
+		// En pestañas las flechas pasan a la vecina (y la eligen); Alt + flecha la mueve.
+		if (rol === 'tablist' && !e.altKey) {
+			const vecina = contenedor.querySelector<HTMLElement>(`[data-manija="${CSS.escape(clave(vista[j]))}"]`);
+			vecina?.focus();
+			vecina?.click();
+			return;
+		}
 		orden = mover(vista, i, j);
 		onmover(i, j);
 		anuncio = `${nombre(vista[j])}: posición ${j + 1} de ${vista.length}`;

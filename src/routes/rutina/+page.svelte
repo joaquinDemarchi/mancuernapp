@@ -94,6 +94,7 @@
 						type="button"
 						role="tab"
 						aria-selected={d.id === dia.id}
+						tabindex={d.id === dia.id ? 0 : -1}
 						aria-controls="dia-panel"
 						onclick={() => (diaId = d.id)}>{d.nombre}</button
 					>

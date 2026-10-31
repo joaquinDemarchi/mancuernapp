@@ -5,7 +5,8 @@
 - 1.1 hecha: `/prototipo` borrado (OK de Joa), Firestore con `persistentLocalCache`, `crearEjercicio` devuelve el id sin `await`, `asegurarUsuario` no se espera. Catálogo y rutina cargan en dev (Chrome de Joa).
 - 1.2 hecha: `calculos.ts` con 19 tests. Los tipos `Bloque`, `Registro` y `Sesion` viven ahí (puros); `Sesion.creada` es un número en ms (lo convierte `sesion.ts`). `ultimaVez(..., cualquierDia)` para extras; `volumen(registros, tipoDe)` recibe una función. `desdeObjetivo` sin objetivo usa 3×10 / 30 s / 10 min, y peso arranca con `kg: 0`.
 - 2.1 hecha: `sesion.ts` (store `sesiones` ordenado, re-suscripción solo si cambia el id de la rutina). Las escrituras actualizan el store a mano al instante (dos toques seguidos antes del snapshot no crean dos sesiones). Quitar el último registro borra la sesión. Probado en el Chrome de Joa: crear, editar, terminar, quitar y borrar; Firestore quedó sin sesiones (como estaba).
-- Próxima: 2.2.
+- 2.2 hecha: tarjeta "Hoy" en el inicio (chips con binding de función `bind:valor={() => dia.id, (v) => (elegido = v)}`), estados Empezar/Seguir/Ver sesión, "hecho el dd/mm", barra con dos secundarias, `/sesion` vacía. `formatearVolumen` y `diaMes` sumados a `calculos.ts`. Verificado: rotación, cambiar el día, primera vez, en curso y terminada (Chrome de Joa con el store forzado) y 390 px en el Browser pane.
+- Próxima: 3.1.
 
 ## Decisiones tomadas con Joa (31/10/2026)
 - Bloques: "+ Bloque", quitar y **desarmar** en series sueltas (sin "Juntar").
@@ -17,6 +18,9 @@
 - Del prototipo: Ajustar en hoja abajo, steppers apilados, sin contador de toques, ✓ = igual, tocar el nombre para ajustar, chips para cambiar el día.
 
 ## Gotchas previstos
+- Después de una edición con HMR, el módulo de la app queda en `/src/lib/x.ts?t=…` y el import desde la consola sin `?t` da otra instancia: buscar la URL real con `performance.getEntriesByType('resource')` e importar esa (también la de `svelte_store.js?v=…`).
+- Svelte 5 escopa con baja especificidad: para pisar estilos de un hijo con `:global` incluir el estado (`input:not(:checked) + span`), si no pisa también el elegido.
+- La ventana del Chrome de Joa no baja a 390 px: los anchos de celu se prueban en el Browser pane con sesión falsa y stores forzados.
 - Verificar Firestore del lado del servidor desde la consola (sin la caché): `const f = await import('/src/lib/firebase.ts')`, token con `f.auth.currentUser.getIdToken()` y `fetch` a la API REST `firestore.googleapis.com/v1/projects/<id>/databases/(default)/documents/users/<uid>/sesiones`.
 - `javascript_tool` de Claude in Chrome a veces ejecuta el script dos veces: no confiar en contadores "antes/después" dentro del mismo script.
 - `crearRutina` todavía hace `await addDoc` (solo la primera vez, con señal): fuera del alcance de este change.

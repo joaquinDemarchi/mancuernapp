@@ -3,8 +3,10 @@ import type { Tipo } from './catalogo';
 import {
 	desarmar,
 	desdeObjetivo,
+	diaMes,
 	diaSugerido,
 	formatear,
+	formatearVolumen,
 	hoy,
 	semana,
 	sesionDeHoy,
@@ -147,5 +149,13 @@ describe('formatear', () => {
 		expect(formatear('cardio', [{ series: 1, minutos: 15 }])).toBe('15 min');
 		expect(formatear('reps', [{ series: 3, reps: 12 }])).toBe('3×12');
 		expect(formatear('calentamiento', [{ series: 1 }])).toBe('Calentamiento');
+	});
+});
+
+describe('formatearVolumen y diaMes', () => {
+	it('miles con punto y guion sin peso', () => {
+		expect(formatearVolumen(4390)).toBe('4.390 kg');
+		expect(formatearVolumen(0)).toBe('—');
+		expect(diaMes('2026-10-29')).toBe('29/10');
 	});
 });

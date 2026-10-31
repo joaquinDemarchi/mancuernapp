@@ -88,6 +88,16 @@ export function volumen(registros: readonly Registro[], tipoDe: (ejercicioId: st
 
 const numero = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 1 });
 
+/** "4.390 kg"; sin ejercicios de peso, "—". */
+export function formatearVolumen(v: number) {
+	return v ? `${numero.format(v)} kg` : '—';
+}
+
+/** "2026-10-29" → "29/10" */
+export function diaMes(fecha: string) {
+	return fecha.slice(8, 10) + '/' + fecha.slice(5, 7);
+}
+
 /** `3×10 · 60 kg + 1×8 · 70 kg`, `3×12`, `3×40 s`, `15 min`, `Calentamiento`. */
 export function formatear(tipo: Tipo, bloques: readonly Bloque[]) {
 	if (tipo === 'calentamiento') return 'Calentamiento';

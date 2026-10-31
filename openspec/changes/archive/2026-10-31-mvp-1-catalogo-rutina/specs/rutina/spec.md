@@ -58,7 +58,7 @@ El editor SHALL mostrar los días como pestañas con la del día elegido marcada
 - **THEN** la hoja lo indica y no lo agrega dos veces
 
 ### Requirement: Reordenar arrastrando
-Los ejercicios de un día y las pestañas de días SHALL poder reordenarse arrastrando desde su manija; con teclado, la manija SHALL mover el elemento con las flechas.
+Los ejercicios de un día y las pestañas de días SHALL poder reordenarse arrastrando desde su manija; con teclado, la manija SHALL mover el elemento con las flechas (en las pestañas, con Alt + flecha, porque la flecha sola SHALL cambiar de día).
 
 #### Scenario: Arrastrar ejercicio
 - **WHEN** el usuario arrastra "Plancha" desde la manija hasta arriba de "Press banca"

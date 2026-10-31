@@ -51,8 +51,8 @@ Al primer ingreso permitido, el sistema SHALL crear `users/{uid}` con email, nom
 - **THEN** su documento no se sobrescribe
 
 ### Requirement: Cerrar sesión
-El sistema SHALL ofrecer cerrar sesión desde la pantalla inicial; al hacerlo SHALL volver a la pantalla de login.
+El sistema SHALL ofrecer cerrar sesión con el botón "Salir" arriba en la pantalla inicial; al hacerlo SHALL volver a la pantalla de login.
 
 #### Scenario: Cierre de sesión
-- **WHEN** el usuario toca "Cerrar sesión"
+- **WHEN** el usuario toca "Salir"
 - **THEN** la sesión termina y ve la pantalla de login

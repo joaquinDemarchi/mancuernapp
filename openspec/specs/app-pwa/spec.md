@@ -32,8 +32,8 @@ Después de la primera visita con conexión, la app SHALL abrir sin conexión mo
 - **THEN** la versión nueva queda activa como mucho en la siguiente apertura
 
 ### Requirement: Pantalla inicial vacía
-Con sesión válida, la app SHALL mostrar una pantalla inicial con el nombre de la app, un estado vacío "Todavía no hay rutina" y la acción de cerrar sesión, usando solo tokens y componentes del Design System.
+Con sesión válida y sin rutina activa, la app SHALL mostrar una pantalla inicial con el nombre de la app, un estado vacío "Todavía no hay rutina", el botón "Salir" arriba y en la barra inferior las acciones "Ejercicios" (secundaria) y "Crear rutina" (primaria), usando solo tokens y componentes del Design System.
 
 #### Scenario: Primer ingreso sin rutina
 - **WHEN** un usuario permitido entra y no tiene rutinas
-- **THEN** ve el nombre de la app, el texto "Todavía no hay rutina" y el botón "Cerrar sesión" en la mitad inferior
+- **THEN** ve el nombre de la app, el texto "Todavía no hay rutina", "Salir" arriba, y "Ejercicios" y "Crear rutina" en la mitad inferior

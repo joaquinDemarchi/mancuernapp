@@ -1,7 +1,219 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
+	import { formatear, formatearVolumen, hoy, semana, sesionDeHoy, ultimaVez, volumen, type Bloque } from '#lib/calculos.ts';
+	import { ejercicios } from '#lib/catalogo.ts';
+	import { formatearObjetivo, rutinaActiva, type Objetivo } from '#lib/rutina.ts';
+	import { guardarRegistro, quitarRegistro, sesiones, terminar } from '#lib/sesion.ts';
+	import Boton from '#lib/componentes/Boton.svelte';
+	import BarraAccion from '#lib/componentes/BarraAccion.svelte';
 	import Cabecera from '#lib/componentes/Cabecera.svelte';
+	import Hoja from '#lib/componentes/Hoja.svelte';
+
+	$effect(() => {
+		if ($rutinaActiva === null) goto('/');
+	});
+
+	// La sesión de hoy manda (y su día); si no hay, el día de `?dia=` y se crea al primer toque.
+	const deHoy = $derived($sesiones && sesionDeHoy($sesiones));
+	const diaId = $derived(deHoy?.diaId ?? page.url.searchParams.get('dia'));
+	const dia = $derived($rutinaActiva?.dias.find((d) => d.id === diaId) ?? $rutinaActiva?.dias[0]);
+	const ctx = $derived($rutinaActiva && dia ? { rutinaId: $rutinaActiva.id, diaId: dia.id } : undefined);
+
+	type Fila = { ejercicioId: string; objetivo?: Objetivo; extra: boolean };
+	const filas = $derived.by((): Fila[] => {
+		if (!dia) return [];
+		const items = dia.items.map((i) => ({ ...i, extra: false }));
+		const extras = (deHoy?.registros ?? [])
+			.filter((r) => !dia.items.some((i) => i.ejercicioId === r.ejercicioId))
+			.map((r) => ({ ejercicioId: r.ejercicioId, extra: true }));
+		return [...items, ...extras];
+	});
+	const hechos = $derived(deHoy?.registros.length ?? 0);
+
+	const ejercicio = (id: string) => $ejercicios?.find((e) => e.id === id);
+	const tipoDe = (id: string) => ejercicio(id)?.tipo;
+	const registro = (id: string) => deHoy?.registros.find((r) => r.ejercicioId === id);
+	const ultima = (f: Fila) => (dia && $sesiones ? ultimaVez($sesiones, dia.id, f.ejercicioId, hoy(), f.extra) : undefined);
+	// Campo por campo: Firestore puede devolver las claves en otro orden.
+	const clave = (bs?: Bloque[]) => JSON.stringify(bs?.map((b) => [b.series, b.reps, b.kg, b.segundos, b.minutos]));
+	const iguales = (a: Bloque[], b?: Bloque[]) => clave(a) === clave(b);
+
+	function valores(f: Fila): { texto: string; clase: string } {
+		const tipo = tipoDe(f.ejercicioId) ?? 'peso';
+		if (tipo === 'calentamiento') return { texto: 'Calentamiento', clase: registro(f.ejercicioId) ? 'hecho' : '' };
+		const r = registro(f.ejercicioId);
+		const u = ultima(f);
+		if (r) {
+			const ajustado = !iguales(r.bloques, u) || r.rpe !== undefined || !!r.nota;
+			const rpe = r.rpe !== undefined ? ` · RPE ${r.rpe}` : '';
+			return { texto: formatear(tipo, r.bloques) + rpe, clase: ajustado ? 'ajustado' : 'hecho' };
+		}
+		if (u) return { texto: `${f.extra ? 'Extra · última' : 'Última'}: ${formatear(tipo, u)}`, clase: '' };
+		if (f.extra) return { texto: 'Extra', clase: '' };
+		const o = formatearObjetivo(f.objetivo);
+		return { texto: o ? `Primera vez · objetivo ${o}` : 'Primera vez', clase: '' };
+	}
+
+	function etiquetaCheck(f: Fila) {
+		const nombre = ejercicio(f.ejercicioId)?.nombre ?? 'Ejercicio';
+		if (registro(f.ejercicioId)) return `${nombre}: hecho`;
+		if (tipoDe(f.ejercicioId) !== 'calentamiento' && ultima(f)) return `${nombre}: igual que la última vez`;
+		return `${nombre}: cargar`;
+	}
+
+	// Ejercicio abierto en Ajustar.
+	let ajustando = $state<Fila>();
+
+	// ✓: hecho → lo quita; con última vez → la copia; primera vez → abre Ajustar.
+	function tocarCheck(f: Fila) {
+		if (!ctx) return;
+		if (registro(f.ejercicioId)) return quitarRegistro(ctx, f.ejercicioId);
+		const u = tipoDe(f.ejercicioId) === 'calentamiento' ? [{ series: 1 }] : ultima(f);
+		if (u) return guardarRegistro(ctx, { ejercicioId: f.ejercicioId, bloques: u, hecho: true });
+		ajustando = f;
+	}
+
+	// Cuerpo: el calentamiento se marca/desmarca; el resto abre Ajustar.
+	function tocarCuerpo(f: Fila) {
+		if (tipoDe(f.ejercicioId) === 'calentamiento') tocarCheck(f);
+		else ajustando = f;
+	}
+
+	let resumen = $state(false);
+	const total = $derived(
+		deHoy ? formatearVolumen(volumen(deHoy.registros, (id) => tipoDe(id))) : formatearVolumen(0)
+	);
+
+	function terminarSesion() {
+		if (!deHoy) return;
+		if (deHoy.terminada) return goto('/');
+		terminar(deHoy.id);
+		resumen = true;
+	}
 </script>
 
 <main class="pantalla">
-	<Cabecera titulo="Hoy" volver="/" />
+	{#if dia && $rutinaActiva && $sesiones && $ejercicios}
+		{@const n = semana($sesiones, dia.id, deHoy)}
+		<Cabecera
+			titulo="Hoy: {dia.nombre}"
+			meta="{$rutinaActiva.nombre} · semana {n} · {hechos}/{filas.length} hechos"
+			volver="/"
+		/>
+		<ul>
+			{#each filas as f (f.ejercicioId)}
+				{@const v = valores(f)}
+				{@const hecho = !!registro(f.ejercicioId)}
+				<li>
+					<button type="button" class="cuerpo" onclick={() => tocarCuerpo(f)}>
+						<span class="nombre">{ejercicio(f.ejercicioId)?.nombre ?? '…'}</span>
+						<span class="valores {v.clase}">{v.texto}</span>
+					</button>
+					<button
+						type="button"
+						class="check"
+						aria-pressed={hecho}
+						aria-label={etiquetaCheck(f)}
+						onclick={() => tocarCheck(f)}
+					>
+						<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+							<path d="M4 12.5 9.5 18 20 6.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" />
+						</svg>
+					</button>
+				</li>
+			{/each}
+		</ul>
+
+		<Hoja bind:abierta={resumen} titulo="Sesión terminada" meta="{dia.nombre} · semana {n} · {hechos} de {filas.length} ejercicios">
+			<div class="volumen">
+				<span class="meta">Volumen</span>
+				<span class="numero">{total}</span>
+			</div>
+			<p class="meta">Queda guardada. Hasta mañana podés volver a tocarla desde el inicio.</p>
+			<Boton onclick={() => goto('/')}>Listo</Boton>
+		</Hoja>
+	{/if}
 </main>
+<BarraAccion>
+	<Boton disabled={!hechos} onclick={terminarSesion}>{deHoy?.terminada ? 'Listo' : 'Terminar sesión'}</Boton>
+</BarraAccion>
+
+<style>
+	ul {
+		display: grid;
+		gap: var(--space-1);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	li {
+		display: flex;
+		align-items: stretch;
+		gap: var(--space-1);
+		min-height: 64px;
+	}
+	.cuerpo {
+		display: grid;
+		align-content: center;
+		flex: 1;
+		min-width: 0;
+		padding: var(--space-2) var(--space-4);
+		border: 0;
+		border-radius: var(--radius);
+		background: var(--surface);
+		color: var(--ink);
+		text-align: left;
+		cursor: pointer;
+	}
+	.nombre {
+		font: 600 var(--fs-heading) / var(--lh-heading) var(--font-display);
+		font-stretch: var(--stretch-condensed);
+	}
+	.valores {
+		color: var(--ink-faint);
+		font: 400 var(--fs-meta) / var(--lh-meta) var(--font-text);
+		font-variant-numeric: tabular-nums;
+	}
+	.valores.hecho {
+		color: var(--ink);
+	}
+	.valores.ajustado {
+		color: var(--accent-ink);
+	}
+	.check {
+		display: grid;
+		place-items: center;
+		flex: none;
+		width: 64px;
+		border: 2px solid var(--control);
+		border-radius: var(--radius);
+		background: transparent;
+		color: var(--ink-muted);
+		cursor: pointer;
+	}
+	.check[aria-pressed='true'] {
+		border-color: var(--accent);
+		background: var(--accent);
+		color: var(--on-accent);
+	}
+	.cuerpo:focus-visible,
+	.check:focus-visible {
+		outline: 2px solid var(--focus);
+		outline-offset: 2px;
+	}
+	.meta {
+		margin: 0;
+		color: var(--ink-faint);
+		font: 400 var(--fs-meta) / var(--lh-meta) var(--font-text);
+	}
+	.volumen {
+		display: grid;
+	}
+	.numero {
+		font: 700 var(--fs-num-xl) / var(--lh-num-xl) var(--font-display);
+		font-stretch: var(--stretch-condensed);
+		letter-spacing: var(--tracking-display);
+		font-variant-numeric: tabular-nums;
+	}
+</style>

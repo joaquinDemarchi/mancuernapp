@@ -6,7 +6,9 @@
 - 1.2 hecha: `calculos.ts` con 19 tests. Los tipos `Bloque`, `Registro` y `Sesion` viven ahí (puros); `Sesion.creada` es un número en ms (lo convierte `sesion.ts`). `ultimaVez(..., cualquierDia)` para extras; `volumen(registros, tipoDe)` recibe una función. `desdeObjetivo` sin objetivo usa 3×10 / 30 s / 10 min, y peso arranca con `kg: 0`.
 - 2.1 hecha: `sesion.ts` (store `sesiones` ordenado, re-suscripción solo si cambia el id de la rutina). Las escrituras actualizan el store a mano al instante (dos toques seguidos antes del snapshot no crean dos sesiones). Quitar el último registro borra la sesión. Probado en el Chrome de Joa: crear, editar, terminar, quitar y borrar; Firestore quedó sin sesiones (como estaba).
 - 2.2 hecha: tarjeta "Hoy" en el inicio (chips con binding de función `bind:valor={() => dia.id, (v) => (elegido = v)}`), estados Empezar/Seguir/Ver sesión, "hecho el dd/mm", barra con dos secundarias, `/sesion` vacía. `formatearVolumen` y `diaMes` sumados a `calculos.ts`. Verificado: rotación, cambiar el día, primera vez, en curso y terminada (Chrome de Joa con el store forzado) y 390 px en el Browser pane.
-- Próxima: 3.1.
+- 3.1 hecha: `/sesion` con filas, ✓, calentamiento por el nombre, Terminar con hoja de resumen. El ✓ de primera vez y el cuerpo ponen `ajustando = fila` (la hoja llega en 3.2). Verificado en el Chrome de Joa: sin cambios, destildar, entrar y salir sin cargar (0 docs de hoy en el servidor), cerrar a mitad ("Seguir Día 1") y volumen 3.400 kg.
+- **Datos de prueba en Firestore de Joa** (borrar al final del change): sesión `joa-prueba-ayer` (Día 1, 30/10, creada por REST) y la sesión de hoy (31/10, terminada). Para borrarlas: REST `DELETE` o `borrarSesion(id)` desde la consola.
+- Próxima: 3.2.
 
 ## Decisiones tomadas con Joa (31/10/2026)
 - Bloques: "+ Bloque", quitar y **desarmar** en series sueltas (sin "Juntar").
@@ -18,6 +20,7 @@
 - Del prototipo: Ajustar en hoja abajo, steppers apilados, sin contador de toques, ✓ = igual, tocar el nombre para ajustar, chips para cambiar el día.
 
 ## Gotchas previstos
+- Firestore devuelve las claves de los mapas en otro orden: comparar bloques campo por campo, no con `JSON.stringify` directo (pasaba con "ajustado" en `/sesion`).
 - Después de una edición con HMR, el módulo de la app queda en `/src/lib/x.ts?t=…` y el import desde la consola sin `?t` da otra instancia: buscar la URL real con `performance.getEntriesByType('resource')` e importar esa (también la de `svelte_store.js?v=…`).
 - Svelte 5 escopa con baja especificidad: para pisar estilos de un hijo con `:global` incluir el estado (`input:not(:checked) + span`), si no pisa también el elegido.
 - La ventana del Chrome de Joa no baja a 390 px: los anchos de celu se prueban en el Browser pane con sesión falsa y stores forzados.

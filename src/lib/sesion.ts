@@ -1,13 +1,13 @@
 import { collection, deleteDoc, doc, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where, type Unsubscribe } from 'firebase/firestore';
 import { get, writable } from 'svelte/store';
 import { sesion } from './acceso';
-import { hoy, ordenar, sesionDeHoy, type Registro, type Sesion } from './calculos';
+import { ordenar, sesionDeHoy, type Registro, type Sesion } from './calculos';
 import { db } from './firebase';
 import { rutinaActiva } from './rutina';
 
 export type { Bloque, Registro, Sesion } from './calculos';
 /** Con qué rutina y día se crea la sesión en el primer toque. */
-export type Contexto = { rutinaId: string; diaId: string };
+export type Contexto = { rutinaId: string; diaId: string; fecha: string };
 
 /** Sesiones de la rutina activa, de la más vieja a la más nueva; `undefined` mientras carga. */
 export const sesiones = writable<Sesion[] | undefined>(undefined);
@@ -42,13 +42,13 @@ rutinaActiva.subscribe((r) => {
 const limpio = (registros: Registro[]): Registro[] => JSON.parse(JSON.stringify(registros));
 
 /**
- * Escribe los registros de la sesión de hoy; si todavía no existe, la crea.
+ * Escribe los registros de la sesión de esa fecha (hoy o un día anterior); si todavía no existe, la crea.
  * Actualiza el store al instante para que dos toques seguidos vean la misma sesión.
  * Sin `await`: sin señal la promesa no resuelve hasta sincronizar.
  */
 function escribir(ctx: Contexto, cambio: (registros: Registro[]) => Registro[]) {
 	const lista = get(sesiones) ?? [];
-	const actual = sesionDeHoy(lista);
+	const actual = sesionDeHoy(lista, ctx.fecha);
 	if (actual) {
 		const registros = limpio(cambio(actual.registros));
 		// Sin ejercicios no queda sesión (destildar el único = no haber empezado).
@@ -60,8 +60,8 @@ function escribir(ctx: Contexto, cambio: (registros: Registro[]) => Registro[]) 
 	const registros = limpio(cambio([]));
 	if (!registros.length) return;
 	const ref = doc(coleccion());
-	const nueva = { rutinaId: ctx.rutinaId, diaId: ctx.diaId, fecha: hoy(), terminada: false, registros };
-	sesiones.set([...lista, { ...nueva, id: ref.id, creada: Date.now() }]);
+	const nueva = { rutinaId: ctx.rutinaId, diaId: ctx.diaId, fecha: ctx.fecha, terminada: false, registros };
+	sesiones.set(ordenar([...lista, { ...nueva, id: ref.id, creada: Date.now() }]));
 	setDoc(ref, { ...nueva, creada: serverTimestamp() }).catch(console.error);
 }
 

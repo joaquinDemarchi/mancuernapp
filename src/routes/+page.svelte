@@ -2,13 +2,14 @@
 	import { goto } from '$app/navigation';
 	import { app } from '#config/app';
 	import { salir } from '#lib/acceso.ts';
-	import { diaMes, diaSugerido, formatearVolumen, hoy, semana, sesionDeHoy, volumen } from '#lib/calculos.ts';
+	import { diaMes, diasAntes, diaSugerido, formatearVolumen, hoy, semana, sesionDeHoy, volumen } from '#lib/calculos.ts';
 	import { ejercicios } from '#lib/catalogo.ts';
 	import { crearRutina, fechaCorta, rutinaActiva } from '#lib/rutina.ts';
 	import { sesiones } from '#lib/sesion.ts';
 	import Boton from '#lib/componentes/Boton.svelte';
 	import BarraAccion from '#lib/componentes/BarraAccion.svelte';
 	import Cabecera from '#lib/componentes/Cabecera.svelte';
+	import Hoja from '#lib/componentes/Hoja.svelte';
 	import OpcionesChip from '#lib/componentes/OpcionesChip.svelte';
 
 	let creando = $state(false);
@@ -55,6 +56,29 @@
 	let verDias = $state(false);
 	const nombreDe = (id: string) => $ejercicios?.find((e) => e.id === id)?.nombre ?? '…';
 
+	// "Cargar un día anterior": una sesión olvidada se carga con su fecha real (entre el inicio y ayer).
+	let anterior = $state(false);
+	let fechaAnt = $state(diasAntes(1));
+	let elegidoAnt = $state<string>();
+	const fechasRapidas = $derived(
+		[
+			{ valor: diasAntes(1), etiqueta: 'Ayer' },
+			{ valor: diasAntes(2), etiqueta: 'Anteayer' }
+		].filter((f) => $rutinaActiva && f.valor >= $rutinaActiva.inicio)
+	);
+	const yaCargada = $derived($sesiones && sesionDeHoy($sesiones, fechaAnt));
+	const diaAnt = $derived.by(() => {
+		if (!$rutinaActiva || !$sesiones) return undefined;
+		const id = yaCargada?.diaId ?? elegidoAnt ?? diaSugerido($rutinaActiva, $sesiones, fechaAnt)?.id;
+		return $rutinaActiva.dias.find((d) => d.id === id);
+	});
+
+	function abrirAnterior() {
+		fechaAnt = diasAntes(1);
+		elegidoAnt = undefined;
+		anterior = true;
+	}
+
 	function hechoEl(id: string) {
 		const s = $sesiones?.findLast((s) => s.diaId === id);
 		return s ? ` · hecho el ${diaMes(s.fecha)}` : '';
@@ -88,10 +112,15 @@
 				{/if}
 			</section>
 		{/if}
-		<!-- Solo para mirar: editar va por "Editar rutina". -->
-		<button class="texto ver" aria-expanded={verDias} onclick={() => (verDias = !verDias)}>
-			{verDias ? 'Ocultar días' : 'Ver días'}
-		</button>
+		<div class="enlaces">
+			<!-- Solo para mirar: editar va por "Editar rutina". -->
+			<button class="texto" aria-expanded={verDias} onclick={() => (verDias = !verDias)}>
+				{verDias ? 'Ocultar días' : 'Ver días'}
+			</button>
+			{#if fechasRapidas.length}
+				<button class="texto" onclick={abrirAnterior}>Cargar un día anterior</button>
+			{/if}
+		</div>
 		{#if verDias}
 			<ul>
 				{#each $rutinaActiva.dias as dia (dia.id)}
@@ -105,6 +134,39 @@
 				{/each}
 			</ul>
 		{/if}
+		<Hoja bind:abierta={anterior} titulo="Cargar un día anterior">
+			<OpcionesChip bind:valor={() => fechaAnt, (v) => ((fechaAnt = v), (elegidoAnt = undefined))} opciones={fechasRapidas} leyenda="Fecha" />
+			<label class="campo">
+				<span>Otra fecha</span>
+				<input
+					type="date"
+					min={$rutinaActiva.inicio}
+					max={diasAntes(1)}
+					value={fechaAnt}
+					onchange={(e) => {
+						const v = e.currentTarget.value;
+						if (v && v >= $rutinaActiva.inicio && v <= diasAntes(1)) fechaAnt = v;
+						else e.currentTarget.value = fechaAnt;
+						elegidoAnt = undefined;
+					}}
+				/>
+			</label>
+			{#if diaAnt}
+				{#if yaCargada}
+					<p class="meta">El {diaMes(fechaAnt)} ya tiene una sesión de {diaAnt.nombre}.</p>
+					<Boton onclick={() => goto(`/sesion?dia=${diaAnt.id}&fecha=${fechaAnt}`)}>Abrir la sesión del {diaMes(fechaAnt)}</Boton>
+				{:else}
+					{#if $rutinaActiva.dias.length > 1}
+						<OpcionesChip
+							bind:valor={() => diaAnt.id, (v) => (elegidoAnt = v)}
+							opciones={$rutinaActiva.dias.map((d) => ({ valor: d.id, etiqueta: d.nombre }))}
+							leyenda="Día"
+						/>
+					{/if}
+					<Boton onclick={() => goto(`/sesion?dia=${diaAnt.id}&fecha=${fechaAnt}`)}>Cargar {diaAnt.nombre}</Boton>
+				{/if}
+			{/if}
+		</Hoja>
 	{:else if $rutinaActiva === null}
 		<div class="vacio">
 			<p class="titulo">Todavía no hay rutina</p>
@@ -168,10 +230,32 @@
 		padding: 0;
 		list-style: none;
 	}
-	.ver {
-		justify-self: start;
-		align-self: flex-start;
-		margin-left: calc(var(--space-3) * -1);
+	.enlaces {
+		display: flex;
+		justify-content: space-between;
+		margin: 0 calc(var(--space-3) * -1);
+	}
+	.campo {
+		display: grid;
+		gap: var(--space-1);
+	}
+	.campo span {
+		color: var(--ink-muted);
+		font: 400 var(--fs-meta) / var(--lh-meta) var(--font-text);
+	}
+	input {
+		min-height: var(--touch-min);
+		padding: 0 var(--space-3);
+		border: 2px solid var(--control);
+		border-radius: var(--radius);
+		background: transparent;
+		color: var(--ink);
+		font: 400 var(--fs-body) / var(--lh-body) var(--font-text);
+		color-scheme: dark light;
+	}
+	input:focus-visible {
+		outline: 2px solid var(--focus);
+		outline-offset: 2px;
 	}
 	li {
 		display: grid;

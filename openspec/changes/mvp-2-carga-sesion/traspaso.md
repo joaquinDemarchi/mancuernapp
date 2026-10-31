@@ -16,7 +16,8 @@
 - Datos de prueba borrados con OK de Joa (31/10): Firestore quedó sin sesiones y con el catálogo original (4 ejercicios).
 - 5.2 hecha: push a `main` con OK de Joa (31/10, 3d4f190), deploy de Vercel en verde y checklist del celu OK (Joa, 31/10).
 - Feedback del celu → grupo 6 en tasks.md (design.md §8): "Cargar un día anterior" (elegir fecha; Joa eligió esto antes que permitir otra sesión hoy) y lista de días plegable "Ver días", solo lectura. 
-- 6.1 hecha: lista de días plegada detrás de "Ver días" (`.texto`, `aria-expanded`), cada día con meta y nombres de ejercicios, sin link al editor. Verificado a 390 px en el Browser pane. Próxima: 6.2.
+- 6.1 hecha: lista de días plegada detrás de "Ver días" (`.texto`, `aria-expanded`), cada día con meta y nombres de ejercicios, sin link al editor. Verificado a 390 px en el Browser pane. 
+- 6.2 hecha: "Cargar un día anterior" junto a "Ver días" (oculto si la rutina empezó hoy): hoja con chips Ayer/Anteayer (desde el inicio de la rutina), campo de fecha y chips de día con el sugerido para esa fecha; si la fecha ya tiene sesión, "Abrir la sesión del dd/mm". `/sesion?fecha=` (validada, anterior a hoy; si no, hoy), título "Ayer: Día 1" / "29/10: Día 1", última vez anterior a esa fecha; `Contexto` suma `fecha`; `diasAntes(n)` en `calculos.ts`. Verificado en el Browser pane con stores falsos (sin tocar el Firestore de Joa): cargar Día 1 de ayer → "Hoy: Día 2 · la última fue Día 1" y reabrir ofrece "Abrir la sesión del 30/10". Falta probarlo en el celu tras el push (con OK de Joa).
 
 ## Checklist en el celu (5.2)
 Reinstalar o recargar la PWA para tomar el service worker nuevo. Joa la hizo completa el 31/10:

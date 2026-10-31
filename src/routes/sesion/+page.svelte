@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { desdeObjetivo, formatear, formatearVolumen, hoy, semana, sesionDeHoy, ultimaVez, volumen, type Bloque } from '#lib/calculos.ts';
+	import { desdeObjetivo, diaMes, diasAntes, formatear, formatearVolumen, hoy, semana, sesionDeHoy, ultimaVez, volumen, type Bloque } from '#lib/calculos.ts';
 	import { ejercicios, type Tipo } from '#lib/catalogo.ts';
 	import { fechaCorta, formatearObjetivo, rutinaActiva, type Objetivo } from '#lib/rutina.ts';
 	import { borrarSesion, guardarRegistro, quitarRegistro, sesiones, terminar } from '#lib/sesion.ts';
@@ -16,11 +16,15 @@
 		if ($rutinaActiva === null) goto('/');
 	});
 
-	// La sesión de hoy manda (y su día); si no hay, el día de `?dia=` y se crea al primer toque.
-	const deHoy = $derived($sesiones && sesionDeHoy($sesiones));
+	// `?fecha=` carga un día anterior (por defecto hoy). La sesión de esa fecha manda (y su día);
+	// si no hay, el día de `?dia=` y se crea al primer toque.
+	const pedida = page.url.searchParams.get('fecha') ?? '';
+	const fecha = /^\d{4}-\d{2}-\d{2}$/.test(pedida) && pedida < hoy() ? pedida : hoy();
+	const cuando = fecha === hoy() ? 'Hoy' : fecha === diasAntes(1) ? 'Ayer' : diaMes(fecha);
+	const deHoy = $derived($sesiones && sesionDeHoy($sesiones, fecha));
 	const diaId = $derived(deHoy?.diaId ?? page.url.searchParams.get('dia'));
 	const dia = $derived($rutinaActiva?.dias.find((d) => d.id === diaId) ?? $rutinaActiva?.dias[0]);
-	const ctx = $derived($rutinaActiva && dia ? { rutinaId: $rutinaActiva.id, diaId: dia.id } : undefined);
+	const ctx = $derived($rutinaActiva && dia ? { rutinaId: $rutinaActiva.id, diaId: dia.id, fecha } : undefined);
 
 	type Fila = { ejercicioId: string; objetivo?: Objetivo; extra: boolean };
 	const filas = $derived.by((): Fila[] => {
@@ -36,7 +40,7 @@
 	const ejercicio = (id: string) => $ejercicios?.find((e) => e.id === id);
 	const tipoDe = (id: string) => ejercicio(id)?.tipo;
 	const registro = (id: string) => deHoy?.registros.find((r) => r.ejercicioId === id);
-	const ultima = (f: Fila) => (dia && $sesiones ? ultimaVez($sesiones, dia.id, f.ejercicioId, hoy(), f.extra) : undefined);
+	const ultima = (f: Fila) => (dia && $sesiones ? ultimaVez($sesiones, dia.id, f.ejercicioId, fecha, f.extra) : undefined);
 	// Campo por campo: Firestore puede devolver las claves en otro orden.
 	const clave = (bs?: Bloque[]) => JSON.stringify(bs?.map((b) => [b.series, b.reps, b.kg, b.segundos, b.minutos]));
 	const iguales = (a: Bloque[], b?: Bloque[]) => clave(a) === clave(b);
@@ -92,7 +96,7 @@
 	let agregando = $state(false);
 	function agregarExtra(id: string, tipo: Tipo) {
 		if (!ctx || !$sesiones) return;
-		const bloques = ultimaVez($sesiones, ctx.diaId, id, hoy(), true) ?? [desdeObjetivo(tipo)];
+		const bloques = ultimaVez($sesiones, ctx.diaId, id, fecha, true) ?? [desdeObjetivo(tipo)];
 		guardarRegistro(ctx, { ejercicioId: id, bloques, hecho: true });
 	}
 
@@ -119,7 +123,7 @@
 	{#if dia && $rutinaActiva && $sesiones && $ejercicios}
 		{@const n = semana($sesiones, dia.id, deHoy)}
 		<Cabecera
-			titulo="Hoy: {dia.nombre}"
+			titulo="{cuando}: {dia.nombre}"
 			meta="{$rutinaActiva.nombre} · semana {n} · {hechos}/{filas.length} hechos"
 			volver="/"
 		>
@@ -178,11 +182,11 @@
 		{#if deHoy}
 			<Hoja
 				bind:abierta={borrando}
-				titulo="Sesión de hoy"
+				titulo={cuando === 'Hoy' ? 'Sesión de hoy' : `Sesión del ${diaMes(fecha)}`}
 				meta="{dia.nombre} · {fechaCorta(deHoy.fecha)} · {deHoy.terminada ? 'terminada' : 'en curso'}"
 			>
 				<p class="aviso" role="alert">
-					{hechos === 1 ? 'Se borra el ejercicio cargado hoy.' : `Se borran los ${hechos} ejercicios cargados hoy.`} No se puede
+					{hechos === 1 ? 'Se borra el ejercicio cargado.' : `Se borran los ${hechos} ejercicios cargados.`} No se puede
 					deshacer.
 				</p>
 				<div class="acciones">
@@ -197,7 +201,9 @@
 				<span class="meta">Volumen</span>
 				<span class="numero">{total}</span>
 			</div>
-			<p class="meta">Queda guardada. Hasta mañana podés volver a tocarla desde el inicio.</p>
+			<p class="meta">
+				{cuando === 'Hoy' ? 'Queda guardada. Hasta mañana podés volver a tocarla desde el inicio.' : 'Queda guardada.'}
+			</p>
 			<Boton onclick={() => goto('/')}>Listo</Boton>
 		</Hoja>
 	{/if}

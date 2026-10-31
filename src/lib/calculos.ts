@@ -25,6 +25,13 @@ export function ordenar(sesiones: readonly Sesion[]) {
 	return [...sesiones].sort((a, b) => a.fecha.localeCompare(b.fecha) || a.creada - b.creada);
 }
 
+/** Fecha local de `n` días atrás (1 = ayer). */
+export function diasAntes(n: number, f = new Date()) {
+	const d = new Date(f);
+	d.setDate(d.getDate() - n);
+	return hoy(d);
+}
+
 export function sesionDeHoy(sesiones: readonly Sesion[], fecha = hoy()) {
 	return sesiones.find((s) => s.fecha === fecha);
 }

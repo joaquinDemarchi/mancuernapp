@@ -4,6 +4,7 @@ import {
 	desarmar,
 	desdeObjetivo,
 	diaMes,
+	diasAntes,
 	diaSugerido,
 	formatear,
 	formatearVolumen,
@@ -37,6 +38,13 @@ const r = (ejercicioId: string, series: number, reps: number, kg: number): Regis
 describe('hoy', () => {
 	it('usa la fecha local', () => {
 		expect(hoy(new Date(2026, 0, 5, 23, 30))).toBe('2026-01-05');
+	});
+});
+
+describe('diasAntes', () => {
+	it('cruza el mes', () => {
+		expect(diasAntes(1, new Date(2026, 10, 1, 9))).toBe('2026-10-31');
+		expect(diasAntes(2, new Date(2026, 10, 1, 9))).toBe('2026-10-30');
 	});
 });
 

@@ -14,22 +14,23 @@
 - 4.2 hecha: "Borrar" en la cabecera de `/sesion` (solo con sesión) con hoja de confirmación (aviso `--alto`, Cancelar + "Sí, borrar sesión"). "Listo" en la sesión terminada ya venía de 3.1. Verificado en el Chrome de Joa: "Ver sesión" → editar (sigue `terminada`) → Borrar → inicio con "Empezar Día 2"; en el servidor solo queda `joa-prueba-ayer` (la sesión de hoy de prueba ya no está).
 - 5.1 hecha: offline simulado en el Chrome de Joa con `disableNetwork(db)` (importando `/node_modules/.vite/deps/firebase_firestore.js?v=…`, la misma instancia de la app): Empezar, 2 ✓, crear un extra al vuelo y Terminar responden en <100 ms y el servidor no tiene nada; con `enableNetwork` aparecen la sesión terminada y el ejercicio nuevo. No cubre modo avión real (service worker + Auth): queda para la checklist del celu en 5.2. Modelo actualizado en `openspec/config.yaml` y `docs/decisiones-diseno-mancuernapp.md §4`.
 - Datos de prueba borrados con OK de Joa (31/10): Firestore quedó sin sesiones y con el catálogo original (4 ejercicios).
-- 5.2 en curso: push a `main` con OK de Joa (31/10, 3d4f190); deploy de Vercel en verde, `/sesion` responde 200 y `/prototipo` 404 en https://mancuernapp.vercel.app. Falta que Joa haga la checklist en el celu; con eso se marca `[x]` la 5.2.
+- 5.2 hecha: push a `main` con OK de Joa (31/10, 3d4f190), deploy de Vercel en verde y checklist del celu OK (Joa, 31/10).
+- Feedback del celu → grupo 6 en tasks.md (design.md §8): "Cargar un día anterior" (elegir fecha; Joa eligió esto antes que permitir otra sesión hoy) y lista de días plegable "Ver días", solo lectura. Próxima: 6.1.
 
 ## Checklist en el celu (5.2)
-Reinstalar o recargar la PWA para tomar el service worker nuevo. Marcar cada punto:
-- [ ] Sesión real completa en el gym: "Empezar" desde la tarjeta Hoy con el día sugerido.
-- [ ] ✓ copia la última vez (y destildar vuelve a "Última: …").
-- [ ] Ajustar: subir kg y ver la fila resaltada.
-- [ ] "+ Bloque" y quitar un bloque.
-- [ ] "Desarmar" un bloque y cambiar la última serie.
-- [ ] RPE (y borrarlo tocándolo de nuevo).
-- [ ] Nota: persiste al cerrar y abrir la app.
-- [ ] Extra: agregar uno del catálogo y crear uno al vuelo.
-- [ ] "Terminar sesión" muestra el volumen.
-- [ ] Retomar: cerrar la app a mitad y volver ("Seguir Día X"); editar después de terminada ("Ver sesión").
-- [ ] Borrar una sesión de prueba con confirmación.
-- [ ] Modo avión: abrir la app, cargar dos ejercicios, terminar; al volver la señal, todo sincroniza.
+Reinstalar o recargar la PWA para tomar el service worker nuevo. Joa la hizo completa el 31/10:
+- [x] Sesión real completa en el gym: "Empezar" desde la tarjeta Hoy con el día sugerido.
+- [x] ✓ copia la última vez (y destildar vuelve a "Última: …").
+- [x] Ajustar: subir kg y ver la fila resaltada.
+- [x] "+ Bloque" y quitar un bloque.
+- [x] "Desarmar" un bloque y cambiar la última serie.
+- [x] RPE (y borrarlo tocándolo de nuevo).
+- [x] Nota: persiste al cerrar y abrir la app.
+- [x] Extra: agregar uno del catálogo y crear uno al vuelo.
+- [x] "Terminar sesión" muestra el volumen.
+- [x] Retomar: cerrar la app a mitad y volver ("Seguir Día X"); editar después de terminada ("Ver sesión").
+- [x] Borrar una sesión de prueba con confirmación.
+- [x] Modo avión: abrir la app, cargar dos ejercicios, terminar; al volver la señal, todo sincroniza.
 
 ## Decisiones tomadas con Joa (31/10/2026)
 - Bloques: "+ Bloque", quitar y **desarmar** en series sueltas (sin "Juntar").

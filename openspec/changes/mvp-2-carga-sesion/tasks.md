@@ -27,7 +27,14 @@
 ## 5. Cierre (~14k)
 
 - [x] 5.1 Verificar offline en dev (DevTools → Network offline, o modo avión con `dev-lan`): "Cargar en modo avión" y "Crear un extra sin señal", y que la UI no queda esperando; actualizar el modelo en `openspec/config.yaml` y `docs/decisiones-diseno-mancuernapp.md §4` (`creada`, `terminada`, sesión creada al primer toque); commit (~7k)
-- [ ] 5.2 Con OK de Joa, push a `main` y verificar el deploy de Vercel en verde; checklist en el celu de Joa (anotarla en `traspaso.md`): sesión real completa en el gym, ✓, ajustar kg, + bloque, desarmar, RPE, nota, extra, terminar, retomar, borrar una de prueba, y una carga en modo avión; commit (~7k)
+- [x] 5.2 Con OK de Joa, push a `main` y verificar el deploy de Vercel en verde; checklist en el celu de Joa (anotarla en `traspaso.md`): sesión real completa en el gym, ✓, ajustar kg, + bloque, desarmar, RPE, nota, extra, terminar, retomar, borrar una de prueba, y una carga en modo avión; commit (~7k)
+
+## 6. Ajustes después del celu (~15k)
+
+> Pedidos de Joa al probar en el celu (31/10/2026): poder cargar una sesión olvidada y un inicio más limpio.
+
+- [ ] 6.1 Inicio: la lista de días queda oculta detrás de un botón sutil "Ver días" / "Ocultar días"; cada día muestra sus ejercicios y "hecho el dd/mm", solo lectura (no lleva al editor); verificar en dev a 390 px; commit (~5k)
+- [ ] 6.2 "Cargar un día anterior" (link sutil bajo la tarjeta Hoy): hoja con fecha (Ayer, Anteayer u otra, entre el inicio de la rutina y ayer) y día (sugerido para esa fecha); abre `/sesion?dia=&fecha=`; la sesión se guarda con esa fecha (última vez, semana y rotación la toman); si ya hay sesión esa fecha, la abre para editar; título "Ayer: Día 1" / "29/10: Día 1"; verificar en dev con Joa logueado cargar la de ayer y que el inicio sugiere el día siguiente; commit (~10k)
 
 ## Workflow follow-up
 

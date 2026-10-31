@@ -21,7 +21,7 @@ Decisiones tomadas con Joa (31/10/2026):
 
 **Non-Goals:**
 - % vs vez anterior, indicador, historial, gráficos (MVP 3).
-- Editar sesiones de días anteriores; dos sesiones el mismo día.
+- Dos sesiones el mismo día. (Editar o cargar sesiones de días anteriores: solo por "Cargar un día anterior", §8.)
 - Reordenar ejercicios dentro de la sesión (se sigue el orden del día; los extras van al final).
 - "Juntar" series desarmadas.
 
@@ -90,6 +90,11 @@ Medidas comunes del MVP 1: margen `--space-4`, cabecera 64 px, filas de 64 px m�
 - **Hoja Ajustar** (variante B): título = nombre del ejercicio, meta "Última: 3×10 · 40 kg" (o "Primera vez"), X para cerrar. Lista de bloques como radios (`role="radiogroup"`): fila de 56 px `--raised`, etiqueta a la izquierda (`--fs-meta`, `--ink-faint`, 56 px de ancho: "Serie N" si el bloque tiene 1 serie, si no "Bloque N"; N = posición), valor a la derecha en display condensado 700 (`1×8 · 40 kg`); elegido = borde 2 px `--accent`. Al abrir queda elegido el primero. Debajo, botón punteado "+ Bloque" (copia el último bloque y lo elige). Editor del elegido en una tarjeta `--ground`: título "Bloque 2"/"Serie 3", "Desarmar" (botón texto, solo con 2+ series; elige la primera serie resultante) y quitar (ícono tacho, `aria-label="Quitar bloque 2"`; deshabilitado si es el único bloque). Steppers apilados según tipo: peso = Series, Reps (±saltoReps), Kg (±saltoKg, una decimal, etiqueta derecha "±2,5"); reps = Series, Reps; tiempo = Series, Segundos (±saltoSeg); cardio = Minutos (sin lista de bloques ni "+ Bloque"). Después "RPE (opcional)" con 5 chips iguales en grilla (6–10; tocar el elegido lo borra) y "Nota (opcional)" (textarea de 88 px, `--ground`). Barra: "Listo" primario (cierra; si el ejercicio no estaba hecho, lo guarda como hecho con los valores mostrados). La hoja hace scroll si no entra. Cada cambio guarda al instante.
 - **Resumen** (hoja al tocar "Terminar sesión"): "Sesión terminada", meta "Día 2 · semana 3 · 6 de 6 ejercicios", etiqueta "Volumen" y el número en `--fs-num-xl` ("4.390 kg", `Intl.NumberFormat('es-AR')`; sin ejercicios de peso: "—"), texto "Queda guardada. Hasta mañana podés volver a tocarla desde el inicio." Barra: "Listo" → `/`.
 - **Borrar sesión** (hoja desde "Borrar"): "Sesión de hoy", meta "Día 2 · 31/10/2026 · terminada|en curso", aviso en `--alto` con `role="alert"`: "Se borran los 6 ejercicios cargados hoy. No se puede deshacer." Barra: "Cancelar" secundario + "Sí, borrar sesión" primario → borra y va a `/`.
+
+### 8. Ajustes después del celu (31/10/2026, con Joa)
+- **Cargar un día anterior**: link sutil (botón texto) bajo la tarjeta Hoy → hoja "Cargar un día anterior" con chips de fecha "Ayer", "Anteayer" y un campo de fecha (mín. el inicio de la rutina, máx. ayer) y chips de días con el sugerido para esa fecha (`diaSugerido(rutina, sesiones, fecha)`). Botón "Cargar Día X" → `/sesion?dia=&fecha=`. Si esa fecha ya tiene sesión: "Abrir la sesión del dd/mm" (se edita igual que la de hoy). Sigue habiendo una sesión por fecha; la sesión lleva su fecha real, así la rotación, la semana y la "última vez" la toman en orden.
+- `/sesion` toma `?fecha=` (por defecto `hoy()`): título "Hoy: Día 1", "Ayer: Día 1" o "29/10: Día 1"; la "última vez" es la anterior a esa fecha; el resumen dice solo "Queda guardada." si no es hoy. `Contexto` suma `fecha`.
+- **Inicio más limpio**: la lista de días se oculta detrás de "Ver días" (botón texto); desplegada muestra cada día con "N ejercicios · hecho el dd/mm" y los nombres de sus ejercicios, solo lectura. Editar sigue en "Editar rutina".
 
 ## Risks / Trade-offs
 

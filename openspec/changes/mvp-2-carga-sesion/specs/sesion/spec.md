@@ -90,11 +90,18 @@ Cada toque que cambia la sesión SHALL guardarse sin botón "Guardar"; la sesió
 - **THEN** el resumen muestra "3.400 kg"
 
 ### Requirement: Sesión de hoy editable y borrable
-La sesión de hoy SHALL poder retomarse y editarse desde el inicio aunque esté terminada, y borrarse con confirmación; las sesiones de días anteriores no SHALL ofrecerse para editar en este MVP.
+La sesión de hoy SHALL poder retomarse y editarse desde el inicio aunque esté terminada, y borrarse con confirmación; las sesiones de días anteriores solo SHALL abrirse desde "Cargar un día anterior".
 
 #### Scenario: Borrar
 - **WHEN** el usuario toca "Borrar" en la sesión de hoy y confirma "Sí, borrar sesión"
 - **THEN** la sesión se borra, vuelve al inicio y la tarjeta ofrece otra vez el día sugerido
+
+### Requirement: Cargar un día anterior
+El inicio SHALL ofrecer "Cargar un día anterior" para elegir una fecha pasada (desde el inicio de la rutina hasta ayer) y un día de la rutina, y cargar esa sesión con su fecha real; si esa fecha ya tiene sesión, SHALL abrirla para editarla.
+
+#### Scenario: Me olvidé de ayer
+- **WHEN** hoy no hay sesiones, la última fue Día 2 el 29/10 y el usuario carga Día 1 con fecha "Ayer" (30/10)
+- **THEN** la sesión queda con fecha 30/10 y la tarjeta Hoy sugiere Día 2
 
 ### Requirement: Semana N
 La sesión SHALL mostrar "semana N", donde N es la cantidad de veces que se hizo ese día en la rutina contando la actual; no se SHALL guardar.

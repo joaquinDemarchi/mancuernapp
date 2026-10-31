@@ -26,7 +26,7 @@
 
 ## 5. Cierre (~14k)
 
-- [ ] 5.1 Verificar offline en dev (DevTools → Network offline, o modo avión con `dev-lan`): "Cargar en modo avión" y "Crear un extra sin señal", y que la UI no queda esperando; actualizar el modelo en `openspec/config.yaml` y `docs/decisiones-diseno-mancuernapp.md §4` (`creada`, `terminada`, sesión creada al primer toque); commit (~7k)
+- [x] 5.1 Verificar offline en dev (DevTools → Network offline, o modo avión con `dev-lan`): "Cargar en modo avión" y "Crear un extra sin señal", y que la UI no queda esperando; actualizar el modelo en `openspec/config.yaml` y `docs/decisiones-diseno-mancuernapp.md §4` (`creada`, `terminada`, sesión creada al primer toque); commit (~7k)
 - [ ] 5.2 Con OK de Joa, push a `main` y verificar el deploy de Vercel en verde; checklist en el celu de Joa (anotarla en `traspaso.md`): sesión real completa en el gym, ✓, ajustar kg, + bloque, desarmar, RPE, nota, extra, terminar, retomar, borrar una de prueba, y una carga en modo avión; commit (~7k)
 
 ## Workflow follow-up

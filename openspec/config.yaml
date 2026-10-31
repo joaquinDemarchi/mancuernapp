@@ -24,8 +24,9 @@ context: |
     con dias[]: { id, nombre, items[]: { ejercicioId, objetivo? } }; el orden es la posición en el array;
     objetivo = { series?, reps?, segundos?, minutos? } (sin kg). El día lleva id porque sesiones.diaId lo referencia.
     Una sola rutina activa; archivada = solo lectura ("desarchivar" escondido en Ajustes).
-  - users/{uid}/sesiones/{id}: { rutinaId, diaId, fecha (auto), registros[] }
-    registros[]: { ejercicioId, bloques[], rpe?, hecho, nota? }
+  - users/{uid}/sesiones/{id}: { rutinaId, diaId, fecha (AAAA-MM-DD local), creada (serverTimestamp), terminada, registros[] }
+    La sesión se crea con el primer ejercicio cargado (no al tocar "Empezar"); una por día.
+    registros[]: { ejercicioId, bloques[], rpe?, hecho, nota? } (solo los ejercicios hechos; extra = no está en el día)
     bloques[]: { series, reps?, kg?, segundos?, minutos? } (desarmable en series individuales).
     "Semana N" se calcula (N-ésima vez que se hace ese día en la rutina), no se guarda.
     Sesiones de la rutina activa: editables y borrables (con confirmación). Se puede agregar un ejercicio extra.

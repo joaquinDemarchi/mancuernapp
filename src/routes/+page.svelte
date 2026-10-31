@@ -73,8 +73,17 @@
 		return $rutinaActiva.dias.find((d) => d.id === id);
 	});
 
+	// "Otra fecha" es un chip más: el campo de fecha aparece solo al elegirlo.
+	let otraFecha = $state(false);
+	function elegirFecha(v: string) {
+		otraFecha = v === 'otra';
+		if (!otraFecha) fechaAnt = v;
+		elegidoAnt = undefined;
+	}
+
 	function abrirAnterior() {
 		fechaAnt = diasAntes(1);
+		otraFecha = false;
 		elegidoAnt = undefined;
 		anterior = true;
 	}
@@ -90,8 +99,8 @@
 		{#snippet accion()}<button class="texto" onclick={salir}>Salir</button>{/snippet}
 	</Cabecera>
 	{#if $rutinaActiva}
-		<p class="meta">Rutina activa · desde {fechaCorta($rutinaActiva.inicio)}</p>
 		<h2>{$rutinaActiva.nombre}</h2>
+		<p class="meta desde">Rutina activa · desde {fechaCorta($rutinaActiva.inicio)}</p>
 		{#if dia}
 			<section class="hoy" aria-label="Hoy">
 				<div>
@@ -113,9 +122,9 @@
 			</section>
 		{/if}
 		<div class="enlaces">
-			<!-- Solo para mirar: editar va por "Editar rutina". -->
+			<!-- Los días solo para mirar; editar va por "Editar rutina", que también queda plegado acá. -->
 			<button class="texto" aria-expanded={verDias} onclick={() => (verDias = !verDias)}>
-				{verDias ? 'Ocultar días' : 'Ver días'}
+				{verDias ? 'Ocultar rutina' : 'Ver rutina'}
 			</button>
 			{#if fechasRapidas.length}
 				<button class="texto" onclick={abrirAnterior}>Cargar un día anterior</button>
@@ -133,24 +142,34 @@
 					</li>
 				{/each}
 			</ul>
+			<div class="acciones">
+				<Boton variante="secundario" onclick={() => goto('/ejercicios')}>Ejercicios</Boton>
+				<Boton variante="secundario" onclick={() => goto('/rutina')}>Editar rutina</Boton>
+			</div>
 		{/if}
 		<Hoja bind:abierta={anterior} titulo="Cargar un día anterior">
-			<OpcionesChip bind:valor={() => fechaAnt, (v) => ((fechaAnt = v), (elegidoAnt = undefined))} opciones={fechasRapidas} leyenda="Fecha" />
-			<label class="campo">
-				<span>Otra fecha</span>
-				<input
-					type="date"
-					min={$rutinaActiva.inicio}
-					max={diasAntes(1)}
-					value={fechaAnt}
-					onchange={(e) => {
-						const v = e.currentTarget.value;
-						if (v && v >= $rutinaActiva.inicio && v <= diasAntes(1)) fechaAnt = v;
-						else e.currentTarget.value = fechaAnt;
-						elegidoAnt = undefined;
-					}}
-				/>
-			</label>
+			<OpcionesChip
+				bind:valor={() => (otraFecha ? 'otra' : fechaAnt), elegirFecha}
+				opciones={[...fechasRapidas, { valor: 'otra', etiqueta: 'Otra fecha' }]}
+				leyenda="Fecha"
+			/>
+			{#if otraFecha}
+				<label class="campo">
+					<span>Elegí la fecha</span>
+					<input
+						type="date"
+						min={$rutinaActiva.inicio}
+						max={diasAntes(1)}
+						value={fechaAnt}
+						onchange={(e) => {
+							const v = e.currentTarget.value;
+							if (v && v >= $rutinaActiva.inicio && v <= diasAntes(1)) fechaAnt = v;
+							else e.currentTarget.value = fechaAnt;
+							elegidoAnt = undefined;
+						}}
+					/>
+				</label>
+			{/if}
 			{#if diaAnt}
 				{#if yaCargada}
 					<p class="meta">El {diaMes(fechaAnt)} ya tiene una sesión de {diaAnt.nombre}.</p>
@@ -174,14 +193,12 @@
 		</div>
 	{/if}
 </main>
-<BarraAccion>
-	<Boton variante="secundario" onclick={() => goto('/ejercicios')}>Ejercicios</Boton>
-	{#if $rutinaActiva}
-		<Boton variante="secundario" onclick={() => goto('/rutina')}>Editar rutina</Boton>
-	{:else}
+{#if !$rutinaActiva}
+	<BarraAccion>
+		<Boton variante="secundario" onclick={() => goto('/ejercicios')}>Ejercicios</Boton>
 		<Boton disabled={creando || $rutinaActiva === undefined} onclick={crear}>Crear rutina</Boton>
-	{/if}
-</BarraAccion>
+	</BarraAccion>
+{/if}
 
 <style>
 	.vacio {
@@ -202,9 +219,18 @@
 		color: var(--ink-faint);
 	}
 	h2 {
-		margin: 0 0 var(--space-4);
+		margin: 0;
 		font: 700 var(--fs-title) / var(--lh-title) var(--font-display);
 		font-stretch: var(--stretch-condensed);
+	}
+	.desde {
+		margin-bottom: var(--space-4);
+	}
+	.acciones {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--space-2);
+		margin-top: var(--space-3);
 	}
 	.hoy {
 		display: grid;

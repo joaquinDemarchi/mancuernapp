@@ -29,6 +29,8 @@
 	let bloques = $state<Bloque[]>(untrack(() => structuredClone($state.snapshot(registro?.bloques ?? inicial))));
 	let elegido = $state(0);
 	let hecho = $state(untrack(() => !!registro));
+	let rpe = $state(untrack(() => registro?.rpe));
+	let nota = $state(untrack(() => registro?.nota ?? ''));
 
 	const tipo = $derived(ejercicio.tipo);
 	const b = $derived(bloques[elegido]);
@@ -36,10 +38,17 @@
 	const nombreBloque = (x: Bloque, i: number) => `${x.series === 1 ? 'Serie' : 'Bloque'} ${i + 1}`;
 
 	// Cada cambio guarda al instante y deja el ejercicio hecho.
-	function guardar(nuevos: Bloque[]) {
+	function guardar(nuevos = bloques) {
 		bloques = nuevos;
 		hecho = true;
-		onguardar({ ...(registro ?? {}), ejercicioId: ejercicio.id, bloques: $state.snapshot(nuevos), hecho: true });
+		const texto = nota.trim();
+		onguardar({ ejercicioId: ejercicio.id, bloques: $state.snapshot(nuevos), hecho: true, rpe, nota: texto || undefined });
+	}
+
+	// Tocar el RPE elegido lo borra.
+	function elegirRpe(n: number) {
+		rpe = rpe === n ? undefined : n;
+		guardar();
 	}
 
 	function cambiar(campo: keyof Bloque, valor: number) {
@@ -63,7 +72,7 @@
 	}
 
 	function listo() {
-		if (!hecho) guardar(bloques);
+		if (!hecho) guardar();
 		abierta = false;
 	}
 </script>
@@ -130,6 +139,20 @@
 			{/if}
 		</section>
 	{/if}
+
+	<fieldset class="rpe">
+		<legend>RPE (opcional)</legend>
+		<div>
+			{#each [6, 7, 8, 9, 10] as n (n)}
+				<button type="button" aria-pressed={rpe === n} onclick={() => elegirRpe(n)}>{n}</button>
+			{/each}
+		</div>
+	</fieldset>
+
+	<label class="nota">
+		<span>Nota (opcional)</span>
+		<textarea bind:value={nota} onchange={() => guardar()}></textarea>
+	</label>
 
 	<Boton onclick={listo}>Listo</Boton>
 </Hoja>
@@ -212,6 +235,53 @@
 		opacity: 0.5;
 		cursor: not-allowed;
 	}
+	.rpe {
+		min-width: 0;
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+	legend,
+	.nota span {
+		margin-bottom: var(--space-1);
+		padding: 0;
+		color: var(--ink-muted);
+		font: 400 var(--fs-meta) / var(--lh-meta) var(--font-text);
+	}
+	.rpe div {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: var(--space-2);
+	}
+	.rpe button {
+		min-height: var(--touch-min);
+		border: 0;
+		border-radius: var(--radius);
+		background: var(--raised);
+		color: var(--ink);
+		font: 700 var(--fs-heading) / 1 var(--font-display);
+		font-variant-numeric: tabular-nums;
+		cursor: pointer;
+	}
+	.rpe button[aria-pressed='true'] {
+		background: var(--accent);
+		color: var(--on-accent);
+	}
+	.nota {
+		display: grid;
+	}
+	textarea {
+		min-height: 88px;
+		padding: var(--space-3);
+		border: 2px solid var(--control);
+		border-radius: var(--radius);
+		background: var(--ground);
+		color: var(--ink);
+		font: 400 var(--fs-body) / var(--lh-body) var(--font-text);
+		resize: vertical;
+	}
+	.rpe button:focus-visible,
+	textarea:focus-visible,
 	.bloque:focus-visible,
 	.agregar:focus-visible,
 	.quitar:focus-visible {

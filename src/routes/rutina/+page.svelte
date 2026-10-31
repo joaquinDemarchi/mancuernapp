@@ -15,6 +15,7 @@
 	import BarraAccion from '#lib/componentes/BarraAccion.svelte';
 	import Cabecera from '#lib/componentes/Cabecera.svelte';
 	import Hoja from '#lib/componentes/Hoja.svelte';
+	import HojaAgregar from '#lib/componentes/HojaAgregar.svelte';
 
 	// `?dia=` abre en ese día; si no existe (o se borró), el primero.
 	let diaId = $state(page.url.searchParams.get('dia'));
@@ -35,6 +36,7 @@
 
 	// Hoja "Renombrar": nombre del día y "Borrar día" (con confirmación si tiene ejercicios).
 	let renombrando = $state(false);
+	let agregando = $state(false);
 	let confirmando = $state(false);
 
 	function abrirRenombrar() {
@@ -120,10 +122,10 @@
 				<Boton variante="secundario" onclick={borrar}>{confirmando ? 'Sí, borrar día' : 'Borrar día'}</Boton>
 			{/if}
 		</Hoja>
+		<HojaAgregar bind:abierta={agregando} {dia} />
 	{/if}
 </main>
-<!-- La hoja "Agregar a Día N" llega en la tarea 4.3 -->
-<BarraAccion><Boton>Agregar ejercicio</Boton></BarraAccion>
+<BarraAccion><Boton onclick={() => (agregando = true)}>Agregar ejercicio</Boton></BarraAccion>
 
 <style>
 	.campo {

@@ -9,7 +9,8 @@
 - 3.1 hecha: `src/lib/catalogo.ts` (`ejercicios` es `null` hasta la primera lectura; `tipos` con etiquetas para los chips; `describir(e)` arma la meta "Peso · 2,5 kg · ±1 rep"; `crearEjercicio(nombre, tipo, datos?)` devuelve el id) y `/ejercicios`. Verificado en el Chrome de Joa: quedaron en su Firestore real "Elongación" (calentamiento) y "Press banca" (peso) como datos de prueba. 
 - 3.2 hecha: `/ejercicio` (variante A). El error de duplicado se ve en vivo mientras se escribe y "Guardar" no hace nada en ese caso; guarda sin `await` y va a `/ejercicios`. Verificado en Chrome: saltos según tipo, "Remo con mancuerna" con salto 1 kg (quedó en el Firestore de Joa), duplicado, renombrar y entrar directo con `?id=`. 
 - 4.1 hecha: `src/lib/rutina.ts` (`rutinaActiva`: `undefined` cargando, `null` sin rutina; `crearRutina`, `fechaCorta`, y `renombrarRutina`, `agregarDia` (devuelve id), `renombrarDia`, `borrarDia`, `moverDia`, `agregarItem`, `quitarItem`, `moverItem`, `fijarObjetivo` (sin objetivo borra la clave), todas sin probar todavía salvo `crearRutina`). Inicio con rutina listo. Verificado en Chrome: en el Firestore de Joa quedó "Rutina 1" activa desde 30/10/2026 con "Día 1" vacío (es la rutina real a completar). 
-- 4.2 hecha: editor `/rutina` (nombre con guardado en `change`, pestañas `role=tab`, `+` agrega y elige el día, hoja "Renombrar día" con "Borrar día": con ejercicios el primer toque muestra el aviso y el botón pasa a "Sí, borrar día"; oculto con un solo día). `formatearObjetivo` en `rutina.ts`. Las filas del día todavía no son botones (la hoja Objetivo es la 4.4). Verificado en Chrome con Firestore; la rutina quedó como estaba ("Rutina 1", "Día 1" vacío). Próxima: 4.3.
+- 4.2 hecha: editor `/rutina` (nombre con guardado en `change`, pestañas `role=tab`, `+` agrega y elige el día, hoja "Renombrar día" con "Borrar día": con ejercicios el primer toque muestra el aviso y el botón pasa a "Sí, borrar día"; oculto con un solo día). `formatearObjetivo` en `rutina.ts`. Las filas del día todavía no son botones (la hoja Objetivo es la 4.4). Verificado en Chrome con Firestore; la rutina quedó como estaba ("Rutina 1", "Día 1" vacío). 
+- 4.3 hecha: `HojaAgregar.svelte` (pasos `buscar`/`nuevo` dentro de la misma `Hoja`; parecidos primero; "ya está en este día" con `aria-disabled`; en el paso nuevo también avisa duplicado). Verificado en Chrome: "Día 1" quedó con Press banca y Hip thrust (Hip thrust creado al vuelo en el catálogo real), útiles para probar 4.4 y 4.5. Próxima: 4.4.
 
 ## Decisiones tomadas con Joa
 - Catálogo como acceso secundario "Ejercicios" en el inicio (sin pestañas abajo).
@@ -20,6 +21,7 @@
 - Rutina con guardado instantáneo; ejercicio con "Guardar"; "Salir" arriba a la derecha; días renombrables.
 
 ## Gotchas previstos
+- Con varias hojas en la página, buscar la abierta con `[...document.querySelectorAll('dialog')].find(d => d.open)`.
 - Desde la consola, importar `firebase/firestore` por `/node_modules/.vite/deps/...` da otra instancia ("Expected first argument to collection()..."): leer los datos por los stores (`catalogo.ts`) en vez de usar el SDK directo.
 - Verificación con Firestore: en el Chrome de Joa (Claude in Chrome), `http://localhost:5173` ya tiene sesión. Desde la consola: `const c = await import('/src/lib/catalogo.ts')`.
 - Browser pane: los clics por coordenada sobre un `<dialog>` modal (top layer) llegan a `<html>` con la emulación de viewport; probar las hojas con `el.click()` desde la consola. Al borrar y recrear una ruta, Vite puede servir la vieja: reiniciar el dev server.

@@ -21,7 +21,8 @@ context: |
     Un ejercicio existe una vez; las rutinas lo referencian (evolución comparable entre rutinas).
     Al crear/importar, sugerir emparejamiento con el catálogo.
   - users/{uid}/rutinas/{id}: { nombre, inicio, fin?, estado: "activa" | "archivada" }
-    con dias[]: { nombre, orden, items[]: { ejercicioId, orden, objetivo? } }.
+    con dias[]: { id, nombre, items[]: { ejercicioId, objetivo? } }; el orden es la posición en el array;
+    objetivo = { series?, reps?, segundos?, minutos? } (sin kg). El día lleva id porque sesiones.diaId lo referencia.
     Una sola rutina activa; archivada = solo lectura ("desarchivar" escondido en Ajustes).
   - users/{uid}/sesiones/{id}: { rutinaId, diaId, fecha (auto), registros[] }
     registros[]: { ejercicioId, bloques[], rpe?, hecho, nota? }

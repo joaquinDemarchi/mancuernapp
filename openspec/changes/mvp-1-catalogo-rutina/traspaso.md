@@ -12,7 +12,18 @@
 - 4.2 hecha: editor `/rutina` (nombre con guardado en `change`, pestañas `role=tab`, `+` agrega y elige el día, hoja "Renombrar día" con "Borrar día": con ejercicios el primer toque muestra el aviso y el botón pasa a "Sí, borrar día"; oculto con un solo día). `formatearObjetivo` en `rutina.ts`. Las filas del día todavía no son botones (la hoja Objetivo es la 4.4). Verificado en Chrome con Firestore; la rutina quedó como estaba ("Rutina 1", "Día 1" vacío). 
 - 4.3 hecha: `HojaAgregar.svelte` (pasos `buscar`/`nuevo` dentro de la misma `Hoja`; parecidos primero; "ya está en este día" con `aria-disabled`; en el paso nuevo también avisa duplicado). Verificado en Chrome: "Día 1" quedó con Press banca y Hip thrust (Hip thrust creado al vuelo en el catálogo real), útiles para probar 4.4 y 4.5. 
 - 4.4 hecha: `HojaObjetivo.svelte` (carga los valores solo al abrir, con `untrack`, para que el eco de Firestore no pise lo que se toca; guarda en cada `oncambio`) y `Hoja` con prop `meta`. Las filas del día son botones que abren el objetivo. Verificado en Chrome: Press banca quedó con objetivo 4×10 en "Día 1"; `3×40 s` y `15 min` probados con `formatearObjetivo` en consola (no hay ejercicios de tiempo ni cardio en el catálogo). 
-- 4.5 hecha: `ListaOrdenable.svelte` (genérico; la fila recibe `manija` para esparcir en su manija; `demora` para el chip de pestañas; orden local hasta que vuelve `items` de Firestore; traga el clic que sigue al soltar; teclado con flechas, devuelve el foco y anuncia en `aria-live`). Verificado en Chrome: arrastre con mouse real de ejercicios (persiste al recargar), teclado, pestañas con toque corto (elige), arrastre rápido sin mantener (no mueve) y mantener ~400 ms con PointerEvents táctiles sintéticos (mueve, hueco punteado, persiste). **No verificado:** "Scroll sin arrastrar" con dedo real (Chrome con la extensión no emula táctil): queda para la checklist del celu en 5.1. Próxima: 5.1 (pide OK de Joa para el push).
+- 4.5 hecha: `ListaOrdenable.svelte` (genérico; la fila recibe `manija` para esparcir en su manija; `demora` para el chip de pestañas; orden local hasta que vuelve `items` de Firestore; traga el clic que sigue al soltar; teclado con flechas, devuelve el foco y anuncia en `aria-live`). Verificado en Chrome: arrastre con mouse real de ejercicios (persiste al recargar), teclado, pestañas con toque corto (elige), arrastre rápido sin mantener (no mueve) y mantener ~400 ms con PointerEvents táctiles sintéticos (mueve, hueco punteado, persiste). **No verificado:** "Scroll sin arrastrar" con dedo real (Chrome con la extensión no emula táctil): queda para la checklist del celu en 5.1. 
+- 5.1 hecha: modelo actualizado en `openspec/config.yaml` y `docs/decisiones-diseno-mancuernapp.md §4`; push a `main` con OK de Joa (30/10/2026). Falta: Joa corre la checklist del celu (abajo); después critique + accesibilidad + copy y `/opsx:archive`.
+
+## Checklist en el celu (Joa)
+- [ ] Crear 3–4 ejercicios de distintos tipos (peso con mancuerna a 1 kg, tiempo, cardio).
+- [ ] Agregar a la rutina con búsqueda y uno creado al vuelo.
+- [ ] Fijar objetivo en uno de peso, uno de tiempo (`3×40 s`) y uno de cardio (`15 min`).
+- [ ] Crear un segundo día; renombrar y borrar un día.
+- [ ] Arrastrar ejercicios desde la manija con el pulgar.
+- [ ] Arrastrar pestañas manteniendo apretado el chip.
+- [ ] Scroll de la lista tocando fuera de la manija: hace scroll, no arrastra (no verificado en la PC).
+- [ ] "Salir" vuelve al login (no verificado en la PC: el Browser pane no abre el popup de Google).
 
 ## Decisiones tomadas con Joa
 - Catálogo como acceso secundario "Ejercicios" en el inicio (sin pestañas abajo).

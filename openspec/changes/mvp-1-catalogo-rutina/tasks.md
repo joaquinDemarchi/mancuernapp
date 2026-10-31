@@ -28,7 +28,7 @@
 
 ## 5. Cierre (~8k)
 
-- [ ] 5.1 Actualizar el modelo en `openspec/config.yaml` y `docs/decisiones-diseno-mancuernapp.md §4` (día con `id`, orden = posición en el array, `objetivo` sin kg); con OK de Joa, push a `main` y verificar el deploy de Vercel en verde; checklist en el celu de Joa (anotada en `traspaso.md`): crear 3–4 ejercicios de distintos tipos, crear rutina con 2 días, agregar con búsqueda y al vuelo, objetivo, arrastrar ejercicios y días con el pulgar, renombrar y borrar un día, "Salir"; commit (~8k)
+- [x] 5.1 Actualizar el modelo en `openspec/config.yaml` y `docs/decisiones-diseno-mancuernapp.md §4` (día con `id`, orden = posición en el array, `objetivo` sin kg); con OK de Joa, push a `main` y verificar el deploy de Vercel en verde; checklist en el celu de Joa (anotada en `traspaso.md`): crear 3–4 ejercicios de distintos tipos, crear rutina con 2 días, agregar con búsqueda y al vuelo, objetivo, arrastrar ejercicios y días con el pulgar, renombrar y borrar un día, "Salir"; commit (~8k)
 
 ## Workflow follow-up
 

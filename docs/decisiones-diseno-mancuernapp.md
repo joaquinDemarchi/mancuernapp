@@ -48,7 +48,8 @@ Los datos históricos del Excel **no se migran**: Lio los carga a mano.
 users/{uid}                      { email, nombre, rol: "usuario" | "profe" (futuro), ajustes }
 users/{uid}/ejercicios/{id}      catálogo personal: { nombre, tipo, saltoKg, saltoReps, saltoSeg, notas }
 users/{uid}/rutinas/{id}         { nombre, inicio, fin?, estado: "activa" | "archivada" }
-   └─ dias[]                     { nombre: "Día 1", orden, items[]: { ejercicioId, orden, objetivo? } }
+   └─ dias[]                     { id, nombre: "Día 1", items[]: { ejercicioId, objetivo? } }
+       └─ objetivo               { series?, reps?, segundos?, minutos? }  (como un bloque, sin kg)
 users/{uid}/sesiones/{id}        { rutinaId, diaId, fecha (auto), registros[] }
    └─ registros[]                { ejercicioId, bloques[], rpe?, hecho, nota? }
        └─ bloques[]              { series, reps?, kg?, segundos?, minutos? }  (desarmable en series individuales)
@@ -61,6 +62,7 @@ Reglas:
 - **Rutina = bloque con inicio/fin**, una sola **activa** a la vez. Al cerrarla pasa a **archivada** (solo lectura). "Desarchivar" escondido en Ajustes.
 - **Sesión** con fecha automática; la "semana N" se calcula (N-ésima vez que se hace ese día en la rutina). Se permite agregar un ejercicio extra a una sesión.
 - Sesiones de la rutina activa: se pueden **editar y borrar** (con confirmación).
+- **Orden** de días e items = posición en el array (no se guarda `orden`). Cada día lleva `id` (`crypto.randomUUID()`) porque `sesiones.diaId` lo referencia y el nombre del día se puede cambiar (MVP 1).
 
 ## 5. Flujo de carga (pantalla crítica)
 

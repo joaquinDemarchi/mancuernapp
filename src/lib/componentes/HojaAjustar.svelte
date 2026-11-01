@@ -150,7 +150,7 @@
 		</section>
 	{/if}
 
-	<button type="button" class="texto opcional" aria-expanded={opcional} onclick={() => (opcional = !opcional)}>
+	<button type="button" class="texto sutil opcional" aria-expanded={opcional} onclick={() => (opcional = !opcional)}>
 		Opcional{rpe !== undefined ? ` · RPE ${rpe}` : ''}{nota.trim() ? ' · nota' : ''}
 	</button>
 	{#if opcional}

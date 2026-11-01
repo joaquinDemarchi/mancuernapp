@@ -128,7 +128,7 @@
 			volver="/"
 		>
 			{#snippet accion()}
-				{#if deHoy}<button class="texto" onclick={() => (borrando = true)}>Borrar</button>{/if}
+				{#if deHoy}<button class="texto sutil" onclick={() => (borrando = true)}>Borrar</button>{/if}
 			{/snippet}
 		</Cabecera>
 		<ul>

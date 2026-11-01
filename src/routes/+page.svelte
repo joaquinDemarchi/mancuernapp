@@ -96,7 +96,7 @@
 
 <main class="pantalla">
 	<Cabecera titulo={app.nombre}>
-		{#snippet accion()}<button class="texto" onclick={salir}>Salir</button>{/snippet}
+		{#snippet accion()}<button class="texto sutil" onclick={salir}>Salir</button>{/snippet}
 	</Cabecera>
 	{#if $rutinaActiva}
 		<h2>{$rutinaActiva.nombre}</h2>
@@ -123,11 +123,11 @@
 		{/if}
 		<div class="enlaces">
 			<!-- Los días solo para mirar; editar va por "Editar rutina", que también queda plegado acá. -->
-			<button class="texto" aria-expanded={verDias} onclick={() => (verDias = !verDias)}>
+			<button class="texto sutil" aria-expanded={verDias} onclick={() => (verDias = !verDias)}>
 				{verDias ? 'Ocultar rutina' : 'Ver rutina'}
 			</button>
 			{#if fechasRapidas.length}
-				<button class="texto" onclick={abrirAnterior}>Cargar un día anterior</button>
+				<button class="texto sutil" onclick={abrirAnterior}>Cargar un día anterior</button>
 			{/if}
 		</div>
 		{#if verDias}

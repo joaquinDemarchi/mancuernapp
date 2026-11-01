@@ -21,6 +21,8 @@
 - 6.3 hecha: Ajustar plegado (`editando` + `tocarBloque`), "+ Bloque" fuera de la vista (volver a mostrarlo = el botón y `agregarBloque` del commit de 3.2), RPE y nota detrás de "Opcional". Verificado a 390 px en el Browser pane. Sin pushear.
 - 6.4 hecha: inicio con la meta bajo el nombre, "Ver rutina" pliega días + Ejercicios + Editar rutina (sin `BarraAccion` si hay rutina), chip "Otra fecha" que despliega el campo. Verificado a 390 px en el Browser pane. Sin pushear.
 - 6.5 hecha: ícono con mancuernita negra sobre naranja. Gotchas al exportar PNG con Chrome headless: ventana (N+200)×(N+200) y recortar (con ancho N el borde derecho sale blanco); no poner `--` dentro de un comentario del SVG (XML inválido, no renderiza). Sin pushear.
+- Grupo 7 (01/11): critique + accesibilidad + copy de las pantallas del MVP 2; Joa aprobó los 9 hallazgos (tasks.md §7). Verificado a 390 px en el Browser pane con stores falsos ("joa"): `acceso.sesion.set({ estado: 'con-sesion', usuario: { uid: 'uidJoa' } })` y después `rutinaActiva`, `ejercicios` y `sesiones` a mano (importando las URLs reales de `performance.getEntriesByType('resource')`). Ojo: un ✓ con la sesión falsa escribe en la caché local del Browser pane (no llega al Firestore de Joa).
+- 7.1 hecha: `.texto.sutil` (`--ink-muted`) en `app.css` para Salir, Ver rutina, Cargar un día anterior, Borrar y Opcional. "Desarmar" y "Renombrar" siguen en naranja (son la acción de su lugar).
 
 ## Checklist en el celu (5.2)
 Reinstalar o recargar la PWA para tomar el service worker nuevo. Joa la hizo completa el 31/10:

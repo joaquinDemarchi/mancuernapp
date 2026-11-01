@@ -39,6 +39,16 @@
 - [x] 6.4 Inicio más limpio (pedido de Joa): "Rutina activa · desde" bajo el nombre; "Ejercicios" y "Editar rutina" plegados con los días detrás de "Ver rutina" (la barra solo queda sin rutina); en "Cargar un día anterior", "Otra fecha" es un chip al lado de Ayer/Anteayer y recién ahí aparece el campo de fecha; verificar en dev a 390 px; commit (~4k)
 - [x] 6.5 Ícono unificado con la interfaz (elegido por Joa): mancuernita negra `--ground` sobre naranja `--accent` en `icon.svg` e `icon-maskable.svg`, PNG 192/512/maskable reexportados; deltas de `app-pwa` y `design-system`, `config.yaml`, decisiones y README de design; commit (~4k)
 
+## 7. Critique, accesibilidad y copy (~12k)
+
+> Revisión de las pantallas del MVP 2 contra `design/README.md` y la línea de Joa (simple, limpia por defecto). Joa aprobó los 9 hallazgos (01/11/2026).
+
+- [x] 7.1 Botones de texto secundarios en gris (`.texto.sutil` con `--ink-muted`): Salir, Ver rutina, Cargar un día anterior, Borrar (sesión) y Opcional; el naranja queda para la acción principal y lo elegido; verificar en dev a 390 px; commit (~2k)
+- [ ] 7.2 Tarjeta Hoy: los chips de día aparecen recién al tocar un "Cambiar" sutil junto a "Hoy: Día X"; verificar en dev a 390 px; commit (~3k)
+- [ ] 7.3 `/sesion`: "+ Agregar ejercicio" como botón de texto sutil en lugar de la caja punteada; verificar en dev a 390 px; commit (~1k)
+- [ ] 7.4 Ajustar: "Opcional" pasa a "RPE y nota"; bloques como botones con `aria-expanded` (no `role="radio"`); sin el título repetido del bloque en el editor; verificar en dev a 390 px; commit (~3k)
+- [ ] 7.5 Copy: "Cargar Día X del dd/mm" en la hoja del día anterior, resumen "Podés editarla desde el inicio hasta que termine el día." y el inicio sin el título "MancuernApp"; verificar en dev a 390 px; commit (~3k)
+
 ## Workflow follow-up
 
 - Critique + accesibilidad + copy de las pantallas nuevas (ciclo de diseño) antes de archivar.

@@ -30,6 +30,7 @@
 	let elegido = $state(0);
 	// Por defecto solo se ven los bloques: tocar uno abre su editor (y tocarlo de nuevo lo cierra).
 	let editando = $state(false);
+	const editor = $props.id();
 	// RPE y nota plegados; abiertos si ya tienen algo.
 	let opcional = $state(untrack(() => registro?.rpe !== undefined || !!registro?.nota));
 	let hecho = $state(untrack(() => !!registro));
@@ -84,12 +85,12 @@
 
 <Hoja bind:abierta titulo={ejercicio.nombre} meta={ultima ? `Última: ${formatear(tipo, ultima)}` : 'Primera vez'}>
 	{#if tipo !== 'cardio'}
-		<div class="bloques" role="radiogroup" aria-label="Bloques">
+		<div class="bloques" role="group" aria-label="Bloques">
 			{#each bloques as x, i (i)}
 				<button
 					type="button"
-					role="radio"
-					aria-checked={editando && i === elegido}
+					aria-expanded={editando && i === elegido}
+					aria-controls={editor}
 					class="bloque"
 					onclick={() => tocarBloque(i)}
 				>
@@ -101,10 +102,9 @@
 	{/if}
 
 	{#if b}
-		<section class="editor" aria-label={tipo === 'cardio' ? 'Minutos' : nombreBloque(b, elegido)}>
+		<section class="editor" id={editor} aria-label={tipo === 'cardio' ? 'Minutos' : nombreBloque(b, elegido)}>
 			{#if tipo !== 'cardio'}
 				<header>
-					<h3>{nombreBloque(b, elegido)}</h3>
 					{#if b.series > 1}
 						<button type="button" class="texto" onclick={desarmarElegido}>Desarmar</button>
 					{/if}
@@ -151,7 +151,7 @@
 	{/if}
 
 	<button type="button" class="texto sutil opcional" aria-expanded={opcional} onclick={() => (opcional = !opcional)}>
-		Opcional{rpe !== undefined ? ` · RPE ${rpe}` : ''}{nota.trim() ? ' · nota' : ''}
+		RPE y nota{rpe !== undefined ? ` · RPE ${rpe}` : ''}{nota.trim() ? ' · nota' : ''}
 	</button>
 	{#if opcional}
 		<fieldset class="rpe">
@@ -190,7 +190,7 @@
 		text-align: left;
 		cursor: pointer;
 	}
-	.bloque[aria-checked='true'] {
+	.bloque[aria-expanded='true'] {
 		border-color: var(--accent);
 	}
 	.etiqueta {
@@ -220,13 +220,8 @@
 	header {
 		display: flex;
 		align-items: center;
+		justify-content: flex-end;
 		gap: var(--space-2);
-	}
-	h3 {
-		flex: 1;
-		margin: 0;
-		font: 600 var(--fs-heading) / var(--lh-heading) var(--font-display);
-		font-stretch: var(--stretch-condensed);
 	}
 	.quitar {
 		display: grid;

@@ -97,12 +97,14 @@
 </script>
 
 <main class="pantalla">
-	<Cabecera titulo={app.nombre}>
+	<!-- Con rutina, el título es la rutina (sin "MancuernApp" encima); sin rutina, el nombre de la app. -->
+	<Cabecera
+		titulo={$rutinaActiva === undefined ? '' : ($rutinaActiva?.nombre ?? app.nombre)}
+		meta={$rutinaActiva ? `Rutina activa · desde ${fechaCorta($rutinaActiva.inicio)}` : undefined}
+	>
 		{#snippet accion()}<button class="texto sutil" onclick={salir}>Salir</button>{/snippet}
 	</Cabecera>
 	{#if $rutinaActiva}
-		<h2>{$rutinaActiva.nombre}</h2>
-		<p class="meta desde">Rutina activa · desde {fechaCorta($rutinaActiva.inicio)}</p>
 		{#if dia}
 			<section class="hoy" aria-label="Hoy">
 				<div class="encabezado">
@@ -189,7 +191,7 @@
 							leyenda="Día"
 						/>
 					{/if}
-					<Boton onclick={() => goto(`/sesion?dia=${diaAnt.id}&fecha=${fechaAnt}`)}>Cargar {diaAnt.nombre}</Boton>
+					<Boton onclick={() => goto(`/sesion?dia=${diaAnt.id}&fecha=${fechaAnt}`)}>Cargar {diaAnt.nombre} del {diaMes(fechaAnt)}</Boton>
 				{/if}
 			{/if}
 		</Hoja>
@@ -224,14 +226,6 @@
 	.meta {
 		font: 400 var(--fs-meta) / var(--lh-meta) var(--font-text);
 		color: var(--ink-faint);
-	}
-	h2 {
-		margin: 0;
-		font: 700 var(--fs-title) / var(--lh-title) var(--font-display);
-		font-stretch: var(--stretch-condensed);
-	}
-	.desde {
-		margin-bottom: var(--space-4);
 	}
 	.acciones {
 		display: grid;

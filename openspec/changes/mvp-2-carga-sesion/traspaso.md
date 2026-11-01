@@ -26,6 +26,7 @@
 - 7.2 hecha: "Cambiar" (`.texto.sutil`, `aria-expanded`) a la derecha de "Hoy: Día X" despliega los chips (`cambiarDia`); solo sin sesión de hoy y con 2+ días. Gotcha: a veces Vite sigue sirviendo el CSS viejo de un `.svelte` después de varios Edit seguidos (`?svelte&type=style` sin la regla nueva): reiniciar el server de dev.
 - 7.3 hecha: "+ Agregar ejercicio" de `/sesion` es `.texto.sutil` alineado a la izquierda (sin la caja punteada).
 - 7.4 hecha: en `HojaAjustar`, "RPE y nota" en lugar de "Opcional"; los bloques son botones con `aria-expanded` + `aria-controls` al editor (`role="group"`, ya no radios); el editor no repite el nombre del bloque (cabecera solo con Desarmar y el tachito, a la derecha).
+- 7.5 hecha: "Cargar Día X del dd/mm" en la hoja del día anterior; resumen "Podés editarla desde el inicio hasta que termine el día."; el inicio con rutina usa la `Cabecera` con el nombre de la rutina y "Rutina activa · desde" como meta (sin "MancuernApp"; sin rutina sigue el nombre de la app). Verificado a 390 px. Falta: push (con OK de Joa) y que Joa lo pruebe en el celu antes de archivar.
 
 ## Checklist en el celu (5.2)
 Reinstalar o recargar la PWA para tomar el service worker nuevo. Joa la hizo completa el 31/10:

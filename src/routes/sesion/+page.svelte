@@ -202,7 +202,7 @@
 				<span class="numero">{total}</span>
 			</div>
 			<p class="meta">
-				{cuando === 'Hoy' ? 'Queda guardada. Hasta mañana podés volver a tocarla desde el inicio.' : 'Queda guardada.'}
+				{cuando === 'Hoy' ? 'Queda guardada. Podés editarla desde el inicio hasta que termine el día.' : 'Queda guardada.'}
 			</p>
 			<Boton onclick={() => goto('/')}>Listo</Boton>
 		</Hoja>

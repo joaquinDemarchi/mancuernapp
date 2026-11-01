@@ -47,7 +47,7 @@
 - [x] 7.2 Tarjeta Hoy: los chips de día aparecen recién al tocar un "Cambiar" sutil junto a "Hoy: Día X"; verificar en dev a 390 px; commit (~3k)
 - [x] 7.3 `/sesion`: "+ Agregar ejercicio" como botón de texto sutil en lugar de la caja punteada; verificar en dev a 390 px; commit (~1k)
 - [x] 7.4 Ajustar: "Opcional" pasa a "RPE y nota"; bloques como botones con `aria-expanded` (no `role="radio"`); sin el título repetido del bloque en el editor; verificar en dev a 390 px; commit (~3k)
-- [ ] 7.5 Copy: "Cargar Día X del dd/mm" en la hoja del día anterior, resumen "Podés editarla desde el inicio hasta que termine el día." y el inicio sin el título "MancuernApp"; verificar en dev a 390 px; commit (~3k)
+- [x] 7.5 Copy: "Cargar Día X del dd/mm" en la hoja del día anterior, resumen "Podés editarla desde el inicio hasta que termine el día." y el inicio sin el título "MancuernApp"; verificar en dev a 390 px; commit (~3k)
 
 ## Workflow follow-up
 

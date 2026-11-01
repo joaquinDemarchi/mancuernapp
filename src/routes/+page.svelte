@@ -32,6 +32,8 @@
 	const deHoy = $derived($sesiones && sesionDeHoy($sesiones));
 	const sugerido = $derived($rutinaActiva && $sesiones && diaSugerido($rutinaActiva, $sesiones));
 	let elegido = $state<string>();
+	// Casi siempre se entrena el sugerido: los chips aparecen recién al tocar "Cambiar".
+	let cambiarDia = $state(false);
 	const diaId = $derived(deHoy?.diaId ?? elegido ?? sugerido?.id);
 	const dia = $derived($rutinaActiva?.dias.find((d) => d.id === diaId));
 	const ultima = $derived($sesiones?.filter((s) => s.fecha < hoy()).at(-1));
@@ -103,11 +105,16 @@
 		<p class="meta desde">Rutina activa · desde {fechaCorta($rutinaActiva.inicio)}</p>
 		{#if dia}
 			<section class="hoy" aria-label="Hoy">
-				<div>
-					<h3>Hoy: {dia.nombre}</h3>
-					<p class="meta">{metaHoy}</p>
+				<div class="encabezado">
+					<div>
+						<h3>Hoy: {dia.nombre}</h3>
+						<p class="meta">{metaHoy}</p>
+					</div>
+					{#if !deHoy && $rutinaActiva.dias.length > 1}
+						<button class="texto sutil" aria-expanded={cambiarDia} onclick={() => (cambiarDia = !cambiarDia)}>Cambiar</button>
+					{/if}
 				</div>
-				{#if !deHoy && $rutinaActiva.dias.length > 1}
+				{#if cambiarDia && !deHoy && $rutinaActiva.dias.length > 1}
 					<OpcionesChip
 						bind:valor={() => dia.id, (v) => (elegido = v)}
 						opciones={$rutinaActiva.dias.map((d) => ({ valor: d.id, etiqueta: d.nombre }))}
@@ -239,6 +246,15 @@
 		padding: var(--space-4);
 		border-radius: var(--radius);
 		background: var(--raised);
+	}
+	.encabezado {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: var(--space-2);
+	}
+	.encabezado .texto {
+		margin: calc(var(--space-3) * -1) calc(var(--space-3) * -1) 0 0;
 	}
 	h3 {
 		margin: 0;

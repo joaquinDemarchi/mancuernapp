@@ -24,6 +24,7 @@
 - Grupo 7 (01/11): critique + accesibilidad + copy de las pantallas del MVP 2; Joa aprobó los 9 hallazgos (tasks.md §7). Verificado a 390 px en el Browser pane con stores falsos ("joa"): `acceso.sesion.set({ estado: 'con-sesion', usuario: { uid: 'uidJoa' } })` y después `rutinaActiva`, `ejercicios` y `sesiones` a mano (importando las URLs reales de `performance.getEntriesByType('resource')`). Ojo: un ✓ con la sesión falsa escribe en la caché local del Browser pane (no llega al Firestore de Joa).
 - 7.1 hecha: `.texto.sutil` (`--ink-muted`) en `app.css` para Salir, Ver rutina, Cargar un día anterior, Borrar y Opcional. "Desarmar" y "Renombrar" siguen en naranja (son la acción de su lugar).
 - 7.2 hecha: "Cambiar" (`.texto.sutil`, `aria-expanded`) a la derecha de "Hoy: Día X" despliega los chips (`cambiarDia`); solo sin sesión de hoy y con 2+ días. Gotcha: a veces Vite sigue sirviendo el CSS viejo de un `.svelte` después de varios Edit seguidos (`?svelte&type=style` sin la regla nueva): reiniciar el server de dev.
+- 7.3 hecha: "+ Agregar ejercicio" de `/sesion` es `.texto.sutil` alineado a la izquierda (sin la caja punteada).
 
 ## Checklist en el celu (5.2)
 Reinstalar o recargar la PWA para tomar el service worker nuevo. Joa la hizo completa el 31/10:

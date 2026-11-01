@@ -154,7 +154,7 @@
 				</li>
 			{/each}
 		</ul>
-		<button type="button" class="agregar" onclick={() => (agregando = true)}>+ Agregar ejercicio</button>
+		<button type="button" class="texto sutil agregar" onclick={() => (agregando = true)}>+ Agregar ejercicio</button>
 		<HojaAgregar
 			bind:abierta={agregando}
 			titulo="Agregar a la sesión"
@@ -276,18 +276,8 @@
 		outline-offset: 2px;
 	}
 	.agregar {
-		min-height: 64px;
-		margin-top: var(--space-1);
-		border: 2px dashed var(--control);
-		border-radius: var(--radius);
-		background: transparent;
-		color: var(--ink);
-		font: 600 var(--fs-body) / var(--lh-body) var(--font-text);
-		cursor: pointer;
-	}
-	.agregar:focus-visible {
-		outline: 2px solid var(--focus);
-		outline-offset: 2px;
+		align-self: flex-start;
+		margin: var(--space-2) 0 0 calc(var(--space-3) * -1);
 	}
 	.meta {
 		margin: 0;

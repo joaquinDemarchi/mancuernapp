@@ -2,7 +2,7 @@
 
 ## Purpose
 
-TBD - created by archiving change mvp-2-carga-sesion. Update Purpose after archive.
+Registrar en el gym la sesión del día rápido y sin fricción: cada ejercicio precargado con la última vez se confirma con ✓ o se cambia con Ajustar, se pueden sumar extras y cargar días anteriores, y todo funciona offline.
 
 ## Requirements
 

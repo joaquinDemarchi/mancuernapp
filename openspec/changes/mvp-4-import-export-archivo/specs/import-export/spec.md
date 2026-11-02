@@ -7,11 +7,14 @@ Traer a la app rutinas y sesiones que viven fuera de ella (el Excel viejo, una r
 ## ADDED Requirements
 
 ### Requirement: Formato de la plantilla
-El import y el export SHALL usar el mismo CSV: columnas fijas `Rutina; Día; Ejercicio; Tipo; Series; Reps; Kg; Segundos; Minutos; Fecha` con encabezado, `;` como separador, coma decimal y UTF-8 con BOM. Cada fila es un bloque: sin Fecha describe el objetivo de un ejercicio en un día de la rutina (Kg se ignora); con Fecha (DD/MM/AAAA o AAAA-MM-DD) es un bloque hecho ese día. Varias filas con la misma rutina, día, ejercicio y fecha son bloques del mismo ejercicio, en orden. El usuario SHALL poder descargar la plantilla con el encabezado y filas de ejemplo.
+El import y el export SHALL usar el mismo CSV: columnas fijas `Rutina; Día; Ejercicio; Tipo; Series; Reps; Kg; Segundos; Minutos; Fecha` con encabezado, `;` como separador, coma decimal y UTF-8 con BOM. El usuario SHALL poder descargar la plantilla con el encabezado y filas de ejemplo.
 
 #### Scenario: Abrir en Excel
 - **WHEN** el usuario descarga la plantilla y la abre con Excel en español
 - **THEN** ve cada columna separada y "62,5" como número
+
+### Requirement: Filas de la plantilla
+Cada fila SHALL ser un bloque: sin Fecha, el objetivo de un ejercicio en un día de la rutina (Kg se ignora); con Fecha (DD/MM/AAAA o AAAA-MM-DD), un bloque hecho ese día. Varias filas con la misma rutina, día, ejercicio y fecha SHALL ser bloques del mismo ejercicio, en orden.
 
 #### Scenario: Bloques de una sesión vieja
 - **WHEN** el CSV tiene dos filas de Press banca en Día 1 de "Rutina 1" con fecha 15/09/2026, una con 3 × 10 · 60 y otra con 1 × 8 · 70

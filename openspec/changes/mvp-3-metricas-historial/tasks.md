@@ -15,7 +15,7 @@
 
 ## 3. Resumen con % e indicador (~10k)
 
-- [ ] 3.1 `Indicador.svelte` (design.md §5) y resumen de `/sesion` según §6: volumen, % e indicador de la sesión y "Por ejercicio" plegado con el % e indicador de cada ejercicio de peso; primera vez sin %; verificar en dev a 390 px los escenarios "Volumen", "Con vez anterior", "Por ejercicio plegado" y "Primera vez" con stores falsos, y que el indicador se entiende en gris (sin color); commit (~10k)
+- [x] 3.1 `Indicador.svelte` (design.md §5) y resumen de `/sesion` según §6: volumen, % e indicador de la sesión y "Por ejercicio" plegado con el % e indicador de cada ejercicio de peso; primera vez sin %; verificar en dev a 390 px los escenarios "Volumen", "Con vez anterior", "Por ejercicio plegado" y "Primera vez" con stores falsos, y que el indicador se entiende en gris (sin color); commit (~10k)
 
 ## 4. Historial (~12k)
 

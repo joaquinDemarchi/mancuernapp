@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { desdeObjetivo, diaMes, diasAntes, formatear, formatearVolumen, hoy, semana, sesionDeHoy, ultimaVez, volumen, type Bloque } from '#lib/calculos.ts';
+	import { anterior, crecimiento, desdeObjetivo, diaMes, diasAntes, formatear, formatearPct, formatearVolumen, hoy, semana, sesionDeHoy, ultimaVez, volumen, volumenEjercicio, type Bloque } from '#lib/calculos.ts';
 	import { ejercicios, type Tipo } from '#lib/catalogo.ts';
 	import { fechaCorta, formatearObjetivo, rutinaActiva, type Objetivo } from '#lib/rutina.ts';
 	import { borrarSesion, guardarRegistro, quitarRegistro, sesiones, terminar } from '#lib/sesion.ts';
@@ -11,6 +11,7 @@
 	import Hoja from '#lib/componentes/Hoja.svelte';
 	import HojaAgregar from '#lib/componentes/HojaAgregar.svelte';
 	import HojaAjustar from '#lib/componentes/HojaAjustar.svelte';
+	import Indicador from '#lib/componentes/Indicador.svelte';
 
 	$effect(() => {
 		if ($rutinaActiva === null) goto('/');
@@ -101,8 +102,19 @@
 	}
 
 	let resumen = $state(false);
-	const total = $derived(
-		deHoy ? formatearVolumen(volumen(deHoy.registros, (id) => tipoDe(id))) : formatearVolumen(0)
+	let porEjercicio = $state(false);
+	// Resumen: volumen y % vs la sesión anterior del mismo día (sin anterior, sin %).
+	const previa = $derived(deHoy && $sesiones ? anterior($sesiones, deHoy) : undefined);
+	const vol = $derived(deHoy ? volumen(deHoy.registros, tipoDe) : 0);
+	const volPrevio = $derived(previa && volumen(previa.registros, tipoDe));
+	const pct = $derived(crecimiento(vol, volPrevio));
+	const dePeso = $derived(
+		(deHoy?.registros ?? [])
+			.filter((r) => tipoDe(r.ejercicioId) === 'peso')
+			.map((r) => {
+				const antes = previa?.registros.find((p) => p.ejercicioId === r.ejercicioId);
+				return { r, pct: crecimiento(volumenEjercicio(r), antes && volumenEjercicio(antes)) };
+			})
 	);
 
 	let borrando = $state(false);
@@ -199,8 +211,39 @@
 		<Hoja bind:abierta={resumen} titulo="Sesión terminada" meta="{dia.nombre} · semana {n} · {hechos} de {filas.length} ejercicios">
 			<div class="volumen">
 				<span class="meta">Volumen</span>
-				<span class="numero">{total}</span>
+				<span class="numero">{formatearVolumen(vol)}</span>
 			</div>
+			{#if pct !== undefined && previa}
+				<div class="comparacion">
+					<Indicador {pct} conPct />
+					<span class="meta">vs {formatearVolumen(volPrevio ?? 0)} el {diaMes(previa.fecha)}</span>
+				</div>
+			{:else if !previa}
+				<p class="meta">Primera vez de {dia.nombre}: la próxima vas a ver cuánto subiste.</p>
+			{/if}
+			{#if dePeso.length}
+				<button type="button" class="texto sutil por-ejercicio" aria-expanded={porEjercicio} onclick={() => (porEjercicio = !porEjercicio)}>
+					Por ejercicio
+				</button>
+				{#if porEjercicio}
+					<ul class="ejercicios">
+						{#each dePeso as { r, pct: p } (r.ejercicioId)}
+							<li>
+								<span class="ej">
+									<span class="label">{ejercicio(r.ejercicioId)?.nombre ?? '…'}</span>
+									<span class="meta">{formatear('peso', r.bloques)}</span>
+								</span>
+								{#if p !== undefined}
+									<span class="pct">{formatearPct(p)}</span>
+									<Indicador pct={p} chico />
+								{:else}
+									<span class="meta">primera vez</span>
+								{/if}
+							</li>
+						{/each}
+					</ul>
+				{/if}
+			{/if}
 			<p class="meta">
 				{cuando === 'Hoy' ? 'Queda guardada. Podés editarla desde el inicio hasta que termine el día.' : 'Queda guardada.'}
 			</p>
@@ -296,6 +339,40 @@
 	}
 	.volumen {
 		display: grid;
+	}
+	.comparacion {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-2) var(--space-3);
+	}
+	.por-ejercicio {
+		justify-self: start;
+		margin-left: calc(var(--space-3) * -1);
+	}
+	.ejercicios li {
+		gap: var(--space-2);
+		align-items: center;
+		padding: var(--space-2) var(--space-4);
+		border-radius: var(--radius);
+		background: var(--raised);
+	}
+	.ej {
+		display: grid;
+		flex: 1;
+		min-width: 0;
+	}
+	.ej .meta {
+		color: var(--ink-muted);
+		font-variant-numeric: tabular-nums;
+	}
+	.label {
+		font: 600 var(--fs-body) / var(--lh-body) var(--font-text);
+	}
+	.pct {
+		font: 600 var(--fs-heading) / var(--lh-heading) var(--font-display);
+		font-stretch: var(--stretch-condensed);
+		font-variant-numeric: tabular-nums;
 	}
 	.numero {
 		font: 700 var(--fs-num-xl) / var(--lh-num-xl) var(--font-display);

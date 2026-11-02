@@ -20,14 +20,14 @@
 	const meta = $derived.by(() => {
 		if (!ejercicio) return '';
 		const tipo = tipos.find((t) => t.valor === ejercicio.tipo)?.etiqueta;
-		if (!veces.length) return `${tipo} · todavía sin veces`;
+		if (!veces.length) return `${tipo} · sin cargar todavía`;
 		return `${tipo} · ${veces.length === 1 ? '1 vez' : `${veces.length} veces`} desde ${diaMes(veces[0].fecha)}`;
 	});
 </script>
 
 <main class="pantalla">
 	<!-- Vuelve a donde se abrió (sesión, ficha o historial); entrando directo, al catálogo. -->
-	<Cabecera titulo={ejercicio?.nombre ?? ''} {meta} volver="/ejercicios" atras />
+	<Cabecera titulo={ejercicio?.nombre ?? 'Ejercicio'} {meta} volver="/ejercicios" atras />
 	{#if ejercicio && $sesiones}
 		{#if ejercicio.tipo === 'peso' && veces.length}
 			<section>

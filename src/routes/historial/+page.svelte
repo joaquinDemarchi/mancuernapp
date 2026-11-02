@@ -38,6 +38,7 @@
 		{#each grupos as g (g.nombre)}
 			<section>
 				<h2>{g.nombre}</h2>
+				{#if g.otros}<p class="nota">De días que ya no están en la rutina: solo para ver.</p>{/if}
 				<ul>
 					{#each g.sesiones as s (s.id)}
 						{@const f = fila(s)}
@@ -84,6 +85,11 @@
 		color: var(--ink-muted);
 		font: 600 var(--fs-heading) / var(--lh-heading) var(--font-display);
 		font-stretch: var(--stretch-condensed);
+	}
+	.nota {
+		margin: calc(var(--space-1) * -1) 0 0;
+		color: var(--ink-faint);
+		font: 400 var(--fs-meta) / var(--lh-meta) var(--font-text);
 	}
 	ul {
 		display: grid;

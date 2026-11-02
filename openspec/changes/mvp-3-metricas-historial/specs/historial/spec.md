@@ -7,7 +7,7 @@ Tener a mano todas las sesiones cargadas, de la más nueva a la más vieja, para
 ## ADDED Requirements
 
 ### Requirement: Acceso al historial
-Con al menos una sesión, el inicio SHALL mostrar bajo la tarjeta "Hoy" una fila con la última sesión (fecha, día, volumen y, si tiene vez anterior, % e indicador) que abre el historial; sin sesiones la fila no SHALL mostrarse.
+Con al menos una sesión anterior a hoy, el inicio SHALL mostrar bajo la tarjeta "Hoy" una fila con la última de ellas (fecha, día, volumen y, si tiene vez anterior, % e indicador) que abre el historial; sin sesiones la fila no SHALL mostrarse.
 
 #### Scenario: Última sesión
 - **WHEN** la última sesión fue Día 1 el 31/10, con 3.400 kg y +6 % vs la anterior

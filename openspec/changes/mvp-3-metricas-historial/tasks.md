@@ -32,7 +32,7 @@
 
 ## 7. Critique, accesibilidad y copy (~10k)
 
-- [ ] 7.1 `design-critique` + `accessibility-review` + `ux-copy` sobre resumen, historial y evolución (contraste del gráfico y del indicador, touch targets ≥ 48 px, `aria-label` del gráfico, textos de estados vacíos); aplicar lo que Joa apruebe; verificar en dev a 390 px; commit (~10k)
+- [x] 7.1 `design-critique` + `accessibility-review` + `ux-copy` sobre resumen, historial y evolución (contraste del gráfico y del indicador, touch targets ≥ 48 px, `aria-label` del gráfico, textos de estados vacíos); aplicar lo que Joa apruebe; verificar en dev a 390 px; commit (~10k)
 
 ## Workflow follow-up
 

@@ -236,6 +236,8 @@ describe('crecimiento e indicador', () => {
 	it('muestra redondeado con menos tipográfico', () => {
 		expect(formatearPct(-3)).toBe('−3 %');
 		expect(formatearPct(10.5)).toBe('+11 %');
+		expect(formatearPct(0)).toBe('0 %');
+		expect(formatearPct(-0.3)).toBe('0 %');
 	});
 });
 

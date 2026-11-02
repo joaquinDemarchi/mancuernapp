@@ -56,9 +56,9 @@
 		return partes.join(' · ');
 	});
 
-	// Fila de la última sesión de la rutina (también la de hoy): abre el historial.
+	// Fila de la última sesión de la rutina antes de hoy (la de hoy ya está en la tarjeta): abre el historial.
 	const reciente = $derived.by(() => {
-		const s = $sesiones?.findLast((s) => s.rutinaId === $rutinaActiva?.id);
+		const s = ultima;
 		if (!s || !$sesiones) return undefined;
 		const tipoDe = (id: string) => $ejercicios?.find((e) => e.id === id)?.tipo;
 		const vol = volumen(s.registros, tipoDe);

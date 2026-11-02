@@ -30,8 +30,19 @@
 			x: veces.length > 1 ? margenX + i * paso : ancho / 2,
 			y: arriba + (1 - ((v.volumen ?? 0) - lo) / (hi - lo)) * (alto - arriba - abajo),
 			cambio: i > 0 && v.rutinaId !== veces[i - 1].rutinaId,
+			x0: i > 0 ? margenX + (i - 0.5) * paso : 0,
 			rutinaId: v.rutinaId
 		}));
+	});
+
+	// Cambios de rutina; el nombre se omite si el cambio anterior quedó muy cerca (se encimarían).
+	const cambios = $derived.by(() => {
+		const lista: { x: number; rutinaId: string; conNombre: boolean }[] = [];
+		for (const p of puntos.filter((p) => p.cambio)) {
+			const previo = lista.findLast((c) => c.conNombre);
+			lista.push({ x: p.x0, rutinaId: p.rutinaId, conNombre: !previo || p.x0 - previo.x > 90 });
+		}
+		return lista;
 	});
 
 	const primera = $derived(veces[0]);
@@ -45,14 +56,12 @@
 
 <figure>
 	<svg viewBox="0 0 {ancho} {alto}" role="img" aria-label={etiqueta}>
-		<line class="base" x1="0" x2={ancho} y1={alto - abajo / 2} y2={alto - abajo / 2} />
-		{#each puntos as p, i (i)}
-			{#if p.cambio}
-				{@const x = (puntos[i - 1].x + p.x) / 2}
-				<line class="cambio" x1={x} x2={x} y1="4" y2={alto - abajo / 2} />
-				<!-- Cerca del borde derecho, el nombre va a la izquierda de la línea para no salirse. -->
-				{@const derecha = x > ancho * 0.7}
-				<text x={derecha ? x - 4 : x + 4} y="14" text-anchor={derecha ? 'end' : 'start'}>{nombreRutina(p.rutinaId)}</text>
+		{#each cambios as c (c.x)}
+			<line class="cambio" x1={c.x} x2={c.x} y1="4" y2={alto - abajo / 2} />
+			<!-- Cerca del borde derecho, el nombre va a la izquierda de la línea para no salirse. -->
+			{#if c.conNombre}
+				{@const derecha = c.x > ancho * 0.7}
+				<text x={derecha ? c.x - 4 : c.x + 4} y="14" text-anchor={derecha ? 'end' : 'start'}>{nombreRutina(c.rutinaId)}</text>
 			{/if}
 		{/each}
 		{#if puntos.length > 1}
@@ -84,10 +93,6 @@
 		width: 100%;
 		height: auto;
 		overflow: visible;
-	}
-	.base {
-		stroke: var(--raised);
-		stroke-width: 2;
 	}
 	.cambio {
 		stroke: var(--control);

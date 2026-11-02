@@ -120,9 +120,10 @@ export function indicador(pct: number): Nivel {
 	return pct > UMBRALES.altoDesde ? 'alto' : 'optimo';
 }
 
-/** "+6 %", "−3 %" (signo menos tipográfico), redondeado a entero. */
+/** "+6 %", "−3 %" (signo menos tipográfico), redondeado a entero; sin signo si redondea a 0. */
 export function formatearPct(pct: number) {
-	return `${pct < 0 ? '−' : '+'}${Math.abs(Math.round(pct))} %`;
+	const n = Math.abs(Math.round(pct));
+	return n ? `${pct < 0 ? '−' : '+'}${n} %` : '0 %';
 }
 
 export type Vez = { fecha: string; sesionId: string; rutinaId: string; diaId: string; bloques: Bloque[]; volumen?: number };

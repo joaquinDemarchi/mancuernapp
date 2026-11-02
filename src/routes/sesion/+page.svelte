@@ -224,11 +224,11 @@
 				<p class="meta">Primera vez de {dia.nombre}: la próxima vas a ver cuánto subiste.</p>
 			{/if}
 			{#if dePeso.length}
-				<button type="button" class="texto sutil por-ejercicio" aria-expanded={porEjercicio} onclick={() => (porEjercicio = !porEjercicio)}>
+				<button type="button" class="texto sutil por-ejercicio" aria-expanded={porEjercicio} aria-controls="por-ejercicio" onclick={() => (porEjercicio = !porEjercicio)}>
 					Por ejercicio
 				</button>
 				{#if porEjercicio}
-					<ul class="ejercicios">
+					<ul class="ejercicios" id="por-ejercicio">
 						{#each dePeso as { r, pct: p } (r.ejercicioId)}
 							<li>
 								<span class="ej">

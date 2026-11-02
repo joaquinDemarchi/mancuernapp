@@ -34,7 +34,8 @@ context: |
     cardio (minutos), calentamiento (solo check). Solo "peso" entra en volumen e indicador.
   - Saltos configurables por ejercicio: kg default 2,5 (mancuernas: mínimo y default 1); reps ±1; tiempo ±5 s.
   - Métricas: volumen = Σ series×reps×kg; % vs vez anterior del mismo ejercicio/día;
-    indicador de sobrecarga Bajo < 0%, Óptimo 0–10%, Alto > 10% con umbrales en una constante.
+    indicador de sobrecarga Bajo < 0%, Óptimo 0–10%, Alto > 10% con umbrales en una constante
+    (UMBRALES en src/lib/calculos.ts). Se calculan en el cliente desde el store con todas las sesiones del usuario.
 
   UI/UX: tema oscuro por defecto (opción claro); uso con una mano (acciones principales en la mitad inferior);
   touch targets ≥ 48 px; contraste pensado para el gym. Ciclo por MVP: mockup → Lio elige → handoff a

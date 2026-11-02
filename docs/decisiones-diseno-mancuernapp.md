@@ -86,6 +86,7 @@ Saltos: **configurables por ejercicio**; default **2,5 kg**; mínimo y default p
 - Indicador de sobrecarga: Bajo < 0%, Óptimo 0–10%, Alto > 10%. **Umbrales fijos en una constante** (configurables en v2).
 - 1 gráfico de evolución por ejercicio (cruzando rutinas gracias al catálogo).
 - Historial de sesiones y rutinas archivadas.
+- Todo se calcula en el cliente (también offline) desde un único store con **todas** las sesiones del usuario; nada de métricas guardado en Firestore. Umbrales en `UMBRALES` de `src/lib/calculos.ts`.
 
 ## 7. Import / Export
 

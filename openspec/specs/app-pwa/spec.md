@@ -11,7 +11,7 @@ La app SHALL publicarse como PWA instalable con nombre "MancuernApp", ícono de 
 
 #### Scenario: Instalar en Android
 - **WHEN** el usuario elige "Instalar app" desde Chrome en Android
-- **THEN** queda instalada como "MancuernApp" con la mancuernita celeste y abre sin barra del navegador
+- **THEN** queda instalada como "MancuernApp" con la mancuernita negra sobre naranja y abre sin barra del navegador
 
 ### Requirement: Nombre centralizado
 El nombre de la app, sus textos de marca y las rutas de los íconos SHALL definirse una sola vez en `config/app.ts`; el manifest, el título del documento y las pantallas SHALL tomarlos de ahí.
@@ -37,3 +37,14 @@ Con sesión válida y sin rutina activa, la app SHALL mostrar una pantalla inici
 #### Scenario: Primer ingreso sin rutina
 - **WHEN** un usuario permitido entra y no tiene rutinas
 - **THEN** ve el nombre de la app, el texto "Todavía no hay rutina", "Salir" arriba, y "Ejercicios" y "Crear rutina" en la mitad inferior
+
+### Requirement: Datos offline
+Después de la primera carga con conexión, la app SHALL mostrar la rutina, el catálogo y las sesiones sin conexión, SHALL guardar los cambios hechos sin conexión y SHALL sincronizarlos solos al volver la señal, sin que la interfaz quede esperando.
+
+#### Scenario: Cargar en modo avión
+- **WHEN** el usuario abre la app en modo avión, carga dos ejercicios y termina la sesión
+- **THEN** la app responde igual que con señal y, al volver la conexión, la sesión aparece en Firestore
+
+#### Scenario: Crear un extra sin señal
+- **WHEN** sin conexión el usuario crea al vuelo un ejercicio extra
+- **THEN** queda agregado a la sesión al instante y en el catálogo al sincronizar

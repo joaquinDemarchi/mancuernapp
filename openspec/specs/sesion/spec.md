@@ -1,16 +1,20 @@
-# Spec Delta
+# sesion Specification
 
-## ADDED Requirements
+## Purpose
+
+TBD - created by archiving change mvp-2-carga-sesion. Update Purpose after archive.
+
+## Requirements
 
 ### Requirement: Día sugerido
-Con rutina activa, el inicio SHALL mostrar "Hoy: Día X" con el día siguiente (por orden en la rutina) al de la última sesión, volviendo al primero después del último; sin sesiones, el primer día. Los chips de días SHALL permitir cambiarlo con un toque antes de empezar.
+Con rutina activa, el inicio SHALL mostrar "Hoy: Día X" con el día siguiente (por orden en la rutina) al de la última sesión, volviendo al primero después del último; sin sesiones, el primer día. Antes de empezar, un botón "Cambiar" SHALL desplegar los chips de días para elegir otro con un toque.
 
 #### Scenario: Rotación
 - **WHEN** la rutina tiene Día 1, Día 2 y Día 3 y la última sesión fue de Día 3
 - **THEN** el inicio muestra "Hoy: Día 1"
 
 #### Scenario: Cambiar el día
-- **WHEN** el sugerido es Día 2 y el usuario toca el chip "Día 3"
+- **WHEN** el sugerido es Día 2 y el usuario toca "Cambiar" y el chip "Día 3"
 - **THEN** la tarjeta muestra "Hoy: Día 3" y "Empezar Día 3"
 
 ### Requirement: Precarga con la última vez
@@ -58,7 +62,7 @@ En Ajustar, el usuario SHALL poder quitar un bloque (salvo el único) y desarmar
 - **THEN** la fila de la sesión muestra "1×10 · 40 kg + 1×10 · 40 kg + 1×8 · 40 kg"
 
 ### Requirement: RPE y nota opcionales
-Ajustar SHALL ofrecer, detrás de un botón "Opcional", RPE con chips 6 a 10 (tocar el elegido lo borra) y una nota de texto, ambos opcionales y guardados con el ejercicio.
+Ajustar SHALL ofrecer, detrás de un botón "RPE y nota", RPE con chips 6 a 10 (tocar el elegido lo borra) y una nota de texto, ambos opcionales y guardados con el ejercicio.
 
 #### Scenario: RPE
 - **WHEN** el usuario elige RPE 8 en Sentadilla

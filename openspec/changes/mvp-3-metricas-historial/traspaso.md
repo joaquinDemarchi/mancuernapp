@@ -5,7 +5,8 @@
 - 02/11/2026: propuesta creada (proposal, specs `metricas`, `historial`, delta de `sesion`, design, tasks) y aprobada por Joa.
 - 1.1 hecha: mockups en https://claude.ai/artifact/XiB3ejhR2npTZwMc6bwcLs (privado). Tres filas: al terminar (Resumen A/B, primera vez, % opcional en la sesión), historial (Inicio A/B, Lista A/B, vacío) y evolución (A volumen / B kg máximo, "Ver evolución" en Ajustar).
 - 1.2 hecha: Joa eligió resumen A con "Por ejercicio" plegado, sin % en la lista de la sesión, inicio B (fila de la última sesión), lista B (agrupada por día) y evolución A (volumen). Handoff en design.md §6; specs `historial` y `sesion` ajustadas.
-- Próxima tarea: 2.1 (cálculos), en una sesión de código aparte.
+- 2.1 hecha: `volumenEjercicio`, `anterior`, `crecimiento`, `UMBRALES`/`indicador`, `formatearPct` y `evolucion` en `calculos.ts`, con tests. `evolucion(sesiones, id, tipo)` recibe el tipo (volumen solo si es peso) y cada vez trae también `rutinaId` (para marcar el cambio de rutina en el gráfico).
+- Próxima tarea: 2.2 (leer todas las sesiones).
 
 ## Gotchas
 

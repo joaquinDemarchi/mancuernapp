@@ -85,12 +85,56 @@ export function desarmar(bloques: readonly Bloque[], i: number): Bloque[] {
 	return [...bloques.slice(0, i), ...sueltas, ...bloques.slice(i + 1)];
 }
 
+/** Σ series × reps × kg de un registro (solo tiene sentido para tipo peso). */
+export function volumenEjercicio(registro: Registro) {
+	return registro.bloques.reduce((t, b) => t + b.series * (b.reps ?? 0) * (b.kg ?? 0), 0);
+}
+
 /** Σ series × reps × kg de los registros de tipo peso. */
 export function volumen(registros: readonly Registro[], tipoDe: (ejercicioId: string) => Tipo | undefined) {
-	return registros
-		.filter((r) => tipoDe(r.ejercicioId) === 'peso')
-		.flatMap((r) => r.bloques)
-		.reduce((t, b) => t + b.series * (b.reps ?? 0) * (b.kg ?? 0), 0);
+	return registros.filter((r) => tipoDe(r.ejercicioId) === 'peso').reduce((t, r) => t + volumenEjercicio(r), 0);
+}
+
+/** La sesión previa del mismo día de la rutina. */
+export function anterior(sesiones: readonly Sesion[], sesion: Sesion) {
+	const delDia = ordenar(sesiones.filter((s) => s.diaId === sesion.diaId));
+	const i = delDia.findIndex((s) => s.id === sesion.id);
+	return i > 0 ? delDia[i - 1] : undefined;
+}
+
+/** % de cambio; sin previo (o previo 0) no hay %. */
+export function crecimiento(actual: number, previo: number | undefined) {
+	if (!previo) return undefined;
+	return ((actual - previo) / previo) * 100;
+}
+
+/** Umbrales del indicador de sobrecarga: Óptimo incluye 0 % y 10 %. */
+export const UMBRALES = { optimoDesde: 0, altoDesde: 10 };
+
+export type Nivel = 'bajo' | 'optimo' | 'alto';
+
+/** Se clasifica con el % sin redondear. */
+export function indicador(pct: number): Nivel {
+	if (pct < UMBRALES.optimoDesde) return 'bajo';
+	return pct > UMBRALES.altoDesde ? 'alto' : 'optimo';
+}
+
+/** "+6 %", "−3 %" (signo menos tipográfico), redondeado a entero. */
+export function formatearPct(pct: number) {
+	return `${pct < 0 ? '−' : '+'}${Math.abs(Math.round(pct))} %`;
+}
+
+export type Vez = { fecha: string; sesionId: string; rutinaId: string; diaId: string; bloques: Bloque[]; volumen?: number };
+
+/** Cada vez que se hizo el ejercicio, de cualquier rutina y día, de la más vieja a la más nueva. */
+export function evolucion(sesiones: readonly Sesion[], ejercicioId: string, tipo: Tipo): Vez[] {
+	return ordenar(sesiones).flatMap((s) => {
+		const r = s.registros.find((r) => r.ejercicioId === ejercicioId);
+		if (!r) return [];
+		const vez: Vez = { fecha: s.fecha, sesionId: s.id, rutinaId: s.rutinaId, diaId: s.diaId, bloques: r.bloques };
+		if (tipo === 'peso') vez.volumen = volumenEjercicio(r);
+		return [vez];
+	});
 }
 
 const numero = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 1 });

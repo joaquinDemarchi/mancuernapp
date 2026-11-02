@@ -1,18 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import type { Tipo } from './catalogo';
 import {
+	anterior,
+	crecimiento,
 	desarmar,
 	desdeObjetivo,
 	diaMes,
 	diasAntes,
 	diaSugerido,
+	evolucion,
 	formatear,
+	formatearPct,
 	formatearVolumen,
 	hoy,
+	indicador,
 	semana,
 	sesionDeHoy,
 	ultimaVez,
 	volumen,
+	volumenEjercicio,
 	type Registro,
 	type Sesion
 } from './calculos';
@@ -165,5 +171,80 @@ describe('formatearVolumen y diaMes', () => {
 		expect(formatearVolumen(4390)).toBe('4.390 kg');
 		expect(formatearVolumen(0)).toBe('—');
 		expect(diaMes('2026-10-29')).toBe('29/10');
+	});
+});
+
+describe('volumenEjercicio', () => {
+	it('3×10·60 + 1×8·70 = 2.360', () => {
+		const reg: Registro = {
+			ejercicioId: 'pb',
+			bloques: [
+				{ series: 3, reps: 10, kg: 60 },
+				{ series: 1, reps: 8, kg: 70 }
+			],
+			hecho: true
+		};
+		expect(volumenEjercicio(reg)).toBe(2360);
+	});
+	it('kg con decimales', () => {
+		expect(volumenEjercicio(r('pb', 4, 10, 62.5))).toBe(2500);
+	});
+});
+
+describe('anterior', () => {
+	const ss = [s('d1', '2026-10-20'), s('d2', '2026-10-22'), s('d1', '2026-10-27'), s('d1', '2026-10-31')];
+	it('la previa del mismo día', () => {
+		expect(anterior(ss, ss[3])).toBe(ss[2]);
+		expect(anterior(ss, ss[2])).toBe(ss[0]);
+	});
+	it('primera vez de ese día', () => {
+		expect(anterior(ss, ss[0])).toBeUndefined();
+		expect(anterior(ss, ss[1])).toBeUndefined();
+	});
+});
+
+describe('crecimiento e indicador', () => {
+	it('2.000 → 2.100 = +5 %', () => {
+		expect(crecimiento(2100, 2000)).toBe(5);
+		expect(formatearPct(crecimiento(2100, 2000)!)).toBe('+5 %');
+	});
+	it('primera vez o previo 0: sin %', () => {
+		expect(crecimiento(2100, undefined)).toBeUndefined();
+		expect(crecimiento(2100, 0)).toBeUndefined();
+	});
+	it('límites de los niveles', () => {
+		expect(indicador(10)).toBe('optimo');
+		expect(indicador(0)).toBe('optimo');
+		expect(indicador(-3)).toBe('bajo');
+		expect(indicador(10.5)).toBe('alto');
+	});
+	it('kg con decimales: 2.400 → 2.500', () => {
+		const pct = crecimiento(volumenEjercicio(r('pb', 4, 10, 62.5)), volumenEjercicio(r('pb', 4, 10, 60)))!;
+		expect(formatearPct(pct)).toBe('+4 %');
+		expect(indicador(pct)).toBe('optimo');
+	});
+	it('muestra redondeado con menos tipográfico', () => {
+		expect(formatearPct(-3)).toBe('−3 %');
+		expect(formatearPct(10.5)).toBe('+11 %');
+	});
+});
+
+describe('evolucion', () => {
+	it('cruza dos rutinas en orden de fecha', () => {
+		const vieja = { ...s('a1', '2026-09-02', [r('sen', 3, 10, 50)]), rutinaId: 'r0' };
+		const ss = [
+			s('d1', '2026-10-27', [r('sen', 3, 10, 60)]),
+			s('d2', '2026-10-29', [r('pb', 3, 10, 40)]),
+			vieja,
+			s('d1', '2026-10-20', [r('sen', 3, 10, 55)])
+		];
+		const veces = evolucion(ss, 'sen', 'peso');
+		expect(veces.map((v) => v.fecha)).toEqual(['2026-09-02', '2026-10-20', '2026-10-27']);
+		expect(veces.map((v) => v.rutinaId)).toEqual(['r0', 'r1', 'r1']);
+		expect(veces.map((v) => v.volumen)).toEqual([1500, 1650, 1800]);
+	});
+	it('sin peso, sin volumen', () => {
+		const pl: Registro = { ejercicioId: 'pl', bloques: [{ series: 3, segundos: 40 }], hecho: true };
+		expect(evolucion([s('d1', '2026-10-27', [pl])], 'pl', 'tiempo')[0].volumen).toBeUndefined();
 	});
 });

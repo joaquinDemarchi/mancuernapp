@@ -1,15 +1,14 @@
-import { collection, deleteDoc, doc, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where, type Unsubscribe } from 'firebase/firestore';
+import { collection, deleteDoc, doc, onSnapshot, serverTimestamp, setDoc, updateDoc, type Unsubscribe } from 'firebase/firestore';
 import { get, writable } from 'svelte/store';
 import { sesion } from './acceso';
 import { ordenar, sesionDeHoy, type Registro, type Sesion } from './calculos';
 import { db } from './firebase';
-import { rutinaActiva } from './rutina';
 
 export type { Bloque, Registro, Sesion } from './calculos';
 /** Con qué rutina y día se crea la sesión en el primer toque. */
 export type Contexto = { rutinaId: string; diaId: string; fecha: string };
 
-/** Sesiones de la rutina activa, de la más vieja a la más nueva; `undefined` mientras carga. */
+/** Todas las sesiones del usuario (de cualquier rutina), de la más vieja a la más nueva; `undefined` mientras carga. */
 export const sesiones = writable<Sesion[] | undefined>(undefined);
 
 function coleccion() {
@@ -18,17 +17,14 @@ function coleccion() {
 	return collection(db, 'users', s.usuario.uid, 'sesiones');
 }
 
-// Una suscripción por rutina: se rehace solo si cambia el id (no en cada edición de la rutina).
+// La suscripción vive mientras haya sesión; historial y evolución cruzan rutinas.
 let desuscribir: Unsubscribe | undefined;
-let rutinaId: string | undefined;
-rutinaActiva.subscribe((r) => {
-	if (r?.id === rutinaId) return;
+sesion.subscribe((s) => {
 	desuscribir?.();
 	desuscribir = undefined;
-	rutinaId = r?.id;
 	sesiones.set(undefined);
-	if (!rutinaId) return;
-	desuscribir = onSnapshot(query(coleccion(), where('rutinaId', '==', rutinaId)), (snap) => {
+	if (s.estado !== 'con-sesion') return;
+	desuscribir = onSnapshot(coleccion(), (snap) => {
 		const lista = snap.docs.map((d) => {
 			// 'estimate': las creadas sin señal todavía no tienen la hora del servidor.
 			const datos = d.data({ serverTimestamps: 'estimate' });
@@ -48,7 +44,7 @@ const limpio = (registros: Registro[]): Registro[] => JSON.parse(JSON.stringify(
  */
 function escribir(ctx: Contexto, cambio: (registros: Registro[]) => Registro[]) {
 	const lista = get(sesiones) ?? [];
-	const actual = sesionDeHoy(lista, ctx.fecha);
+	const actual = sesionDeHoy(lista, ctx.fecha, ctx.rutinaId);
 	if (actual) {
 		const registros = limpio(cambio(actual.registros));
 		// Sin ejercicios no queda sesión (destildar el único = no haber empezado).

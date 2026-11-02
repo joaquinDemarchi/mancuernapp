@@ -24,6 +24,7 @@ import {
 } from './calculos';
 
 const rutina = {
+	id: 'r1',
 	dias: [
 		{ id: 'd1', nombre: 'Día 1', items: [] },
 		{ id: 'd2', nombre: 'Día 2', items: [] },
@@ -60,6 +61,11 @@ describe('sesionDeHoy', () => {
 		expect(sesionDeHoy(ss, '2026-10-31')).toBe(ss[1]);
 		expect(sesionDeHoy(ss, '2026-10-30')).toBeUndefined();
 	});
+	it('con rutina, ignora las de otra', () => {
+		const otra = { ...s('a1', '2026-10-31'), rutinaId: 'r0' };
+		expect(sesionDeHoy([otra], '2026-10-31', 'r1')).toBeUndefined();
+		expect(sesionDeHoy([otra], '2026-10-31')).toBe(otra);
+	});
 });
 
 describe('diaSugerido', () => {
@@ -78,6 +84,10 @@ describe('diaSugerido', () => {
 	});
 	it('ignora la sesión de hoy', () => {
 		const ss = [s('d1', '2026-10-30'), s('d2', '2026-10-31')];
+		expect(diaSugerido(rutina, ss, '2026-10-31')?.id).toBe('d2');
+	});
+	it('ignora las sesiones de otra rutina', () => {
+		const ss = [s('d1', '2026-10-27'), { ...s('a1', '2026-10-30'), rutinaId: 'r0' }];
 		expect(diaSugerido(rutina, ss, '2026-10-31')?.id).toBe('d2');
 	});
 	it('mismo día: desempata por creada', () => {

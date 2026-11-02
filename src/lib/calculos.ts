@@ -32,13 +32,14 @@ export function diasAntes(n: number, f = new Date()) {
 	return hoy(d);
 }
 
-export function sesionDeHoy(sesiones: readonly Sesion[], fecha = hoy()) {
-	return sesiones.find((s) => s.fecha === fecha);
+/** La sesión de esa fecha; con `rutinaId`, solo si es de esa rutina. */
+export function sesionDeHoy(sesiones: readonly Sesion[], fecha = hoy(), rutinaId?: string) {
+	return sesiones.find((s) => s.fecha === fecha && (!rutinaId || s.rutinaId === rutinaId));
 }
 
-/** El día siguiente al de la última sesión anterior a `antesDe`; si no hay o ese día ya no existe, el primero. */
-export function diaSugerido(rutina: { dias: Dia[] }, sesiones: readonly Sesion[], antesDe = hoy()): Dia | undefined {
-	const ultima = ordenar(sesiones.filter((s) => s.fecha < antesDe)).at(-1);
+/** El día siguiente al de la última sesión de la rutina anterior a `antesDe`; si no hay o ese día ya no existe, el primero. */
+export function diaSugerido(rutina: { id: string; dias: Dia[] }, sesiones: readonly Sesion[], antesDe = hoy()): Dia | undefined {
+	const ultima = ordenar(sesiones.filter((s) => s.rutinaId === rutina.id && s.fecha < antesDe)).at(-1);
 	const i = ultima ? rutina.dias.findIndex((d) => d.id === ultima.diaId) : -1;
 	if (i < 0) return rutina.dias[0];
 	return rutina.dias[(i + 1) % rutina.dias.length];

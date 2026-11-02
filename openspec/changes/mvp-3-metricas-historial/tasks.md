@@ -11,7 +11,7 @@
 ## 2. Cálculos y datos (~18k)
 
 - [x] 2.1 En `src/lib/calculos.ts`: `volumenEjercicio`, `anterior`, `crecimiento`, `indicador` con `UMBRALES`, `formatearPct` y `evolucion` (design.md §2), con tests en `calculos.test.ts`: 3×10·60 + 1×8·70 = 2.360, +5 %, primera vez sin %, previo 0 sin %, 10 % = óptimo, 0 % = óptimo, −3 % = bajo, 10,5 % = alto, kg 62,5, evolución cruzando dos rutinas en orden; verificar `npm test` y `npm run check` en verde; commit (~10k)
-- [ ] 2.2 `src/lib/sesion.ts` lee todas las sesiones del usuario (design.md §1); `sesionDeHoy` y `diaSugerido` filtran por la rutina activa donde corresponde, con tests que mezclan sesiones de otra rutina; verificar `npm test`, y en dev con Joa logueado que la tarjeta Hoy, la rotación y "Seguir Día X" siguen iguales; commit (~8k)
+- [x] 2.2 `src/lib/sesion.ts` lee todas las sesiones del usuario (design.md §1); `sesionDeHoy` y `diaSugerido` filtran por la rutina activa donde corresponde, con tests que mezclan sesiones de otra rutina; verificar `npm test`, y en dev con Joa logueado que la tarjeta Hoy, la rotación y "Seguir Día X" siguen iguales; commit (~8k)
 
 ## 3. Resumen con % e indicador (~10k)
 

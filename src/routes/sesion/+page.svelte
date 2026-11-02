@@ -21,7 +21,7 @@
 	const pedida = page.url.searchParams.get('fecha') ?? '';
 	const fecha = /^\d{4}-\d{2}-\d{2}$/.test(pedida) && pedida < hoy() ? pedida : hoy();
 	const cuando = fecha === hoy() ? 'Hoy' : fecha === diasAntes(1) ? 'Ayer' : diaMes(fecha);
-	const deHoy = $derived($sesiones && sesionDeHoy($sesiones, fecha));
+	const deHoy = $derived($sesiones && sesionDeHoy($sesiones, fecha, $rutinaActiva?.id));
 	const diaId = $derived(deHoy?.diaId ?? page.url.searchParams.get('dia'));
 	const dia = $derived($rutinaActiva?.dias.find((d) => d.id === diaId) ?? $rutinaActiva?.dias[0]);
 	const ctx = $derived($rutinaActiva && dia ? { rutinaId: $rutinaActiva.id, diaId: dia.id, fecha } : undefined);

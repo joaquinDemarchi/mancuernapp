@@ -29,14 +29,14 @@
 	}
 
 	// Tarjeta "Hoy": la sesión de hoy si existe; si no, el día sugerido o el elegido con los chips.
-	const deHoy = $derived($sesiones && sesionDeHoy($sesiones));
+	const deHoy = $derived($sesiones && sesionDeHoy($sesiones, hoy(), $rutinaActiva?.id));
 	const sugerido = $derived($rutinaActiva && $sesiones && diaSugerido($rutinaActiva, $sesiones));
 	let elegido = $state<string>();
 	// Casi siempre se entrena el sugerido: los chips aparecen recién al tocar "Cambiar".
 	let cambiarDia = $state(false);
 	const diaId = $derived(deHoy?.diaId ?? elegido ?? sugerido?.id);
 	const dia = $derived($rutinaActiva?.dias.find((d) => d.id === diaId));
-	const ultima = $derived($sesiones?.filter((s) => s.fecha < hoy()).at(-1));
+	const ultima = $derived($sesiones?.filter((s) => s.rutinaId === $rutinaActiva?.id && s.fecha < hoy()).at(-1));
 
 	const metaHoy = $derived.by(() => {
 		if (!dia || !$sesiones) return '';
@@ -48,7 +48,7 @@
 			const extras = deHoy.registros.filter((r) => !dia.items.some((i) => i.ejercicioId === r.ejercicioId));
 			return `En curso · ${deHoy.registros.length} de ${dia.items.length + extras.length} hechos`;
 		}
-		if (!$sesiones.length) return 'Primera vez';
+		if (!ultima) return 'Primera vez';
 		const anterior = $rutinaActiva?.dias.find((d) => d.id === ultima?.diaId);
 		const partes = [`Semana ${semana($sesiones, dia.id)}`, cantidad(dia.items.length)];
 		if (anterior) partes.push(`la última fue ${anterior.nombre}`);
@@ -68,7 +68,7 @@
 			{ valor: diasAntes(2), etiqueta: 'Anteayer' }
 		].filter((f) => $rutinaActiva && f.valor >= $rutinaActiva.inicio)
 	);
-	const yaCargada = $derived($sesiones && sesionDeHoy($sesiones, fechaAnt));
+	const yaCargada = $derived($sesiones && sesionDeHoy($sesiones, fechaAnt, $rutinaActiva?.id));
 	const diaAnt = $derived.by(() => {
 		if (!$rutinaActiva || !$sesiones) return undefined;
 		const id = yaCargada?.diaId ?? elegidoAnt ?? diaSugerido($rutinaActiva, $sesiones, fechaAnt)?.id;

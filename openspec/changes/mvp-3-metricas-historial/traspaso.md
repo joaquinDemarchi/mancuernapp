@@ -14,17 +14,18 @@
 - 6.1 hecha: historial, evolución y resumen salen del store en memoria; recorriéndolos en dev con stores falsos no hubo pedidos de red nuevos (solo el canal de escucha ya abierto y el `updateDoc` de "Terminar", que es de MVP 2 y no espera respuesta). No se pudo cortar la red del Browser pane: el modo avión real va en el checklist del 6.2. `config.yaml` y `docs/decisiones-diseno-mancuernapp.md` §6 anotan el store con todas las sesiones y `UMBRALES`. check, test y build en verde.
 - 6.2 en curso: pusheado con OK de Joa (02/11, cd4a649); deploy de Vercel en verde y `/historial` y `/evolucion` responden 200 en https://mancuernapp.vercel.app. Falta que Joa haga el checklist en el celu (abajo); con eso, marcar 6.2 y seguir con el grupo 7.
 - 7.1 hecha (02/11): critique + accesibilidad + copy. Contraste y touch targets ya pasaban (indicador 4,6–8,1:1 en ambos temas, filas 64 px, botones 48 px). Joa aprobó los 7 hallazgos: "0 %" sin signo cuando redondea a 0; la fila "Última" del inicio muestra la última sesión antes de hoy (la de hoy ya está en la tarjeta; spec `historial` ajustada); `/evolucion` con título "Ejercicio" de respaldo y "sin cargar todavía"; sin línea de base en el gráfico; "Por ejercicio" con `aria-controls`; el nombre de rutina en el gráfico se omite si el cambio anterior está a < 90 unidades; "Otros días" del historial con la nota "solo para ver". Verificado a 390 px con stores falsos. Sin pushear.
-- Falta: checklist del 6.2 en el celu (Joa) y push de los commits locales (con OK); después archivar con `/opsx:archive`.
+- 6.2 hecha: push de 7.1 con OK de Joa (02/11, 6d98a07), deploy de Vercel OK; Joa hizo el checklist en el celu y dio el MVP 3 por cerrado. Se archiva.
+- Decisión de Joa: "Cargar un día anterior" sigue limitado a fechas desde el inicio de la rutina activa (no se edita el "desde" ni se saca el límite).
 
 ## Checklist en el celu (6.2)
 Recargar o reinstalar la PWA para tomar el service worker nuevo.
-- [ ] La tarjeta Hoy sugiere el mismo día que antes y "Seguir/Ver sesión" funciona (store con todas las sesiones).
-- [ ] Terminar una sesión real: volumen, % e indicador vs la vez anterior; "Por ejercicio" abre el detalle.
-- [ ] Fila "Última: Día X" bajo la tarjeta Hoy abre el historial.
-- [ ] Historial: grupos por día, de la más nueva a la más vieja.
-- [ ] Corregir un kg de una sesión vieja desde el historial y ver el volumen nuevo al volver.
-- [ ] Ver evolución desde Ajustar (vuelve a la sesión) y desde la ficha del catálogo.
-- [ ] Modo avión: abrir historial, evolución y terminar una sesión; todo se ve sin señal.
+- [x] La tarjeta Hoy sugiere el mismo día que antes y "Seguir/Ver sesión" funciona (store con todas las sesiones).
+- [x] Terminar una sesión real: volumen, % e indicador vs la vez anterior; "Por ejercicio" abre el detalle.
+- [x] Fila "Última: Día X" bajo la tarjeta Hoy abre el historial.
+- [x] Historial: grupos por día, de la más nueva a la más vieja.
+- [x] Corregir un kg de una sesión vieja desde el historial y ver el volumen nuevo al volver.
+- [x] Ver evolución desde Ajustar (vuelve a la sesión) y desde la ficha del catálogo.
+- [x] Modo avión: abrir historial, evolución y terminar una sesión; todo se ve sin señal.
 
 ## Gotchas
 

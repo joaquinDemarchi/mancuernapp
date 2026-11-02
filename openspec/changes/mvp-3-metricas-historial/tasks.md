@@ -28,7 +28,7 @@
 ## 6. Cierre (~10k)
 
 - [x] 6.1 Verificar offline en dev (Network offline): historial, evolución y resumen con % funcionan sin señal; actualizar `openspec/config.yaml` y `docs/decisiones-diseno-mancuernapp.md` §6 si cambió algo (store de todas las sesiones, umbrales); `npm run check`, `npm test`, `npm run build`; commit (~4k)
-- [ ] 6.2 Con OK de Joa, push a `main` y verificar el deploy de Vercel en verde; checklist en el celu de Joa (anotarla en `traspaso.md`): terminar una sesión real y ver %/indicador, abrir el historial, corregir una sesión vieja, ver la evolución desde Ajustar y desde el catálogo; commit (~6k)
+- [x] 6.2 Con OK de Joa, push a `main` y verificar el deploy de Vercel en verde; checklist en el celu de Joa (anotarla en `traspaso.md`): terminar una sesión real y ver %/indicador, abrir el historial, corregir una sesión vieja, ver la evolución desde Ajustar y desde el catálogo; commit (~6k)
 
 ## 7. Critique, accesibilidad y copy (~10k)
 

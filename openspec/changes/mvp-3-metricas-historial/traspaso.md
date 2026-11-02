@@ -12,7 +12,17 @@
 - 5.1 hecha: `GraficoEvolucion.svelte` (SVG con viewBox 320×140, puntos equiespaciados, línea punteada y nombre al cambiar de rutina, `role="img"` con `aria-label`) y `/evolucion?id=` (gráfico solo para peso, "Cada vez" de la más nueva a la más vieja). "Ver evolución" (`.texto.sutil`) en la ficha (`Cabecera` con `accion`) y en `HojaAjustar` (nuevo snippet `accion` en `Hoja`). La flecha de `/evolucion` vuelve con `history.back()` (prop `atras` de `Cabecera`; entrando directo, a `/ejercicios`). Solo la rutina activa está en memoria: las otras se muestran como "Otra rutina" (día y marca del gráfico); MVP 4 tendrá los nombres. Verificado con stores falsos a 390 y 360 px: cruzando rutinas (7 puntos), una sola vez (un punto, sin línea), Plancha (tiempo, sin gráfico), desde Ajustar vuelve a la sesión, desde la ficha; `npm run build` con `evolucion.html` e `historial.html` prerenderizadas.
 - Gotcha: la ficha `/ejercicio?id=` lee el id una sola vez; navegar de una ficha a otra sin pasar por otra ruta no la remonta (en `/evolucion` el id es `$derived`).
 - 6.1 hecha: historial, evolución y resumen salen del store en memoria; recorriéndolos en dev con stores falsos no hubo pedidos de red nuevos (solo el canal de escucha ya abierto y el `updateDoc` de "Terminar", que es de MVP 2 y no espera respuesta). No se pudo cortar la red del Browser pane: el modo avión real va en el checklist del 6.2. `config.yaml` y `docs/decisiones-diseno-mancuernapp.md` §6 anotan el store con todas las sesiones y `UMBRALES`. check, test y build en verde.
-- Próxima tarea: 6.2 (push con OK de Joa, deploy y checklist en el celu); después el grupo 7.
+- 6.2 en curso: pusheado con OK de Joa (02/11, cd4a649); deploy de Vercel en verde y `/historial` y `/evolucion` responden 200 en https://mancuernapp.vercel.app. Falta que Joa haga el checklist en el celu (abajo); con eso, marcar 6.2 y seguir con el grupo 7.
+
+## Checklist en el celu (6.2)
+Recargar o reinstalar la PWA para tomar el service worker nuevo.
+- [ ] La tarjeta Hoy sugiere el mismo día que antes y "Seguir/Ver sesión" funciona (store con todas las sesiones).
+- [ ] Terminar una sesión real: volumen, % e indicador vs la vez anterior; "Por ejercicio" abre el detalle.
+- [ ] Fila "Última: Día X" bajo la tarjeta Hoy abre el historial.
+- [ ] Historial: grupos por día, de la más nueva a la más vieja.
+- [ ] Corregir un kg de una sesión vieja desde el historial y ver el volumen nuevo al volver.
+- [ ] Ver evolución desde Ajustar (vuelve a la sesión) y desde la ficha del catálogo.
+- [ ] Modo avión: abrir historial, evolución y terminar una sesión; todo se ve sin señal.
 
 ## Gotchas
 

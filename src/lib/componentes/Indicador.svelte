@@ -21,7 +21,7 @@
 <!-- Forma y palabra además del color: se entiende en gris. -->
 <span class="indicador {nivel}" class:chico>
 	<span aria-hidden="true">{forma[nivel]}</span>
-	{#if conPct && chico}{formatearPct(pct)} {/if}{palabra[nivel]}{#if conPct && !chico}&nbsp;· {formatearPct(pct)}{/if}
+	{#if conPct && chico}{formatearPct(pct)}&nbsp;{/if}{palabra[nivel]}{#if conPct && !chico}&nbsp;· {formatearPct(pct)}{/if}
 </span>
 
 <style>

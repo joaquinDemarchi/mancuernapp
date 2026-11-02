@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { app } from '#config/app';
 	import { salir } from '#lib/acceso.ts';
-	import { diaMes, diasAntes, diaSugerido, formatearVolumen, hoy, semana, sesionDeHoy, volumen } from '#lib/calculos.ts';
+	import { anterior as sesionAnterior, crecimiento, diaMes, diasAntes, diaSugerido, formatearPct, formatearVolumen, hoy, indicador, semana, sesionDeHoy, volumen } from '#lib/calculos.ts';
 	import { ejercicios } from '#lib/catalogo.ts';
 	import { crearRutina, fechaCorta, rutinaActiva } from '#lib/rutina.ts';
 	import { sesiones } from '#lib/sesion.ts';
@@ -10,6 +10,7 @@
 	import BarraAccion from '#lib/componentes/BarraAccion.svelte';
 	import Cabecera from '#lib/componentes/Cabecera.svelte';
 	import Hoja from '#lib/componentes/Hoja.svelte';
+	import Indicador from '#lib/componentes/Indicador.svelte';
 	import OpcionesChip from '#lib/componentes/OpcionesChip.svelte';
 
 	let creando = $state(false);
@@ -53,6 +54,19 @@
 		const partes = [`Semana ${semana($sesiones, dia.id)}`, cantidad(dia.items.length)];
 		if (anterior) partes.push(`la última fue ${anterior.nombre}`);
 		return partes.join(' · ');
+	});
+
+	// Fila de la última sesión de la rutina (también la de hoy): abre el historial.
+	const reciente = $derived.by(() => {
+		const s = $sesiones?.findLast((s) => s.rutinaId === $rutinaActiva?.id);
+		if (!s || !$sesiones) return undefined;
+		const tipoDe = (id: string) => $ejercicios?.find((e) => e.id === id)?.tipo;
+		const vol = volumen(s.registros, tipoDe);
+		const previa = sesionAnterior($sesiones, s);
+		const nombre = $rutinaActiva?.dias.find((d) => d.id === s.diaId)?.nombre ?? 'Sesión';
+		const pct = crecimiento(vol, previa && volumen(previa.registros, tipoDe));
+		const conPct = pct === undefined ? '' : `, ${formatearPct(pct)} ${{ bajo: 'Bajo', optimo: 'Óptimo', alto: 'Alto' }[indicador(pct)]}`;
+		return { fecha: diaMes(s.fecha), nombre, vol: formatearVolumen(vol), pct, etiqueta: `Historial. Última sesión: ${diaMes(s.fecha)}, ${nombre}, ${formatearVolumen(vol)}${conPct}` };
 	});
 
 	let verDias = $state(false);
@@ -129,6 +143,16 @@
 					<Boton onclick={() => goto(`/sesion?dia=${dia.id}`)}>{deHoy ? 'Seguir' : 'Empezar'} {dia.nombre}</Boton>
 				{/if}
 			</section>
+		{/if}
+		{#if reciente}
+			<a class="ultima" href="/historial" aria-label={reciente.etiqueta}>
+				<span class="fecha">{reciente.fecha}</span>
+				<span class="datos">
+					<span class="label">Última: {reciente.nombre}</span>
+					<span class="meta">{reciente.vol} · ver historial</span>
+				</span>
+				{#if reciente.pct !== undefined}<Indicador pct={reciente.pct} chico conPct />{/if}
+			</a>
 		{/if}
 		<div class="enlaces">
 			<!-- Los días solo para mirar; editar va por "Editar rutina", que también queda plegado acá. -->
@@ -265,6 +289,37 @@
 		margin: 0;
 		padding: 0;
 		list-style: none;
+	}
+	.ultima {
+		display: flex;
+		align-items: center;
+		gap: var(--space-3);
+		min-height: 64px;
+		margin-bottom: var(--space-2);
+		padding: var(--space-2) var(--space-4);
+		border-radius: var(--radius);
+		background: var(--surface);
+		color: var(--ink);
+		text-decoration: none;
+	}
+	.ultima:focus-visible {
+		outline: 2px solid var(--focus);
+		outline-offset: 2px;
+	}
+	.ultima .fecha {
+		flex: none;
+		width: 52px;
+		font: 600 var(--fs-heading) / var(--lh-heading) var(--font-display);
+		font-stretch: var(--stretch-condensed);
+		font-variant-numeric: tabular-nums;
+	}
+	.ultima .datos {
+		display: grid;
+		flex: 1;
+		min-width: 0;
+	}
+	.ultima .label {
+		font: 600 var(--fs-body) / var(--lh-body) var(--font-text);
 	}
 	.enlaces {
 		display: flex;

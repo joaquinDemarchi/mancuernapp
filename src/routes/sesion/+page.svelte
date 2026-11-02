@@ -22,6 +22,8 @@
 	const pedida = page.url.searchParams.get('fecha') ?? '';
 	const fecha = /^\d{4}-\d{2}-\d{2}$/.test(pedida) && pedida < hoy() ? pedida : hoy();
 	const cuando = fecha === hoy() ? 'Hoy' : fecha === diasAntes(1) ? 'Ayer' : diaMes(fecha);
+	// Abierta desde el historial: volver, borrar y "Listo" vuelven ahí.
+	const salida = page.url.searchParams.get('desde') === 'historial' ? '/historial' : '/';
 	const deHoy = $derived($sesiones && sesionDeHoy($sesiones, fecha, $rutinaActiva?.id));
 	const diaId = $derived(deHoy?.diaId ?? page.url.searchParams.get('dia'));
 	const dia = $derived($rutinaActiva?.dias.find((d) => d.id === diaId) ?? $rutinaActiva?.dias[0]);
@@ -120,12 +122,12 @@
 	let borrando = $state(false);
 	function borrar() {
 		if (deHoy) borrarSesion(deHoy.id);
-		goto('/');
+		goto(salida);
 	}
 
 	function terminarSesion() {
 		if (!deHoy) return;
-		if (deHoy.terminada) return goto('/');
+		if (deHoy.terminada) return goto(salida);
 		terminar(deHoy.id);
 		resumen = true;
 	}
@@ -137,7 +139,7 @@
 		<Cabecera
 			titulo="{cuando}: {dia.nombre}"
 			meta="{$rutinaActiva.nombre} · semana {n} · {hechos}/{filas.length} hechos"
-			volver="/"
+			volver={salida}
 		>
 			{#snippet accion()}
 				{#if deHoy}<button class="texto sutil" onclick={() => (borrando = true)}>Borrar</button>{/if}
@@ -247,7 +249,7 @@
 			<p class="meta">
 				{cuando === 'Hoy' ? 'Queda guardada. Podés editarla desde el inicio hasta que termine el día.' : 'Queda guardada.'}
 			</p>
-			<Boton onclick={() => goto('/')}>Listo</Boton>
+			<Boton onclick={() => goto(salida)}>Listo</Boton>
 		</Hoja>
 	{/if}
 </main>

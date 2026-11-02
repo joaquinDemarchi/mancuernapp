@@ -19,7 +19,7 @@
 
 ## 4. Historial (~12k)
 
-- [ ] 4.1 Ruta `/historial` (grupos por día y filas según §6, estado vacío) y fila de la última sesión en el inicio; tocar una fila abre `/sesion?dia=&fecha=`; "Borrar" de una sesión abierta desde el historial vuelve al historial; verificar en dev a 390 px "Última sesión", "Sin sesiones", "Orden", "Fila de una sesión", "Historial vacío", "Corregir un kg viejo" y "Borrar una vieja" (con una sesión de prueba, dejando Firestore como estaba); commit (~12k)
+- [x] 4.1 Ruta `/historial` (grupos por día y filas según §6, estado vacío) y fila de la última sesión en el inicio; tocar una fila abre `/sesion?dia=&fecha=`; "Borrar" de una sesión abierta desde el historial vuelve al historial; verificar en dev a 390 px "Última sesión", "Sin sesiones", "Orden", "Fila de una sesión", "Historial vacío", "Corregir un kg viejo" y "Borrar una vieja" (con una sesión de prueba, dejando Firestore como estaba); commit (~12k)
 
 ## 5. Evolución por ejercicio (~15k)
 

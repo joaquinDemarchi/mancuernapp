@@ -87,14 +87,22 @@ Cada toque que cambia la sesión SHALL guardarse sin botón "Guardar"; la sesió
 - **THEN** no queda ninguna sesión guardada
 
 ### Requirement: Terminar con volumen
-"Terminar sesión" SHALL marcar la sesión como terminada y mostrar el volumen total (Σ series × reps × kg de los ejercicios de peso hechos).
+"Terminar sesión" SHALL marcar la sesión como terminada y mostrar el volumen total (Σ series × reps × kg de los ejercicios de peso hechos) y, si ese día tiene una sesión anterior, el % vs esa vez y el indicador de sobrecarga (spec `metricas`); el % e indicador de cada ejercicio de peso SHALL quedar plegados detrás de un botón "Por ejercicio".
 
 #### Scenario: Volumen
 - **WHEN** los ejercicios de peso hechos son 4×10 · 40 kg y 3×10 · 60 kg
 - **THEN** el resumen muestra "3.400 kg"
 
+#### Scenario: Con vez anterior
+- **WHEN** la sesión anterior de Día 1 sumó 3.200 kg y la de hoy 3.400 kg
+- **THEN** el resumen muestra "3.400 kg", "+6 %" y "Óptimo"
+
+#### Scenario: Por ejercicio plegado
+- **WHEN** termina una sesión donde Press banca subió 5 % vs la vez anterior
+- **THEN** el resumen no muestra los ejercicios hasta tocar "Por ejercicio", y ahí Press banca muestra "+5 %" y "Óptimo"
+
 ### Requirement: Sesión de hoy editable y borrable
-La sesión de hoy SHALL poder retomarse y editarse desde el inicio aunque esté terminada, y borrarse con confirmación; las sesiones de días anteriores solo SHALL abrirse desde "Cargar un día anterior".
+La sesión de hoy SHALL poder retomarse y editarse desde el inicio aunque esté terminada, y borrarse con confirmación; las sesiones de días anteriores SHALL abrirse desde "Cargar un día anterior" o desde el historial, y editarse y borrarse igual.
 
 #### Scenario: Borrar
 - **WHEN** el usuario toca "Borrar" en la sesión de hoy y confirma "Sí, borrar sesión"

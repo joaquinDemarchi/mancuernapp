@@ -5,11 +5,14 @@
 		abierta = $bindable(false),
 		titulo,
 		meta,
+		accion,
 		children
 	}: {
 		abierta: boolean;
 		titulo: string;
 		meta?: string;
+		/** Botón de texto a la izquierda de cerrar (p. ej. "Ver evolución"). */
+		accion?: Snippet;
 		children: Snippet;
 	} = $props();
 
@@ -36,6 +39,7 @@
 				<h2 {id}>{titulo}</h2>
 				{#if meta}<p>{meta}</p>{/if}
 			</div>
+			{#if accion}{@render accion()}{/if}
 			<button type="button" aria-label="Cerrar" onclick={() => (abierta = false)}>
 				<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
 					<path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />

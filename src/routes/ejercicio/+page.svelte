@@ -42,7 +42,11 @@
 </script>
 
 <main class="pantalla">
-	<Cabecera {titulo} volver="/ejercicios" />
+	<Cabecera {titulo} volver="/ejercicios">
+		{#snippet accion()}
+			{#if id}<button type="button" class="texto sutil" onclick={() => goto(`/evolucion?id=${id}`)}>Ver evolución</button>{/if}
+		{/snippet}
+	</Cabecera>
 	<form
 		onsubmit={(e) => {
 			e.preventDefault();

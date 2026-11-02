@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
+	import { goto } from '$app/navigation';
 	import { desarmar, formatear, type Bloque, type Registro } from '#lib/calculos.ts';
 	import type { Ejercicio } from '#lib/catalogo.ts';
 	import Boton from '#lib/componentes/Boton.svelte';
@@ -84,6 +85,9 @@
 </script>
 
 <Hoja bind:abierta titulo={ejercicio.nombre} meta={ultima ? `Última: ${formatear(tipo, ultima)}` : 'Primera vez'}>
+	{#snippet accion()}
+		<button type="button" class="texto sutil" onclick={() => goto(`/evolucion?id=${ejercicio.id}`)}>Ver evolución</button>
+	{/snippet}
 	{#if tipo !== 'cardio'}
 		<div class="bloques" role="group" aria-label="Bloques">
 			{#each bloques as x, i (i)}

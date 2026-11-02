@@ -23,7 +23,7 @@
 
 ## 5. Evolución por ejercicio (~15k)
 
-- [ ] 5.1 `GraficoEvolucion.svelte` (SVG propio, design.md §3) y ruta `/evolucion?id=` con gráfico (solo peso) y lista de veces; "Ver evolución" en la ficha `/ejercicio?id=` y en `HojaAjustar`; verificar en dev a 360 y 390 px "Cruzando rutinas" (stores falsos), "Una sola vez", un ejercicio de tiempo (sin gráfico), "Desde Ajustar" (vuelve a la sesión) y `npm run build` con la ruta prerenderizada; commit (~15k)
+- [x] 5.1 `GraficoEvolucion.svelte` (SVG propio, design.md §3) y ruta `/evolucion?id=` con gráfico (solo peso) y lista de veces; "Ver evolución" en la ficha `/ejercicio?id=` y en `HojaAjustar`; verificar en dev a 360 y 390 px "Cruzando rutinas" (stores falsos), "Una sola vez", un ejercicio de tiempo (sin gráfico), "Desde Ajustar" (vuelve a la sesión) y `npm run build` con la ruta prerenderizada; commit (~15k)
 
 ## 6. Cierre (~10k)
 

@@ -4,12 +4,15 @@
 	let {
 		titulo,
 		volver,
+		atras = false,
 		meta,
 		accion
 	}: {
 		titulo: string;
 		/** Ruta a la que vuelve la flecha; sin ella no hay flecha. */
 		volver?: string;
+		/** La flecha vuelve con `history.back()` a donde se abrió; `volver` queda para cuando se entró directo. */
+		atras?: boolean;
 		meta?: string;
 		/** Botón de texto a la derecha (p. ej. "Salir"). */
 		accion?: Snippet;
@@ -18,7 +21,15 @@
 
 <header>
 	{#if volver}
-		<a href={volver} aria-label="Volver">
+		<a
+			href={volver}
+			aria-label="Volver"
+			onclick={(e) => {
+				if (!atras || history.length < 2) return;
+				e.preventDefault();
+				history.back();
+			}}
+		>
 			<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
 				<path d="M15 4 7 12l8 8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
 			</svg>

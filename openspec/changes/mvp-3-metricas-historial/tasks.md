@@ -5,7 +5,7 @@
 
 ## 1. Diseño (sesión de diseño, ~20k)
 
-- [ ] 1.1 Mockups en un Artifact Design (tokens de `design/tokens.css`, 390 px, tema oscuro): resumen de "Terminar sesión" con %, indicador y detalle por ejercicio; historial (2–3 variantes de fila y de dónde va "Historial" en el inicio); evolución de un ejercicio con gráfico y lista (variante volumen vs kg máximo); "Ver evolución" en Ajustar y en la ficha; estados vacíos y primera vez; verificar que Joa tiene el link y las variantes numeradas; commit del link en `traspaso.md` (~15k)
+- [x] 1.1 Mockups en un Artifact Design (tokens de `design/tokens.css`, 390 px, tema oscuro): resumen de "Terminar sesión" con %, indicador y detalle por ejercicio; historial (2–3 variantes de fila y de dónde va "Historial" en el inicio); evolución de un ejercicio con gráfico y lista (variante volumen vs kg máximo); "Ver evolución" en Ajustar y en la ficha; estados vacíos y primera vez; verificar que Joa tiene el link y las variantes numeradas; commit del link en `traspaso.md` (~15k)
 - [ ] 1.2 Con la elección de Joa, handoff a design.md §6 (pantalla por pantalla, textos y tokens); si la elección cambia algo de las specs (p. ej. gráfico de kg máximo), actualizar los deltas y verificar `openspec validate mvp-3-metricas-historial --strict`; commit (~5k)
 
 ## 2. Cálculos y datos (~18k)

@@ -45,7 +45,7 @@ Un componente `GraficoEvolucion.svelte` dibuja un `<svg>` con `viewBox` fijo y a
 
 - `/historial`: lista; cada fila es un link a `/sesion?dia=<diaId>&fecha=<fecha>` (la sesión existente se abre para editar, ya soportado). Borrar desde ahí vuelve con `history.back()` al historial.
 - `/evolucion?id=<ejercicioId>`: prerenderizada como `/ejercicio?id=`. Vuelve con `history.back()` (a la sesión, a la ficha o al historial).
-- Accesos: botón sutil "Historial" en el inicio; "Ver evolución" (`.texto.sutil`) en la ficha `/ejercicio?id=` y en `HojaAjustar`.
+- Accesos: fila de la última sesión en el inicio (§6); "Ver evolución" (`.texto.sutil`) en la ficha `/ejercicio?id=` y en `HojaAjustar`.
 - Sesiones de rutinas no activas: hoy no existen (archivar es MVP 4). La pantalla de sesión resuelve el día con la rutina activa; si el `diaId` no está, MVP 4 decidirá la vista de solo lectura.
 
 ### 5. Componente del indicador
@@ -54,7 +54,23 @@ Un componente `GraficoEvolucion.svelte` dibuja un `<svg>` con `viewBox` fijo y a
 
 ### 6. Pantallas (handoff de los mockups)
 
-Pendiente: se completa en la tarea 1.2 con la variante que elija Joa (resumen, historial, evolución y dónde va cada acceso).
+Mockups: https://claude.ai/artifact/XiB3ejhR2npTZwMc6bwcLs. Elegidas por Joa (02/11/2026): resumen **A** con el detalle por ejercicio plegado, **sin** % en la lista de la sesión, inicio **B** (fila de la última sesión), lista **B** (agrupada por día) y evolución **A** (volumen). Las clases del canvas (`project/mvp3.css`) son referencia; en la app cada componente lleva sus estilos con tokens.
+
+**Indicador** (`Indicador.svelte`): pastilla con fondo `--{nivel}-tint`, texto `--{nivel}`, forma `▼`/`●`/`▲` con `aria-hidden` y la palabra. Grande (resumen): 32 px de alto, `label` 16/24. Chica (filas): 24 px, `meta` 13/18, `--space-2` de padding. Con %, el texto es "+5 % Óptimo" en la chica de la fila del inicio; en el resumen y el historial el % va aparte, en `heading` condensado.
+
+**Resumen** (hoja de `/sesion`, sobre lo que ya hay):
+- Meta igual que hoy ("Día 2 · semana 3 · 6 de 6 ejercicios"), "Volumen" y el número en `num-xl`.
+- Debajo, con vez anterior: indicador grande "● Óptimo · +5 %" y al lado, en `meta`, "vs 4.165 kg el 28/10". Sin vez anterior: "Primera vez de Día 2: la próxima vas a ver cuánto subiste." en `meta`.
+- Botón sutil "Por ejercicio" (`.texto.sutil`, `aria-expanded`), plegado por defecto. Al abrirlo, una fila por ejercicio de peso hecho, fondo `--raised`: nombre (`label`), valores en `meta` `--ink-muted` y, a la derecha, % en `heading` condensado + indicador chico; sin vez anterior, "primera vez" en `meta`. No aparece si no hay ejercicios de peso.
+- "Listo" como hoy.
+
+**Inicio** (debajo de la tarjeta Hoy, antes de los botones sutiles): con sesiones, una fila-link de 64 px, fondo `--surface`: a la izquierda la fecha `dd/mm` en `heading` condensado (52 px), al medio "Última: Día 1" (`label`) y "3.400 kg · ver historial" (`meta`), a la derecha el indicador chico con % y palabra ("● +6 % Óptimo"); sin vez anterior, sin indicador. `aria-label`: "Historial. Última sesión: 31/10, Día 1, 3.400 kg, +6 % Óptimo". Sin sesiones no se muestra.
+
+**Historial** (`/historial`): cabecera con volver y "Historial". Grupos por día de la rutina activa en el orden de la rutina; título del grupo = nombre del día en `heading` condensado `--ink-muted`; los grupos sin sesiones no se muestran; sesiones de un día que ya no existe van al final bajo "Otros días". Filas como la del inicio: fecha, "Semana N" (`label`) y volumen (`meta`), y a la derecha % en `heading` + indicador chico con la palabra, o "primera vez" en `meta`. Toda la fila es un link a `/sesion?dia=&fecha=`. Vacío: "Todavía no hay sesiones" (`heading`) y "Cuando cargues la primera, aparece acá con su volumen." centrados.
+
+**Evolución** (`/evolucion?id=`): cabecera con volver, nombre del ejercicio como título y meta "Peso · 8 veces desde 02/09". "Volumen por vez" (`label`) y el gráfico en una tarjeta `--surface`: línea de 3 px y puntos de r 4 en `--accent-ink` (el último r 6), base en `--raised`, cambio de rutina con línea punteada `--control` y el nombre de la rutina en 12 px `--ink-faint`; pie con primer y último valor ("**1.600 kg** · 02/09" … "**2.360 kg** · 02/11"). Debajo "Cada vez" y filas de la más nueva a la más vieja: fecha, día (y rutina si no es la activa), bloques con `formatear` y el volumen a la derecha. Tipos sin peso: sin gráfico ni volumen, solo las filas.
+
+**Ver evolución**: botón sutil a la derecha del nombre en la cabecera de `HojaAjustar`, y otro en la ficha `/ejercicio?id=` (solo si el ejercicio ya existe).
 
 ## Risks / Trade-offs
 

@@ -6,7 +6,7 @@
 ## 1. Diseño (sesión de diseño, ~20k)
 
 - [x] 1.1 Mockups en un Artifact Design (tokens de `design/tokens.css`, 390 px, tema oscuro): resumen de "Terminar sesión" con %, indicador y detalle por ejercicio; historial (2–3 variantes de fila y de dónde va "Historial" en el inicio); evolución de un ejercicio con gráfico y lista (variante volumen vs kg máximo); "Ver evolución" en Ajustar y en la ficha; estados vacíos y primera vez; verificar que Joa tiene el link y las variantes numeradas; commit del link en `traspaso.md` (~15k)
-- [ ] 1.2 Con la elección de Joa, handoff a design.md §6 (pantalla por pantalla, textos y tokens); si la elección cambia algo de las specs (p. ej. gráfico de kg máximo), actualizar los deltas y verificar `openspec validate mvp-3-metricas-historial --strict`; commit (~5k)
+- [x] 1.2 Con la elección de Joa, handoff a design.md §6 (pantalla por pantalla, textos y tokens); si la elección cambia algo de las specs (p. ej. gráfico de kg máximo), actualizar los deltas y verificar `openspec validate mvp-3-metricas-historial --strict`; commit (~5k)
 
 ## 2. Cálculos y datos (~18k)
 
@@ -15,11 +15,11 @@
 
 ## 3. Resumen con % e indicador (~10k)
 
-- [ ] 3.1 `Indicador.svelte` (design.md §5) y resumen de `/sesion` según §6: volumen, % e indicador de la sesión y de cada ejercicio de peso; primera vez sin %; verificar en dev a 390 px los escenarios "Volumen", "Con vez anterior" y "Primera vez" con stores falsos, y que el indicador se entiende en gris (sin color); commit (~10k)
+- [ ] 3.1 `Indicador.svelte` (design.md §5) y resumen de `/sesion` según §6: volumen, % e indicador de la sesión y "Por ejercicio" plegado con el % e indicador de cada ejercicio de peso; primera vez sin %; verificar en dev a 390 px los escenarios "Volumen", "Con vez anterior", "Por ejercicio plegado" y "Primera vez" con stores falsos, y que el indicador se entiende en gris (sin color); commit (~10k)
 
 ## 4. Historial (~12k)
 
-- [ ] 4.1 Ruta `/historial` (filas según §6, estado vacío) y acceso "Historial" en el inicio; tocar una fila abre `/sesion?dia=&fecha=`; "Borrar" de una sesión abierta desde el historial vuelve al historial; verificar en dev a 390 px "Orden", "Fila de una sesión", "Sin sesiones", "Corregir un kg viejo" y "Borrar una vieja" (con una sesión de prueba, dejando Firestore como estaba); commit (~12k)
+- [ ] 4.1 Ruta `/historial` (grupos por día y filas según §6, estado vacío) y fila de la última sesión en el inicio; tocar una fila abre `/sesion?dia=&fecha=`; "Borrar" de una sesión abierta desde el historial vuelve al historial; verificar en dev a 390 px "Última sesión", "Sin sesiones", "Orden", "Fila de una sesión", "Historial vacío", "Corregir un kg viejo" y "Borrar una vieja" (con una sesión de prueba, dejando Firestore como estaba); commit (~12k)
 
 ## 5. Evolución por ejercicio (~15k)
 

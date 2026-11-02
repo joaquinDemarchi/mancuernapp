@@ -6,13 +6,13 @@ Desde el MVP 2 Joa carga cada sesión en el gym, pero la app todavía no le devu
 
 ## What Changes
 
-- Resumen de "Terminar sesión": además del volumen, % vs la vez anterior de ese día e indicador de sobrecarga (Bajo / Óptimo / Alto, con forma y palabra), y el % e indicador de cada ejercicio de peso.
-- Historial (`/historial`), al que se llega desde un botón sutil del inicio: sesiones de la más nueva a la más vieja con fecha, día, volumen e indicador; tocar una la abre en la pantalla de sesión para verla, editarla o borrarla.
+- Resumen de "Terminar sesión": además del volumen, % vs la vez anterior de ese día e indicador de sobrecarga (Bajo / Óptimo / Alto, con forma y palabra); el % e indicador de cada ejercicio de peso, plegados detrás de "Por ejercicio".
+- Historial (`/historial`), al que se llega desde una fila con la última sesión bajo la tarjeta Hoy: sesiones agrupadas por día de la rutina, de la más nueva a la más vieja, con fecha, semana, volumen e indicador; tocar una la abre en la pantalla de sesión para verla, editarla o borrarla.
 - Evolución por ejercicio (`/evolucion?id=`): gráfico del volumen de cada vez que se hizo, cruzando rutinas gracias al catálogo, y la lista de esas veces. Se abre desde la ficha del ejercicio en el catálogo y desde Ajustar.
 - Umbrales del indicador fijos en una constante (Bajo < 0 %, Óptimo 0–10 %, Alto > 10 %).
 - El store de sesiones pasa a leer todas las sesiones del usuario (no solo las de la rutina activa), para que historial y gráfico crucen rutinas.
 
-**A decidir con Joa en el mockup** (antes del código): dónde va el acceso a Historial en el inicio, cómo se ve cada fila del historial, si el gráfico muestra volumen (propuesto) o kg máximo, y si % e indicador por ejercicio aparecen también en la pantalla de sesión o solo en el resumen.
+**Elegido por Joa en el mockup** (design.md §6): resumen A con el detalle plegado, sin % en la lista de la sesión, inicio B, historial agrupado por día y gráfico de volumen.
 
 **Fuera de alcance:** archivar rutina, ver rutinas archivadas y nueva rutina, import/export (MVP 4); gráfico para ejercicios que no son de peso (reps, tiempo, cardio: solo la lista de veces); umbrales configurables, sugerir progresión, 1RM/récords, dashboard ampliado (v2); filtros o búsqueda en el historial; comparar sesiones de distinto día.
 

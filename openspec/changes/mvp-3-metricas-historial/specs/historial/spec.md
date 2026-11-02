@@ -7,22 +7,30 @@ Tener a mano todas las sesiones cargadas, de la más nueva a la más vieja, para
 ## ADDED Requirements
 
 ### Requirement: Acceso al historial
-El inicio SHALL ofrecer un botón secundario "Historial", visible aunque no haya sesiones.
+Con al menos una sesión, el inicio SHALL mostrar bajo la tarjeta "Hoy" una fila con la última sesión (fecha, día, volumen y, si tiene vez anterior, % e indicador) que abre el historial; sin sesiones la fila no SHALL mostrarse.
+
+#### Scenario: Última sesión
+- **WHEN** la última sesión fue Día 1 el 31/10, con 3.400 kg y +6 % vs la anterior
+- **THEN** el inicio muestra la fila "31/10", "Última: Día 1", "3.400 kg" y "+6 % Óptimo", y al tocarla se abre el historial
 
 #### Scenario: Sin sesiones
-- **WHEN** el usuario todavía no cargó ninguna sesión y abre "Historial"
-- **THEN** ve un estado vacío que explica que acá van a aparecer sus sesiones
+- **WHEN** el usuario todavía no cargó ninguna sesión
+- **THEN** el inicio no muestra la fila de la última sesión
 
 ### Requirement: Lista de sesiones
-El historial SHALL listar todas las sesiones del usuario, de cualquier rutina, de la más nueva a la más vieja, cada una con fecha, nombre del día, semana N, volumen y, si tiene vez anterior, % e indicador.
+El historial SHALL agrupar las sesiones del usuario por día de la rutina, en el orden de los días, y dentro de cada día listarlas de la más nueva a la más vieja, cada una con fecha, semana N, volumen y, si tiene vez anterior, % e indicador. Sin sesiones SHALL mostrar un estado vacío.
 
 #### Scenario: Orden
-- **WHEN** hay sesiones del 28/10 (Día 1), 29/10 (Día 2) y 31/10 (Día 3)
-- **THEN** la primera fila es 31/10 · Día 3 y la última 28/10 · Día 1
+- **WHEN** Día 1 se hizo el 24/10, 27/10 y 31/10 y Día 2 el 25/10 y 28/10
+- **THEN** primero aparece el grupo "Día 1" con 31/10 arriba y 24/10 abajo, y después el grupo "Día 2"
 
 #### Scenario: Fila de una sesión
-- **WHEN** la sesión del 29/10 es la segunda vez de Día 2, sumó 4.390 kg y subió 4 % vs la anterior
-- **THEN** su fila muestra "29/10", "Día 2", "semana 2", "4.390 kg", "+4 %" y "Óptimo"
+- **WHEN** la sesión del 28/10 es la segunda vez de Día 2, sumó 4.165 kg y subió 4 % vs la anterior
+- **THEN** su fila, en el grupo "Día 2", muestra "28/10", "Semana 2", "4.165 kg", "+4 %" y "Óptimo"
+
+#### Scenario: Historial vacío
+- **WHEN** se borró la única sesión desde el historial
+- **THEN** el historial muestra "Todavía no hay sesiones"
 
 ### Requirement: Abrir una sesión del historial
 Tocar una sesión del historial SHALL abrirla en la pantalla de sesión con su fecha real, donde se puede editar o borrar con confirmación igual que la de hoy.

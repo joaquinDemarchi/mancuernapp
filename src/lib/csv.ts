@@ -245,3 +245,34 @@ export function escribirCsv(datos: { ejercicios: Ejercicio[]; rutinas: Rutina[];
 	}
 	return '﻿' + filas.map((f) => f.map(celda).join(';')).join('\r\n') + '\r\n';
 }
+
+/** Encabezado y filas de ejemplo: los días de una rutina (sin fecha) y una sesión hecha (con fecha). */
+export function plantillaCsv(): string {
+	const ej = (id: string, nombre: string, tipo: Tipo): Ejercicio => ({ id, nombre, tipo, saltoKg: 2.5, saltoReps: 1, saltoSeg: 5, notas: '' });
+	return escribirCsv({
+		ejercicios: [ej('pb', 'Press banca', 'peso'), ej('sen', 'Sentadilla', 'peso'), ej('pl', 'Plancha', 'tiempo')],
+		rutinas: [
+			{
+				id: 'r',
+				nombre: 'Rutina 1',
+				inicio: '',
+				estado: 'activa',
+				dias: [
+					{ id: 'd1', nombre: 'Día 1', items: [{ ejercicioId: 'pb', objetivo: { series: 4, reps: 10 } }, { ejercicioId: 'sen', objetivo: { series: 3, reps: 12 } }] },
+					{ id: 'd2', nombre: 'Día 2', items: [{ ejercicioId: 'pl', objetivo: { series: 3, segundos: 40 } }] }
+				]
+			}
+		],
+		sesiones: [
+			{
+				id: 's',
+				rutinaId: 'r',
+				diaId: 'd1',
+				fecha: '2026-09-15',
+				creada: 0,
+				terminada: true,
+				registros: [{ ejercicioId: 'pb', bloques: [{ series: 3, reps: 10, kg: 60 }, { series: 1, reps: 8, kg: 62.5 }], hecho: true }]
+			}
+		]
+	});
+}

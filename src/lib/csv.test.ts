@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Sesion } from './calculos';
 import type { Ejercicio, Tipo } from './catalogo';
-import { columnas, escribirCsv, leerCsv, planImport, validar } from './csv';
+import { columnas, escribirCsv, leerCsv, planImport, plantillaCsv, validar } from './csv';
 import type { Rutina } from './rutina';
 
 const ej = (id: string, nombre: string, tipo: Tipo = 'peso'): Ejercicio => ({ id, nombre, tipo, saltoKg: 2.5, saltoReps: 1, saltoSeg: 5, notas: '' });
@@ -146,5 +146,16 @@ describe('escribirCsv', () => {
 					}))
 			);
 		}
+	});
+});
+
+describe('plantillaCsv', () => {
+	it('es válida y arma una rutina con una sesión', () => {
+		const texto = plantillaCsv();
+		expect(texto).toContain('Rutina 1;Día 1;Press banca;peso;1;8;62,5;;;15/09/2026');
+		const { filas, errores } = validar(leerCsv(texto));
+		expect(errores).toEqual([]);
+		const [r] = planImport(filas, vacio).rutinas;
+		expect([r.nombre, r.dias.length, r.sesiones.length]).toEqual(['Rutina 1', 2, 1]);
 	});
 });

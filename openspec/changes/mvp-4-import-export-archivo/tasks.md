@@ -23,7 +23,7 @@
 
 ## 5. Exportar y plantilla (~8k)
 
-- [ ] 5.1 "Exportar todo" y "Descargar plantilla" donde diga §7 (Blob + `<a download>`); verificar en dev que el archivo baja con el nombre correcto y abrirlo en Excel (Joa) o revisar con `npm test` el texto generado con BOM, `;` y coma decimal; commit (~8k)
+- [x] 5.1 "Exportar todo" y "Descargar plantilla" donde diga §7 (Blob + `<a download>`); verificar en dev que el archivo baja con el nombre correcto y abrirlo en Excel (Joa) o revisar con `npm test` el texto generado con BOM, `;` y coma decimal; commit (~8k)
 
 ## 6. Importar con revisión (~20k)
 

@@ -171,6 +171,7 @@
 			{#if fechasRapidas.length}
 				<button class="texto sutil" onclick={abrirAnterior}>Cargar un día anterior</button>
 			{/if}
+			<a class="texto sutil" href="/datos">Importar y exportar</a>
 		</div>
 		{#if verDias}
 			<ul>
@@ -241,12 +242,16 @@
 			</p>
 			<div class="enlaces-vacio">
 				<a class="texto sutil" href="/historial">Historial</a>
+				<a class="texto sutil" href="/datos">Importar y exportar</a>
 			</div>
 		</div>
 	{:else if $rutinaActiva === null}
 		<div class="vacio">
 			<p class="titulo">Todavía no hay rutina</p>
 			<p>Armá los días con ejercicios de tu catálogo.</p>
+			<div class="enlaces-vacio">
+				<a class="texto sutil" href="/datos">Importar y exportar</a>
+			</div>
 		</div>
 	{/if}
 </main>
@@ -363,6 +368,7 @@
 	}
 	.enlaces {
 		display: flex;
+		flex-wrap: wrap;
 		justify-content: space-between;
 		margin: 0 calc(var(--space-3) * -1);
 	}

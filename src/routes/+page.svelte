@@ -4,7 +4,7 @@
 	import { salir } from '#lib/acceso.ts';
 	import { anterior as sesionAnterior, crecimiento, diaMes, diasAntes, diaSugerido, formatearPct, formatearVolumen, hoy, indicador, semana, sesionDeHoy, volumen } from '#lib/calculos.ts';
 	import { ejercicios } from '#lib/catalogo.ts';
-	import { crearRutina, fechaCorta, rutinaActiva } from '#lib/rutina.ts';
+	import { crearRutina, fechaCorta, nuevaRutina, rutinaActiva, rutinas } from '#lib/rutina.ts';
 	import { sesiones } from '#lib/sesion.ts';
 	import Boton from '#lib/componentes/Boton.svelte';
 	import BarraAccion from '#lib/componentes/BarraAccion.svelte';
@@ -23,6 +23,15 @@
 		} finally {
 			creando = false;
 		}
+	}
+
+	// Sin activa pero con archivadas: la nueva copia los días de la última terminada.
+	const ultimaRutina = $derived($rutinas?.filter((r) => r.fin).sort((a, b) => a.fin!.localeCompare(b.fin!)).at(-1));
+	const sesionesUltima = $derived($sesiones?.filter((s) => s.rutinaId === ultimaRutina?.id).length ?? 0);
+
+	function nueva() {
+		nuevaRutina();
+		goto('/rutina');
 	}
 
 	function cantidad(n: number) {
@@ -219,6 +228,21 @@
 				{/if}
 			{/if}
 		</Hoja>
+	{:else if $rutinaActiva === null && ultimaRutina}
+		<div class="vacio">
+			<h2 class="titulo">Sin rutina activa</h2>
+			<p>
+				{ultimaRutina.nombre} terminó el {diaMes(ultimaRutina.fin!)} con {sesionesUltima}
+				{sesionesUltima === 1 ? 'sesión' : 'sesiones'}.
+			</p>
+			<p class="meta">
+				La nueva arranca con {ultimaRutina.dias.length === 1 ? 'su día' : `sus ${ultimaRutina.dias.length} días`} y ejercicios;
+				después la cambiás.
+			</p>
+			<div class="enlaces-vacio">
+				<a class="texto sutil" href="/historial">Historial</a>
+			</div>
+		</div>
 	{:else if $rutinaActiva === null}
 		<div class="vacio">
 			<p class="titulo">Todavía no hay rutina</p>
@@ -226,7 +250,9 @@
 		</div>
 	{/if}
 </main>
-{#if !$rutinaActiva}
+{#if $rutinaActiva === null && ultimaRutina}
+	<BarraAccion><Boton onclick={nueva}>Nueva rutina</Boton></BarraAccion>
+{:else if !$rutinaActiva}
 	<BarraAccion>
 		<Boton variante="secundario" onclick={() => goto('/ejercicios')}>Ejercicios</Boton>
 		<Boton disabled={creando || $rutinaActiva === undefined} onclick={crear}>Crear rutina</Boton>
@@ -244,12 +270,26 @@
 		color: var(--ink-muted);
 	}
 	.titulo {
+		margin: 0;
 		font: 600 var(--fs-heading) / var(--lh-heading) var(--font-display);
 		color: var(--ink);
 	}
 	.meta {
 		font: 400 var(--fs-meta) / var(--lh-meta) var(--font-text);
 		color: var(--ink-faint);
+	}
+	.vacio .meta {
+		margin-top: var(--space-2);
+	}
+	.enlaces-vacio {
+		display: flex;
+		justify-content: center;
+		margin-top: var(--space-3);
+	}
+	a.texto {
+		display: inline-flex;
+		align-items: center;
+		text-decoration: none;
 	}
 	.acciones {
 		display: grid;

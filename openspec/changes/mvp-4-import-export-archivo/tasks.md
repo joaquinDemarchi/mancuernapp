@@ -11,7 +11,7 @@
 ## 2. Rutinas archivadas (~15k)
 
 - [x] 2.1 `rutina.ts` con store `rutinas` (todas) y `rutinaActiva` derivada; `terminarRutina`, `nuevaRutina` (copia con ids de día nuevos, "Rutina N+1") y `volverARutina` (un `writeBatch`); la copia en una función pura con test (días, items y objetivos iguales, ids distintos); verificar `npm test`, `npm run check` y en dev con stores falsos que el inicio, la tarjeta Hoy y Editar rutina siguen iguales con una activa; commit (~10k)
-- [ ] 2.2 "Terminar rutina" (sutil, con confirmación) en `/rutina` e inicio sin activa con "Nueva rutina" (o "Crear rutina" sin ninguna) según §7; verificar en dev a 390 px "Cambio de rutina", "Copiar" y "Primera rutina"; commit (~5k)
+- [x] 2.2 "Terminar rutina" (sutil, con confirmación) en `/rutina` e inicio sin activa con "Nueva rutina" (o "Crear rutina" sin ninguna) según §7; verificar en dev a 390 px "Cambio de rutina", "Copiar" y "Primera rutina"; commit (~5k)
 
 ## 3. Historial y sesión en solo lectura (~12k)
 

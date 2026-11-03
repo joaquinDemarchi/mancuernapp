@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { ejercicios } from '#lib/catalogo.ts';
+	import { sesiones } from '#lib/sesion.ts';
 	import {
 		agregarDia,
 		agregarItem,
@@ -13,7 +14,8 @@
 		moverItem,
 		renombrarDia,
 		renombrarRutina,
-		rutinaActiva
+		rutinaActiva,
+		terminarRutina
 	} from '#lib/rutina.ts';
 	import Boton from '#lib/componentes/Boton.svelte';
 	import BarraAccion from '#lib/componentes/BarraAccion.svelte';
@@ -72,6 +74,19 @@
 		borrarDia(dia.id);
 		diaId = null;
 		renombrando = false;
+	}
+
+	// "Terminar rutina": el primer toque avisa, el segundo archiva y vuelve al inicio.
+	let terminando = $state(false);
+	const sesionesRutina = $derived($sesiones?.filter((s) => s.rutinaId === $rutinaActiva?.id).length ?? 0);
+
+	function terminar() {
+		if (!terminando) {
+			terminando = true;
+			return;
+		}
+		terminarRutina();
+		goto('/');
 	}
 </script>
 
@@ -154,6 +169,18 @@
 				</ListaOrdenable>
 			{:else}
 				<p class="vacio">Este día no tiene ejercicios</p>
+			{/if}
+		</div>
+
+		<div class="terminar" class:confirmando={terminando}>
+			{#if terminando}
+				<p class="confirmar" role="alert">
+					{$rutinaActiva.nombre} pasa al historial con fin hoy y sus {sesionesRutina}
+					{sesionesRutina === 1 ? 'sesión queda' : 'sesiones quedan'}. Tocá de nuevo para terminarla.
+				</p>
+				<Boton variante="secundario" onclick={terminar}>Sí, terminar rutina</Boton>
+			{:else}
+				<button type="button" class="texto sutil" onclick={terminar}>Terminar rutina</button>
 			{/if}
 		</div>
 
@@ -311,6 +338,21 @@
 		text-align: center;
 		color: var(--ink-muted);
 		margin: 0;
+	}
+	.terminar {
+		display: grid;
+		justify-items: start;
+		gap: var(--space-2);
+		margin: var(--space-4) calc(var(--space-3) * -1) 0;
+	}
+	.terminar.confirmando {
+		justify-items: stretch;
+		margin-inline: 0;
+	}
+	.confirmar {
+		margin: 0;
+		color: var(--ink-muted);
+		font: 400 var(--fs-body) / var(--lh-body) var(--font-text);
 	}
 	.aviso {
 		margin: 0;

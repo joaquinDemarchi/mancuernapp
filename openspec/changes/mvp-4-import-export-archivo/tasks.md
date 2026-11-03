@@ -5,7 +5,7 @@
 
 ## 1. Diseño (sesión de diseño, ~20k)
 
-- [ ] 1.1 Mockups en un Artifact Design (tokens de `design/tokens.css`, 390 px, tema oscuro) con 2–3 variantes numeradas de: dónde van Importar / Exportar todo / plantilla (pantalla `/datos` vs hoja desde "Ver rutina"); revisión del import (resumen, errores por fila, emparejamiento); "Terminar rutina" con confirmación; inicio sin activa con "Nueva rutina"; historial con grupos archivados y "Volver a esta rutina"; sesión en solo lectura; verificar que Joa tiene el link; commit del link en `traspaso.md` (~15k)
+- [x] 1.1 Mockups en un Artifact Design (tokens de `design/tokens.css`, 390 px, tema oscuro) con 2–3 variantes numeradas de: dónde van Importar / Exportar todo / plantilla (pantalla `/datos` vs hoja desde "Ver rutina"); revisión del import (resumen, errores por fila, emparejamiento); "Terminar rutina" con confirmación; inicio sin activa con "Nueva rutina"; historial con grupos archivados y "Volver a esta rutina"; sesión en solo lectura; verificar que Joa tiene el link; commit del link en `traspaso.md` (~15k)
 - [ ] 1.2 Con la elección de Joa, handoff a design.md §7 (pantalla por pantalla, textos y tokens); si cambia algo de las specs, actualizar los deltas y verificar `openspec validate mvp-4-import-export-archivo --strict`; commit (~5k)
 
 ## 2. Rutinas archivadas (~15k)

@@ -3,10 +3,10 @@
 ## ADDED Requirements
 
 ### Requirement: Terminar rutina
-En Editar rutina, un botón sutil "Terminar rutina" SHALL pedir confirmación y pasar la rutina activa a archivada con fecha de fin de hoy; sus sesiones se conservan.
+En Editar rutina, un botón sutil "Terminar rutina" SHALL pedir confirmación (tocar de nuevo "Sí, terminar rutina") y pasar la rutina activa a archivada con fecha de fin de hoy; sus sesiones se conservan.
 
 #### Scenario: Cambio de rutina
-- **WHEN** el usuario toca "Terminar rutina" en "Rutina 1" y confirma
+- **WHEN** el usuario toca "Terminar rutina" en "Rutina 1" y después "Sí, terminar rutina"
 - **THEN** "Rutina 1" queda archivada con fin hoy y el inicio ofrece "Nueva rutina"
 
 ### Requirement: Nueva rutina copiando la anterior

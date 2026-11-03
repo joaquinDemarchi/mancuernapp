@@ -32,7 +32,7 @@ Importar SHALL mostrar una revisión antes de escribir nada: rutinas y días que
 - **THEN** no se crea ninguna rutina, sesión ni ejercicio
 
 ### Requirement: Emparejamiento con el catálogo
-Cada ejercicio del CSV SHALL emparejarse con el del catálogo que tenga el mismo nombre (ignorando mayúsculas, tildes y espacios); si no hay, la revisión SHALL ofrecer crearlo con el tipo del CSV o elegir uno parecido del catálogo. Un ejercicio emparejado conserva su tipo del catálogo.
+Cada ejercicio del CSV SHALL emparejarse con el del catálogo que tenga el mismo nombre (ignorando mayúsculas, tildes y espacios); si no hay, la revisión SHALL ofrecer crearlo con el tipo del CSV o elegir uno parecido del catálogo, y no SHALL poder importarse hasta decidir cada parecido. Un ejercicio emparejado conserva su tipo del catálogo.
 
 #### Scenario: Mismo nombre
 - **WHEN** el CSV dice "press banca" y el catálogo tiene "Press banca"
@@ -40,7 +40,7 @@ Cada ejercicio del CSV SHALL emparejarse con el del catálogo que tenga el mismo
 
 #### Scenario: Parecido
 - **WHEN** el CSV dice "Camilla isquio" y el catálogo tiene "Camilla isquiotibiales"
-- **THEN** la revisión pregunta si es el mismo, con la opción de crearlo nuevo
+- **THEN** la revisión pregunta si es el mismo, con la opción de crearlo nuevo, y "Importar" queda deshabilitado hasta elegir
 
 ### Requirement: Importar una rutina nueva
 Las filas sin fecha de una rutina que no existe SHALL crear esa rutina con sus días en el orden en que aparecen y los ejercicios con su objetivo; si no hay rutina activa queda activa con inicio hoy, y si hay una activa SHALL ofrecerse terminarla primero o guardar la nueva como archivada.

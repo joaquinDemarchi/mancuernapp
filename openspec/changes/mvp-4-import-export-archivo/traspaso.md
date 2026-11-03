@@ -4,7 +4,8 @@
 
 - 02/11/2026: propuesta creada (proposal, specs `import-export`, deltas de `rutina` e `historial`, design, tasks). Decisiones de Joa antes de proponer: solo CSV; el import trae rutina y sesiones viejas; la nueva rutina arranca copiando la anterior; las archivadas se ven en el historial.
 - 02/11/2026: 1.1 hecha. Mockups en el canvas https://claude.ai/artifact/68rdozFVjMZ2SRW6vSFFhw (privado, tokens Pizarra, 390 px, oscuro): 1A pantalla «Importar y exportar» / 1B hoja desde «Ver rutina» (botón «Datos»); revisión 2A todo a la vista / 2B solo lo que hay que decidir, más errores por fila y con rutina activa A (radios en la revisión) / B (hoja al tocar «Importar»); terminar 3A hoja / 3B «tocá de nuevo»; inicio sin activa A centrado / B tarjeta; historial 4A archivadas desplegadas / 4B plegadas, confirmación de «Volver a esta rutina»; sesión archivada A lista sin controles / B como el resumen con %.
-- Próxima tarea: 1.2 (handoff a design.md §7 con lo que elija Joa).
+- 03/11/2026: 1.2 hecha. Joa eligió 1A (`/datos`), 2B, con rutina activa A, 3B, inicio A, 4B y sesión B; handoff en design.md §7. Deltas ajustados: archivadas plegadas en el historial, sesión archivada con volumen y %, "Importar" deshabilitado hasta decidir cada parecido, terminar con "Sí, terminar rutina". Joa eligió sin objetar los tres supuestos del mockup ("Volver a esta rutina" en el historial, elegir qué hacer con la activa, archivadas sin editar): se toman como confirmados.
+- Próxima tarea: 2.1 (sesión de código aparte).
 
 ## Gotchas
 

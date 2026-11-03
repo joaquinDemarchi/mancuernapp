@@ -19,7 +19,7 @@
 
 ## 4. CSV: lectura, validación y plan (~15k)
 
-- [ ] 4.1 `src/lib/csv.ts` con `leerCsv`, `validar`, `planImport` y `escribirCsv` (design.md §4) y tests en `csv.test.ts`: BOM y comillas, coma y punto decimal, las dos fechas, fila con error con su línea, bloques de una sesión en orden, rutina nueva sin fechas, rutina inexistente con fechas → archivada con inicio/fin, fecha repetida salteada, emparejamiento por nombre normalizado y parecidos sin emparejar solos, ida y vuelta `escribirCsv` → `leerCsv` → `planImport` igual a los datos; verificar `npm test` y `npm run check`; commit (~15k)
+- [x] 4.1 `src/lib/csv.ts` con `leerCsv`, `validar`, `planImport` y `escribirCsv` (design.md §4) y tests en `csv.test.ts`: BOM y comillas, coma y punto decimal, las dos fechas, fila con error con su línea, bloques de una sesión en orden, rutina nueva sin fechas, rutina inexistente con fechas → archivada con inicio/fin, fecha repetida salteada, emparejamiento por nombre normalizado y parecidos sin emparejar solos, ida y vuelta `escribirCsv` → `leerCsv` → `planImport` igual a los datos; verificar `npm test` y `npm run check`; commit (~15k)
 
 ## 5. Exportar y plantilla (~8k)
 

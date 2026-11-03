@@ -15,7 +15,7 @@
 
 ## 3. Historial y sesión en solo lectura (~12k)
 
-- [ ] 3.1 `/historial` con un grupo por rutina archivada (nombre, inicio–fin, día en cada fila, "Volver a esta rutina" con confirmación) y links con `&rutina=`; `/sesion` resuelve rutina y día desde `?rutina=` y queda en solo lectura si está archivada; sacar "Otros días"; verificar en dev a 390 px "Rutina archivada", "Sesión de una rutina archivada", "Me equivoqué al terminar" y que "Corregir un kg viejo" y "Borrar una vieja" siguen andando en la activa; commit (~12k)
+- [x] 3.1 `/historial` con un grupo por rutina archivada (nombre, inicio–fin, día en cada fila, "Volver a esta rutina" con confirmación) y links con `&rutina=`; `/sesion` resuelve rutina y día desde `?rutina=` y queda en solo lectura si está archivada; sacar "Otros días"; verificar en dev a 390 px "Rutina archivada", "Sesión de una rutina archivada", "Me equivoqué al terminar" y que "Corregir un kg viejo" y "Borrar una vieja" siguen andando en la activa; commit (~12k)
 
 ## 4. CSV: lectura, validación y plan (~15k)
 

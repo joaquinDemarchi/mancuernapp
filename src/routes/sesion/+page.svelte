@@ -3,8 +3,8 @@
 	import { page } from '$app/state';
 	import { anterior, crecimiento, desdeObjetivo, diaMes, diasAntes, formatear, formatearPct, formatearVolumen, hoy, semana, sesionDeHoy, ultimaVez, volumen, volumenEjercicio, type Bloque } from '#lib/calculos.ts';
 	import { ejercicios, type Tipo } from '#lib/catalogo.ts';
-	import { fechaCorta, formatearObjetivo, rutinaActiva, type Objetivo } from '#lib/rutina.ts';
-	import { borrarSesion, guardarRegistro, quitarRegistro, sesiones, terminar } from '#lib/sesion.ts';
+	import { fechaCorta, formatearObjetivo, rutinaActiva, rutinas, type Objetivo } from '#lib/rutina.ts';
+	import { borrarSesion, guardarRegistro, quitarRegistro, sesiones, terminar, type Registro } from '#lib/sesion.ts';
 	import Boton from '#lib/componentes/Boton.svelte';
 	import BarraAccion from '#lib/componentes/BarraAccion.svelte';
 	import Cabecera from '#lib/componentes/Cabecera.svelte';
@@ -13,8 +13,13 @@
 	import HojaAjustar from '#lib/componentes/HojaAjustar.svelte';
 	import Indicador from '#lib/componentes/Indicador.svelte';
 
+	// `?rutina=` abre una sesión de otra rutina (por defecto la activa); si es archivada, solo para ver.
+	const rutinaPedida = page.url.searchParams.get('rutina');
+	const rutina = $derived(rutinaPedida ? $rutinas?.find((r) => r.id === rutinaPedida) : $rutinaActiva);
+	const soloLectura = $derived(rutina?.estado === 'archivada');
+
 	$effect(() => {
-		if ($rutinaActiva === null) goto('/');
+		if ($rutinas && !rutina) goto('/');
 	});
 
 	// `?fecha=` carga un día anterior (por defecto hoy). La sesión de esa fecha manda (y su día);
@@ -24,10 +29,10 @@
 	const cuando = fecha === hoy() ? 'Hoy' : fecha === diasAntes(1) ? 'Ayer' : diaMes(fecha);
 	// Abierta desde el historial: volver, borrar y "Listo" vuelven ahí.
 	const salida = page.url.searchParams.get('desde') === 'historial' ? '/historial' : '/';
-	const deHoy = $derived($sesiones && sesionDeHoy($sesiones, fecha, $rutinaActiva?.id));
+	const deHoy = $derived($sesiones && sesionDeHoy($sesiones, fecha, rutina?.id));
 	const diaId = $derived(deHoy?.diaId ?? page.url.searchParams.get('dia'));
-	const dia = $derived($rutinaActiva?.dias.find((d) => d.id === diaId) ?? $rutinaActiva?.dias[0]);
-	const ctx = $derived($rutinaActiva && dia ? { rutinaId: $rutinaActiva.id, diaId: dia.id, fecha } : undefined);
+	const dia = $derived(rutina?.dias.find((d) => d.id === diaId) ?? rutina?.dias[0]);
+	const ctx = $derived(rutina && dia && !soloLectura ? { rutinaId: rutina.id, diaId: dia.id, fecha } : undefined);
 
 	type Fila = { ejercicioId: string; objetivo?: Objetivo; extra: boolean };
 	const filas = $derived.by((): Fila[] => {
@@ -110,14 +115,15 @@
 	const vol = $derived(deHoy ? volumen(deHoy.registros, tipoDe) : 0);
 	const volPrevio = $derived(previa && volumen(previa.registros, tipoDe));
 	const pct = $derived(crecimiento(vol, volPrevio));
-	const dePeso = $derived(
-		(deHoy?.registros ?? [])
-			.filter((r) => tipoDe(r.ejercicioId) === 'peso')
-			.map((r) => {
-				const antes = previa?.registros.find((p) => p.ejercicioId === r.ejercicioId);
-				return { r, pct: crecimiento(volumenEjercicio(r), antes && volumenEjercicio(antes)) };
-			})
+	// % solo para los de peso; en el resumen van solo esos y en una sesión archivada, todos.
+	const porRegistro = $derived(
+		(deHoy?.registros ?? []).map((r) => {
+			if (tipoDe(r.ejercicioId) !== 'peso') return { r, pct: undefined };
+			const antes = previa?.registros.find((p) => p.ejercicioId === r.ejercicioId);
+			return { r, pct: crecimiento(volumenEjercicio(r), antes && volumenEjercicio(antes)) };
+		})
 	);
+	const dePeso = $derived(porRegistro.filter(({ r }) => tipoDe(r.ejercicioId) === 'peso'));
 
 	let borrando = $state(false);
 	function borrar() {
@@ -134,11 +140,29 @@
 </script>
 
 <main class="pantalla">
-	{#if dia && $rutinaActiva && $sesiones && $ejercicios}
+	{#if dia && rutina && soloLectura && $sesiones && $ejercicios}
+		<Cabecera
+			titulo="{dia.nombre} · {diaMes(fecha)}"
+			meta="{rutina.nombre} (archivada) · semana {semana($sesiones, dia.id, deHoy)}"
+			volver={salida}
+		/>
+		<div class="lectura">
+			{@render volumenYComparacion()}
+			{#if porRegistro.length}
+				<h2>Por ejercicio</h2>
+				<ul class="ejercicios">
+					{#each porRegistro as { r, pct: p } (r.ejercicioId)}
+						{@render filaEjercicio(r, p)}
+					{/each}
+				</ul>
+			{/if}
+			<p class="meta">Para corregirla, volvé a {rutina.nombre} desde el historial.</p>
+		</div>
+	{:else if dia && rutina && $sesiones && $ejercicios}
 		{@const n = semana($sesiones, dia.id, deHoy)}
 		<Cabecera
 			titulo="{cuando}: {dia.nombre}"
-			meta="{$rutinaActiva.nombre} · semana {n} · {hechos}/{filas.length} hechos"
+			meta="{rutina.nombre} · semana {n} · {hechos}/{filas.length} hechos"
 			volver={salida}
 		>
 			{#snippet accion()}
@@ -211,16 +235,8 @@
 		{/if}
 
 		<Hoja bind:abierta={resumen} titulo="Sesión terminada" meta="{dia.nombre} · semana {n} · {hechos} de {filas.length} ejercicios">
-			<div class="volumen">
-				<span class="meta">Volumen</span>
-				<span class="numero">{formatearVolumen(vol)}</span>
-			</div>
-			{#if pct !== undefined && previa}
-				<div class="comparacion">
-					<Indicador {pct} conPct />
-					<span class="meta">vs {formatearVolumen(volPrevio ?? 0)} el {diaMes(previa.fecha)}</span>
-				</div>
-			{:else if !previa}
+			{@render volumenYComparacion()}
+			{#if !previa}
 				<p class="meta">Primera vez de {dia.nombre}: la próxima vas a ver cuánto subiste.</p>
 			{/if}
 			{#if dePeso.length}
@@ -230,18 +246,7 @@
 				{#if porEjercicio}
 					<ul class="ejercicios" id="por-ejercicio">
 						{#each dePeso as { r, pct: p } (r.ejercicioId)}
-							<li>
-								<span class="ej">
-									<span class="label">{ejercicio(r.ejercicioId)?.nombre ?? '…'}</span>
-									<span class="meta">{formatear('peso', r.bloques)}</span>
-								</span>
-								{#if p !== undefined}
-									<span class="pct">{formatearPct(p)}</span>
-									<Indicador pct={p} chico />
-								{:else}
-									<span class="meta">primera vez</span>
-								{/if}
-							</li>
+							{@render filaEjercicio(r, p)}
 						{/each}
 					</ul>
 				{/if}
@@ -253,9 +258,41 @@
 		</Hoja>
 	{/if}
 </main>
-<BarraAccion>
-	<Boton disabled={!hechos} onclick={terminarSesion}>{deHoy?.terminada ? 'Listo' : 'Terminar sesión'}</Boton>
-</BarraAccion>
+{#if !soloLectura}
+	<BarraAccion>
+		<Boton disabled={!hechos} onclick={terminarSesion}>{deHoy?.terminada ? 'Listo' : 'Terminar sesión'}</Boton>
+	</BarraAccion>
+{/if}
+
+<!-- Del resumen; también arma la vista de una sesión archivada. -->
+{#snippet volumenYComparacion()}
+	<div class="volumen">
+		<span class="meta">Volumen</span>
+		<span class="numero">{formatearVolumen(vol)}</span>
+	</div>
+	{#if pct !== undefined && previa}
+		<div class="comparacion">
+			<Indicador {pct} conPct />
+			<span class="meta">vs {formatearVolumen(volPrevio ?? 0)} el {diaMes(previa.fecha)}</span>
+		</div>
+	{/if}
+{/snippet}
+
+{#snippet filaEjercicio(r: Registro, p: number | undefined)}
+	{@const tipo = tipoDe(r.ejercicioId) ?? 'peso'}
+	<li>
+		<span class="ej">
+			<span class="label">{ejercicio(r.ejercicioId)?.nombre ?? '…'}</span>
+			<span class="meta">{formatear(tipo, r.bloques)}</span>
+		</span>
+		{#if p !== undefined}
+			<span class="pct">{formatearPct(p)}</span>
+			<Indicador pct={p} chico />
+		{:else if tipo === 'peso'}
+			<span class="meta">primera vez</span>
+		{/if}
+	</li>
+{/snippet}
 
 <style>
 	ul {
@@ -341,6 +378,15 @@
 	}
 	.volumen {
 		display: grid;
+	}
+	.lectura {
+		display: grid;
+		gap: var(--space-3);
+	}
+	h2 {
+		margin: var(--space-2) 0 0;
+		color: var(--ink-muted);
+		font: 600 var(--fs-meta) / var(--lh-meta) var(--font-text);
 	}
 	.comparacion {
 		display: flex;

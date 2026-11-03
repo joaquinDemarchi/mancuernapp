@@ -5,7 +5,8 @@
 - 02/11/2026: propuesta creada (proposal, specs `import-export`, deltas de `rutina` e `historial`, design, tasks). Decisiones de Joa antes de proponer: solo CSV; el import trae rutina y sesiones viejas; la nueva rutina arranca copiando la anterior; las archivadas se ven en el historial.
 - 02/11/2026: 1.1 hecha. Mockups en el canvas https://claude.ai/artifact/68rdozFVjMZ2SRW6vSFFhw (privado, tokens Pizarra, 390 px, oscuro): 1A pantalla «Importar y exportar» / 1B hoja desde «Ver rutina» (botón «Datos»); revisión 2A todo a la vista / 2B solo lo que hay que decidir, más errores por fila y con rutina activa A (radios en la revisión) / B (hoja al tocar «Importar»); terminar 3A hoja / 3B «tocá de nuevo»; inicio sin activa A centrado / B tarjeta; historial 4A archivadas desplegadas / 4B plegadas, confirmación de «Volver a esta rutina»; sesión archivada A lista sin controles / B como el resumen con %.
 - 03/11/2026: 1.2 hecha. Joa eligió 1A (`/datos`), 2B, con rutina activa A, 3B, inicio A, 4B y sesión B; handoff en design.md §7. Deltas ajustados: archivadas plegadas en el historial, sesión archivada con volumen y %, "Importar" deshabilitado hasta decidir cada parecido, terminar con "Sí, terminar rutina". Joa eligió sin objetar los tres supuestos del mockup ("Volver a esta rutina" en el historial, elegir qué hacer con la activa, archivadas sin editar): se toman como confirmados.
-- Próxima tarea: 2.1 (sesión de código aparte).
+- 03/11/2026: 2.1 hecha. `rutina.ts` lee toda la colección en `rutinas` (ordenadas por `inicio`) y `rutinaActiva` es `derived` (`undefined` cargando, `null` sin activa: los usos de las pantallas no cambiaron). `terminarRutina()` (`updateDoc` estado + fin hoy), `nuevaRutina()` (`setDoc` sin `await` con `doc(coleccion())`, copia los días de la última archivada por `fin` o arranca con "Día 1" si no hay; devuelve el id) y `volverARutina(id)` (`writeBatch`: activa → archivada con fin, elegida → activa con `deleteField()` en `fin`). La copia es `copiarDias` en `calculos.ts` (pura, con test). Verificado a 390 px con stores falsos: inicio, tarjeta Hoy, Ver rutina y Editar rutina iguales; con solo archivadas `rutinaActiva` es `null` y el inicio muestra "Crear rutina" (2.2 lo cambia).
+- Próxima tarea: 2.2.
 
 ## Gotchas
 
@@ -13,4 +14,5 @@
 - Copiar la rutina genera ids de día nuevos: las sesiones viejas quedan en los ids viejos (semana N y rotación arrancan de cero).
 - Al pasar `rutinaActiva` a derivada de `rutinas`, revisar `crearRutina` y todo lo que usa `rutinaActiva === undefined` / `null` (carga vs sin rutina).
 - Trucos de verificación con stores falsos: `openspec/changes/archive/2026-11-02-mvp-3-metricas-historial/traspaso.md` (`localStorage.__setup` en el Browser pane; habrá que sumar `rutinas`).
+- `localStorage.__setup` del Browser pane ya setea `rutinas` (r0 archivada con día `a1`, r1 activa), no `rutinaActiva` (ahora es derivada, no tiene `set`). En el inicio, `Boton` responde a `el.click()` buscando por `textContent` (no `innerText`).
 - `npm run dev` bloquea mover carpetas en `openspec/changes` (Windows): parar el server antes de archivar.

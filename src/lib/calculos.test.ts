@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Tipo } from './catalogo';
 import {
 	anterior,
+	copiarDias,
 	crecimiento,
 	desarmar,
 	desdeObjetivo,
@@ -22,6 +23,7 @@ import {
 	type Registro,
 	type Sesion
 } from './calculos';
+import type { Dia } from './rutina';
 
 const rutina = {
 	id: 'r1',
@@ -258,5 +260,19 @@ describe('evolucion', () => {
 	it('sin peso, sin volumen', () => {
 		const pl: Registro = { ejercicioId: 'pl', bloques: [{ series: 3, segundos: 40 }], hecho: true };
 		expect(evolucion([s('d1', '2026-10-27', [pl])], 'pl', 'tiempo')[0].volumen).toBeUndefined();
+	});
+});
+
+describe('copiarDias', () => {
+	const dias: Dia[] = [
+		{ id: 'd1', nombre: 'Día 1', items: [{ ejercicioId: 'press', objetivo: { series: 4, reps: 10 } }, { ejercicioId: 'cinta' }] },
+		{ id: 'd2', nombre: 'Piernas', items: [{ ejercicioId: 'plancha', objetivo: { series: 3, segundos: 40 } }] }
+	];
+	it('deja días, items y objetivos iguales con ids nuevos', () => {
+		const copia = copiarDias(dias);
+		expect(copia.map(({ id: _, ...resto }) => resto)).toEqual(dias.map(({ id: _, ...resto }) => resto));
+		expect(copia.map((d) => d.id)).not.toContain('d1');
+		expect(copia.map((d) => d.id)).not.toContain('d2');
+		expect(copia[0].id).not.toBe(copia[1].id);
 	});
 });

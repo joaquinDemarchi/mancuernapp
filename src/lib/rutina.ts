@@ -1,6 +1,7 @@
-import { addDoc, collection, doc, limit, onSnapshot, query, updateDoc, where, type Unsubscribe } from 'firebase/firestore';
-import { get, writable } from 'svelte/store';
+import { addDoc, collection, deleteField, doc, onSnapshot, setDoc, updateDoc, writeBatch, type Unsubscribe } from 'firebase/firestore';
+import { derived, get, writable } from 'svelte/store';
 import { sesion } from './acceso';
+import { copiarDias } from './calculos';
 import { db } from './firebase';
 import { mover } from './orden';
 
@@ -12,12 +13,16 @@ export type Rutina = {
 	id: string;
 	nombre: string;
 	inicio: string; // AAAA-MM-DD
+	fin?: string; // AAAA-MM-DD, al archivarla
 	estado: 'activa' | 'archivada';
 	dias: Dia[];
 };
 
+/** Todas las rutinas del usuario, ordenadas por inicio; `undefined` mientras llega la primera lectura. */
+export const rutinas = writable<Rutina[] | undefined>(undefined);
+
 /** `undefined` mientras llega la primera lectura; `null` si no hay rutina activa. */
-export const rutinaActiva = writable<Rutina | null | undefined>(undefined);
+export const rutinaActiva = derived(rutinas, (rs) => (rs ? (rs.find((r) => r.estado === 'activa') ?? null) : undefined));
 
 function coleccion() {
 	const s = get(sesion);
@@ -30,12 +35,11 @@ let desuscribir: Unsubscribe | undefined;
 sesion.subscribe((s) => {
 	desuscribir?.();
 	desuscribir = undefined;
-	rutinaActiva.set(undefined);
+	rutinas.set(undefined);
 	if (s.estado !== 'con-sesion') return;
-	const q = query(coleccion(), where('estado', '==', 'activa'), limit(1));
-	desuscribir = onSnapshot(q, (snap) => {
-		const d = snap.docs[0];
-		rutinaActiva.set(d ? ({ id: d.id, ...d.data() } as Rutina) : null);
+	desuscribir = onSnapshot(coleccion(), (snap) => {
+		const rs = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Rutina);
+		rutinas.set(rs.sort((a, b) => a.inicio.localeCompare(b.inicio)));
 	});
 });
 
@@ -57,6 +61,35 @@ export async function crearRutina() {
 		dias: [{ id: crypto.randomUUID(), nombre: 'Día 1', items: [] }]
 	};
 	return (await addDoc(coleccion(), nueva)).id;
+}
+
+/** Archiva la activa con fin hoy (sin esperar respuesta: anda offline). */
+export function terminarRutina() {
+	return updateDoc(doc(coleccion(), actual().id), { estado: 'archivada', fin: hoy() });
+}
+
+/** Crea "Rutina N+1" activa copiando los días de la última archivada y devuelve su id. */
+export function nuevaRutina() {
+	const rs = get(rutinas) ?? [];
+	const ultima = rs.filter((r) => r.fin).sort((a, b) => a.fin!.localeCompare(b.fin!)).at(-1);
+	const ref = doc(coleccion());
+	const nueva: Omit<Rutina, 'id'> = {
+		nombre: `Rutina ${rs.length + 1}`,
+		inicio: hoy(),
+		estado: 'activa',
+		dias: ultima ? copiarDias(ultima.dias) : [{ id: crypto.randomUUID(), nombre: 'Día 1', items: [] }]
+	};
+	setDoc(ref, nueva);
+	return ref.id;
+}
+
+/** La elegida vuelve a ser la activa y la activa (si hay) se archiva, en un solo batch: nunca quedan dos activas. */
+export function volverARutina(id: string) {
+	const batch = writeBatch(db);
+	const activa = get(rutinaActiva);
+	if (activa) batch.update(doc(coleccion(), activa.id), { estado: 'archivada', fin: hoy() });
+	batch.update(doc(coleccion(), id), { estado: 'activa', fin: deleteField() });
+	return batch.commit();
 }
 
 function actual(): Rutina {

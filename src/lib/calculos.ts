@@ -163,3 +163,8 @@ export function formatear(tipo: Tipo, bloques: readonly Bloque[]) {
 		})
 		.join(' + ');
 }
+
+/** Copia los días para una rutina nueva: mismos nombres, items y objetivos, con ids de día nuevos. */
+export function copiarDias(dias: readonly Dia[]): Dia[] {
+	return dias.map((d) => ({ ...d, id: crypto.randomUUID() }));
+}

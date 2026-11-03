@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Sesion } from './calculos';
 import type { Ejercicio, Tipo } from './catalogo';
-import { columnas, escribirCsv, leerCsv, planImport, plantillaCsv, validar } from './csv';
+import { armarImport, columnas, escribirCsv, leerCsv, planImport, plantillaCsv, validar } from './csv';
 import type { Rutina } from './rutina';
 
 const ej = (id: string, nombre: string, tipo: Tipo = 'peso'): Ejercicio => ({ id, nombre, tipo, saltoKg: 2.5, saltoReps: 1, saltoSeg: 5, notas: '' });
@@ -157,5 +157,46 @@ describe('plantillaCsv', () => {
 		expect(errores).toEqual([]);
 		const [r] = planImport(filas, vacio).rutinas;
 		expect([r.nombre, r.dias.length, r.sesiones.length]).toEqual(['Rutina 1', 2, 1]);
+	});
+});
+
+describe('armarImport', () => {
+	let n = 0;
+	const base = { decisiones: {}, terminarActiva: true, hoy: '2026-11-03', nuevoId: () => `id${n++}` };
+	const activa: Rutina = { id: 'r1', nombre: 'Rutina 2', inicio: '2026-09-24', estado: 'activa', dias: [{ id: 'd1', nombre: 'Día 1', items: [] }] };
+
+	it('rutina del profe sin activa: queda activa con inicio hoy y ejercicios del catálogo o nuevos', () => {
+		const { filas } = csv('Rutina 5;Día 1;press banca;;4;10;;;;', 'Rutina 5;Día 1;Burpees;reps;3;15;;;;');
+		const e = armarImport(planImport(filas, { ...vacio, ejercicios: catalogo }), base);
+		expect(e.archivar).toBeUndefined();
+		expect(e.ejercicios.map((x) => [x.nombre, x.tipo])).toEqual([['Burpees', 'reps']]);
+		const [r] = e.rutinas;
+		expect([r.nombre, r.estado, r.inicio, r.fin]).toEqual(['Rutina 5', 'activa', '2026-11-03', undefined]);
+		expect(r.dias[0].items).toEqual([{ ejercicioId: 'pb', objetivo: { series: 4, reps: 10 } }, { ejercicioId: e.ejercicios[0].id, objetivo: { series: 3, reps: 15 } }]);
+	});
+	it('con activa: terminarla o guardar la nueva archivada', () => {
+		const { filas } = csv('Rutina 5;Día 1;Press banca;;4;10;;;;');
+		const plan = planImport(filas, { ejercicios: catalogo, rutinas: [activa], sesiones: [] });
+		const terminando = armarImport(plan, { ...base, activa: 'r1' });
+		expect([terminando.archivar, terminando.rutinas[0].estado]).toEqual([{ id: 'r1', fin: '2026-11-03' }, 'activa']);
+		const guardando = armarImport(plan, { ...base, activa: 'r1', terminarActiva: false });
+		expect([guardando.archivar, guardando.rutinas[0].estado, guardando.rutinas[0].fin]).toEqual([undefined, 'archivada', '2026-11-03']);
+	});
+	it('el Excel viejo: rutina archivada con sus sesiones terminadas en sus días', () => {
+		const { filas } = csv('Rutina 1;Día 1;Press banca;;3;10;60;;;08/09/2026', 'Rutina 1;Día 2;Plancha;;3;;;40;;10/09/2026');
+		const e = armarImport(planImport(filas, { ...vacio, ejercicios: catalogo }), base);
+		const [r] = e.rutinas;
+		expect([r.estado, r.inicio, r.fin]).toEqual(['archivada', '2026-09-08', '2026-09-10']);
+		expect(e.sesiones.map((s) => [s.rutinaId, s.diaId, s.fecha, s.terminada, s.registros[0].ejercicioId])).toEqual([
+			[r.id, r.dias[0].id, '2026-09-08', true, 'pb'],
+			[r.id, r.dias[1].id, '2026-09-10', true, 'pl']
+		]);
+	});
+	it('sesiones de una rutina existente van a su día; el parecido elegido usa el del catálogo', () => {
+		const { filas } = csv('Rutina 2;Día 1;Camilla isquio;;3;12;20;;;30/10/2026');
+		const plan = planImport(filas, { ejercicios: catalogo, rutinas: [activa], sesiones: [] });
+		const e = armarImport(plan, { ...base, activa: 'r1', decisiones: { 'Camilla isquio': 'mismo' } });
+		expect([e.rutinas, e.ejercicios, e.archivar]).toEqual([[], [], undefined]);
+		expect(e.sesiones.map((s) => [s.rutinaId, s.diaId, s.registros[0].ejercicioId])).toEqual([['r1', 'd1', 'cam']]);
 	});
 });

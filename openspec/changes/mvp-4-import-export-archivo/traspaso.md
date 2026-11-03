@@ -17,6 +17,7 @@
 - "Importar" todavía no tiene `onclick`: lo conecta la 6.2 con `plan`, `decisiones` y `terminarActiva`. Si se elige "Es el mismo", el ejercicio es `e.parecidos[0]`.
 - El Browser pane no emula 390 px (queda en el ancho del pane, ~420 px): el desborde se chequeó con `document.body.style.width = '375px'`.
 - Próxima tarea: 6.2.
+- 03/11/2026: 6.2 a medio camino (commit de avance, sin `[x]`). Escrito: `armarImport` en `csv.ts` (decisiones, una sola activa, ids) con 4 tests; `src/lib/importar.ts` con `guardarImport` (lotes de 450, archiva la activa primero, sin `await`); "Importar" en `/datos` llama a los dos y hace `goto('/')`. También `/evolucion` ya nombra las rutinas con `rutinas` (el pendiente menor de arriba). Check y tests en verde. Falta: verificar en dev con stores falsos "Rutina del profe", "El Excel viejo" y "Fecha repetida", y la prueba con Joa logueado (con su OK).
 
 ## Gotchas
 

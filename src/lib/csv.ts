@@ -276,3 +276,59 @@ export function plantillaCsv(): string {
 		]
 	});
 }
+
+/** Lo que el import escribe, ya con ids (sin `creada`: la pone el servidor). */
+export type Escrituras = {
+	ejercicios: Ejercicio[];
+	rutinas: Rutina[];
+	/** La activa que se termina porque la nueva ocupa su lugar. */
+	archivar?: { id: string; fin: string };
+	sesiones: Omit<Sesion, 'creada'>[];
+};
+
+/** Completa el plan con las elecciones de la revisión y genera los ids (design.md §5). */
+export function armarImport(
+	plan: Plan,
+	o: { decisiones: Record<string, 'mismo' | 'nuevo'>; terminarActiva: boolean; activa?: string; hoy: string; nuevoId: () => string }
+): Escrituras {
+	const salida: Escrituras = { ejercicios: [], rutinas: [], sesiones: [] };
+	const ejercicioId: Record<string, string> = {};
+	for (const e of plan.ejercicios) {
+		const id = e.existente?.id ?? (o.decisiones[e.nombre] === 'mismo' ? e.parecidos[0]?.id : undefined);
+		if (id) ejercicioId[e.nombre] = id;
+		else {
+			ejercicioId[e.nombre] = o.nuevoId();
+			salida.ejercicios.push({ id: ejercicioId[e.nombre], nombre: e.nombre, tipo: e.tipo, saltoKg: 2.5, saltoReps: 1, saltoSeg: 5, notas: '' });
+		}
+	}
+	// Una sola activa: la primera rutina nueva sin fechas, si no hay activa o se elige terminarla.
+	let lugarLibre = !o.activa || o.terminarActiva;
+	for (const r of plan.rutinas) {
+		const rutinaId = r.existente ?? o.nuevoId();
+		const diaId: Record<string, string> = {};
+		if (!r.existente) {
+			const dias = r.dias.map((d) => {
+				diaId[d.nombre] = o.nuevoId();
+				const items = d.items.map((it) => (it.objetivo ? { ejercicioId: ejercicioId[it.ejercicio], objetivo: it.objetivo } : { ejercicioId: ejercicioId[it.ejercicio] }));
+				return { id: diaId[d.nombre], nombre: d.nombre, items };
+			});
+			if (r.estado === 'archivada') salida.rutinas.push({ id: rutinaId, nombre: r.nombre, inicio: r.inicio!, fin: r.fin, estado: 'archivada', dias });
+			else if (lugarLibre) {
+				salida.rutinas.push({ id: rutinaId, nombre: r.nombre, inicio: o.hoy, estado: 'activa', dias });
+				if (o.activa) salida.archivar = { id: o.activa, fin: o.hoy };
+				lugarLibre = false;
+			} else salida.rutinas.push({ id: rutinaId, nombre: r.nombre, inicio: o.hoy, fin: o.hoy, estado: 'archivada', dias });
+		}
+		for (const s of r.sesiones) {
+			salida.sesiones.push({
+				id: o.nuevoId(),
+				rutinaId,
+				diaId: s.diaId ?? diaId[s.dia],
+				fecha: s.fecha,
+				terminada: true,
+				registros: s.registros.map((reg) => ({ ejercicioId: ejercicioId[reg.ejercicio], bloques: reg.bloques, hecho: true }))
+			});
+		}
+	}
+	return salida;
+}

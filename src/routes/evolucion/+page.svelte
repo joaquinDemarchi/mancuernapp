@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import { diaMes, evolucion, formatear, formatearVolumen } from '#lib/calculos.ts';
 	import { ejercicios, tipos } from '#lib/catalogo.ts';
-	import { rutinaActiva } from '#lib/rutina.ts';
+	import { rutinaActiva, rutinas } from '#lib/rutina.ts';
 	import { sesiones } from '#lib/sesion.ts';
 	import Cabecera from '#lib/componentes/Cabecera.svelte';
 	import GraficoEvolucion from '#lib/componentes/GraficoEvolucion.svelte';
@@ -12,8 +12,7 @@
 	const ejercicio = $derived($ejercicios?.find((e) => e.id === id));
 	const veces = $derived(ejercicio && $sesiones ? evolucion($sesiones, id, ejercicio.tipo) : []);
 
-	// Solo la rutina activa está en memoria: las demás todavía no tienen nombre a mano (MVP 4).
-	const nombreRutina = (rutinaId: string) => (rutinaId === $rutinaActiva?.id ? $rutinaActiva.nombre : 'Otra rutina');
+	const nombreRutina = (rutinaId: string) => $rutinas?.find((r) => r.id === rutinaId)?.nombre ?? 'Otra rutina';
 	const nombreDia = (rutinaId: string, diaId: string) =>
 		rutinaId === $rutinaActiva?.id ? ($rutinaActiva.dias.find((d) => d.id === diaId)?.nombre ?? '') : nombreRutina(rutinaId);
 

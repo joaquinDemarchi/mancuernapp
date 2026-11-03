@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { diaMes, hoy } from '#lib/calculos.ts';
 	import { ejercicios } from '#lib/catalogo.ts';
-	import { escribirCsv, leerCsv, planImport, plantillaCsv, validar, type ErrorFila, type Plan } from '#lib/csv.ts';
+	import { armarImport, escribirCsv, leerCsv, planImport, plantillaCsv, validar, type ErrorFila, type Plan } from '#lib/csv.ts';
+	import { guardarImport } from '#lib/importar.ts';
 	import { rutinaActiva, rutinas } from '#lib/rutina.ts';
 	import { sesiones } from '#lib/sesion.ts';
 	import Boton from '#lib/componentes/Boton.svelte';
@@ -51,6 +53,14 @@
 		revision = undefined;
 	}
 
+	// Sin pantalla de éxito: vuelve al inicio, que ya muestra lo importado desde la caché local.
+	function importar() {
+		if (!revision?.plan) return;
+		const opciones = { decisiones, terminarActiva, activa: $rutinaActiva?.id, hoy: hoy(), nuevoId: () => crypto.randomUUID() };
+		guardarImport(armarImport(revision.plan, opciones));
+		goto('/');
+	}
+
 	const plan = $derived(revision?.plan);
 	const dudosos = $derived(plan?.ejercicios.filter((e) => !e.existente && e.parecidos.length) ?? []);
 	const faltan = $derived(dudosos.filter((e) => !decisiones[e.nombre]).length);
@@ -65,7 +75,7 @@
 
 	const titulo = $derived(
 		rutinasNuevas
-			? `${cantidad(rutinasNuevas, 'rutina nueva', 'rutinas nuevas')} y ${cantidad(sesionesNuevas, 'sesión', 'sesiones')}`
+			? cantidad(rutinasNuevas, 'rutina nueva', 'rutinas nuevas') + (sesionesNuevas ? ` y ${cantidad(sesionesNuevas, 'sesión', 'sesiones')}` : '')
 			: cantidad(sesionesNuevas, 'sesión', 'sesiones')
 	);
 	const detalle = $derived(
@@ -242,7 +252,7 @@
 			{:else}
 				{#if faltan}<p class="meta falta">Falta decidir {cantidad(faltan, 'ejercicio', 'ejercicios')}</p>{/if}
 				<Boton variante="secundario" onclick={cancelar}>Cancelar</Boton>
-				<Boton disabled={faltan > 0}>Importar</Boton>
+				<Boton disabled={faltan > 0} onclick={importar}>Importar</Boton>
 			{/if}
 		</div>
 	</BarraAccion>

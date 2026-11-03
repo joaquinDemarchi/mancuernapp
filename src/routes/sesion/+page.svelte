@@ -145,6 +145,7 @@
 			titulo="{dia.nombre} · {diaMes(fecha)}"
 			meta="{rutina.nombre} (archivada) · semana {semana($sesiones, dia.id, deHoy)}"
 			volver={salida}
+			etiquetaVolver={salida === '/historial' ? 'Volver al historial' : 'Volver'}
 		/>
 		<div class="lectura">
 			{@render volumenYComparacion()}

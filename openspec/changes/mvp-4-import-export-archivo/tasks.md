@@ -27,7 +27,7 @@
 
 ## 6. Importar con revisión (~20k)
 
-- [ ] 6.1 Elegir archivo, mostrar la revisión según §7 (qué se crea, sesiones por rutina, errores por fila, emparejamiento y parecidos, fechas salteadas, elección con rutina activa) y "Cancelar" sin escribir nada; verificar en dev a 390 px con un CSV de prueba de "joa" los escenarios "Fila con error", "Cancelar", "Mismo nombre" y "Parecido"; commit (~12k)
+- [x] 6.1 Elegir archivo, mostrar la revisión según §7 (qué se crea, sesiones por rutina, errores por fila, emparejamiento y parecidos, fechas salteadas, elección con rutina activa) y "Cancelar" sin escribir nada; verificar en dev a 390 px con un CSV de prueba de "joa" los escenarios "Fila con error", "Cancelar", "Mismo nombre" y "Parecido"; commit (~12k)
 - [ ] 6.2 Guardar el plan con `writeBatch` en lotes de 450 sin `await` (design.md §5); verificar en dev con stores falsos "Rutina del profe", "El Excel viejo" (historial y evolución muestran lo importado) y "Fecha repetida"; con Joa logueado, solo con su OK y un CSV chico de prueba que después se borra; commit (~8k)
 
 ## 7. Cierre (~10k)

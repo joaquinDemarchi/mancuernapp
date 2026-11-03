@@ -5,6 +5,8 @@
 		titulo,
 		volver,
 		atras = false,
+		onvolver,
+		etiquetaVolver = 'Volver',
 		meta,
 		accion
 	}: {
@@ -13,6 +15,9 @@
 		volver?: string;
 		/** La flecha vuelve con `history.back()` a donde se abrió; `volver` queda para cuando se entró directo. */
 		atras?: boolean;
+		/** La flecha no navega: hace esto (p. ej. cancelar una revisión dentro de la misma pantalla). */
+		onvolver?: () => void;
+		etiquetaVolver?: string;
 		meta?: string;
 		/** Botón de texto a la derecha (p. ej. "Salir"). */
 		accion?: Snippet;
@@ -23,8 +28,12 @@
 	{#if volver}
 		<a
 			href={volver}
-			aria-label="Volver"
+			aria-label={etiquetaVolver}
 			onclick={(e) => {
+				if (onvolver) {
+					e.preventDefault();
+					return onvolver();
+				}
 				if (!atras || history.length < 2) return;
 				e.preventDefault();
 				history.back();

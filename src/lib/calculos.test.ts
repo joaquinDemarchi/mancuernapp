@@ -17,7 +17,9 @@ import {
 	hoy,
 	indicador,
 	lunes,
+	mejoresMarcas,
 	porSemana,
+	progreso,
 	racha,
 	semana,
 	sesionDeHoy,
@@ -347,5 +349,83 @@ describe('racha', () => {
 	it('un hueco corta', () => {
 		const ss = ['2026-10-06', '2026-10-20', '2026-10-27'].map((f) => s('d1', f));
 		expect(racha(ss, '2026-11-02')).toBe(2);
+	});
+});
+
+describe('mejoresMarcas', () => {
+	const catalogo: { id: string; tipo: Tipo }[] = [
+		{ id: 'cinta', tipo: 'cardio' },
+		{ id: 'movilidad', tipo: 'calentamiento' },
+		{ id: 'pb', tipo: 'peso' },
+		{ id: 'pl', tipo: 'tiempo' },
+		{ id: 'remo', tipo: 'peso' },
+		{ id: 'sentadilla', tipo: 'reps' }
+	];
+	const x = (ejercicioId: string, bloques: Registro['bloques']): Registro => ({ ejercicioId, bloques, hecho: true });
+	it('cada tipo, sin calentamiento ni lo que no se hizo', () => {
+		const ss = [
+			s('d1', '2026-10-20', [
+				r('pb', 3, 10, 60),
+				x('pl', [{ series: 3, segundos: 40 }]),
+				x('cinta', [{ series: 1, minutos: 20 }]),
+				x('movilidad', [{ series: 1 }]),
+				x('sentadilla', [{ series: 3, reps: 12 }])
+			]),
+			s('d1', '2026-10-27', [
+				x('pb', [{ series: 2, reps: 6, kg: 70 }]),
+				x('pl', [{ series: 3, segundos: 45 }]),
+				x('cinta', [{ series: 1, minutos: 25 }]),
+				x('sentadilla', [{ series: 3, reps: 11 }])
+			])
+		];
+		expect(mejoresMarcas(ss, catalogo)).toEqual([
+			{ ejercicioId: 'cinta', marcas: [{ etiqueta: 'Minutos', valor: '25 min', fecha: '2026-10-27' }] },
+			{
+				ejercicioId: 'pb',
+				marcas: [
+					{ etiqueta: 'Mayor peso', valor: '70 kg × 6', fecha: '2026-10-27' },
+					{ etiqueta: 'Mayor volumen', valor: '1.800 kg', fecha: '2026-10-20' }
+				]
+			},
+			{ ejercicioId: 'pl', marcas: [{ etiqueta: 'Segundos en una serie', valor: '45 s', fecha: '2026-10-27' }] },
+			{ ejercicioId: 'sentadilla', marcas: [{ etiqueta: 'Reps en una serie', valor: '12 reps', fecha: '2026-10-20' }] }
+		]);
+	});
+	it('empate de kg: más reps; si se repite, la primera fecha', () => {
+		const ss = [
+			s('d1', '2026-10-27', [x('pb', [{ series: 1, reps: 8, kg: 70 }])]),
+			s('d1', '2026-10-13', [x('pb', [{ series: 1, reps: 5, kg: 70 }])]),
+			s('d1', '2026-10-20', [x('pb', [{ series: 1, reps: 8, kg: 70 }])])
+		];
+		expect(mejoresMarcas(ss, catalogo)[0].marcas).toEqual([
+			{ etiqueta: 'Mayor peso', valor: '70 kg × 8', fecha: '2026-10-20' },
+			{ etiqueta: 'Mayor volumen', valor: '560 kg', fecha: '2026-10-20' }
+		]);
+	});
+	it('saltea ejercicios borrados del catálogo', () => {
+		expect(mejoresMarcas([s('d1', '2026-10-20', [r('borrado', 3, 10, 60)])], catalogo)).toEqual([]);
+	});
+});
+
+describe('progreso', () => {
+	const catalogo: { id: string; tipo: Tipo }[] = [
+		{ id: 'pb', tipo: 'peso' },
+		{ id: 'pl', tipo: 'tiempo' },
+		{ id: 'remo', tipo: 'peso' },
+		{ id: 'sen', tipo: 'peso' },
+		{ id: 'vuelos', tipo: 'peso' }
+	];
+	it('última vs primera, ordenado de mayor a menor', () => {
+		const pl: Registro = { ejercicioId: 'pl', bloques: [{ series: 3, segundos: 40 }], hecho: true };
+		const ss = [
+			s('d1', '2026-10-06', [r('sen', 2, 10, 100), r('pb', 3, 10, 60), r('vuelos', 3, 10, 0), pl]),
+			s('d1', '2026-10-13', [r('remo', 3, 10, 40), r('vuelos', 3, 10, 5), pl]),
+			s('d1', '2026-10-20', [r('sen', 2, 10, 115), r('pb', 3, 10, 57)]),
+			s('d1', '2026-10-27', [r('borrado', 3, 10, 60), r('borrado', 3, 10, 60)])
+		];
+		expect(progreso(ss, catalogo)).toEqual([
+			{ ejercicioId: 'sen', primera: 2000, ultima: 2300, pct: 15 },
+			{ ejercicioId: 'pb', primera: 1800, ultima: 1710, pct: -5 }
+		]);
 	});
 });

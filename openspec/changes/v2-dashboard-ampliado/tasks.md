@@ -11,7 +11,7 @@
 ## 2. Cálculos (~16k)
 
 - [x] 2.1 En `src/lib/calculos.ts`: `desdePeriodo`, `lunes`, `porSemana` (volumen y sesiones, semanas vacías en 0) y `racha` según design §1–§3, con tests (domingo/lunes, cambio de mes y de año, semana actual sin sesión, racha cortada, período sin sesiones); verificar `npm test` y `npm run check`; commit (~8k)
-- [ ] 2.2 `mejoresMarcas` y `progreso` según design §4–§5, con tests (empate de kg, primera fecha de la marca, cada tipo, calentamiento afuera, una sola vez, volumen 0 la primera vez, ejercicio borrado del catálogo); verificar `npm test` y `npm run check`; commit (~8k)
+- [x] 2.2 `mejoresMarcas` y `progreso` según design §4–§5, con tests (empate de kg, primera fecha de la marca, cada tipo, calentamiento afuera, una sola vez, volumen 0 la primera vez, ejercicio borrado del catálogo); verificar `npm test` y `npm run check`; commit (~8k)
 
 ## 3. Pantalla `/resumen` (~20k)
 

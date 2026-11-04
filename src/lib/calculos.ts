@@ -236,3 +236,62 @@ export function racha(sesiones: readonly Sesion[], fecha = hoy()) {
 	}
 	return n;
 }
+
+// Resumen: mejores marcas y progreso (sobre las sesiones del período).
+
+export type Marca = { etiqueta: string; valor: string; fecha: string };
+
+/** Por ejercicio del catálogo (en su orden), sus mejores marcas; la fecha es la primera vez que se logró. Sin calentamiento. */
+export function mejoresMarcas(sesiones: readonly Sesion[], catalogo: readonly { id: string; tipo: Tipo }[]) {
+	const orden = ordenar(sesiones);
+	return catalogo.flatMap((e) => {
+		if (e.tipo === 'calentamiento') return [];
+		let mejor: Bloque | undefined;
+		let fecha = '';
+		let vol = -1;
+		let fechaVol = '';
+		const valor = (b: Bloque) => (e.tipo === 'reps' ? b.reps : e.tipo === 'tiempo' ? b.segundos : b.minutos) ?? 0;
+		for (const s of orden) {
+			const r = s.registros.find((r) => r.ejercicioId === e.id);
+			if (!r) continue;
+			for (const b of r.bloques) {
+				const supera =
+					!mejor ||
+					(e.tipo === 'peso'
+						? (b.kg ?? 0) > (mejor.kg ?? 0) || ((b.kg ?? 0) === (mejor.kg ?? 0) && (b.reps ?? 0) > (mejor.reps ?? 0))
+						: valor(b) > valor(mejor));
+				if (supera) [mejor, fecha] = [b, s.fecha];
+			}
+			if (e.tipo === 'peso' && volumenEjercicio(r) > vol) [vol, fechaVol] = [volumenEjercicio(r), s.fecha];
+		}
+		if (!mejor) return [];
+		const marcas: Marca[] =
+			e.tipo === 'peso'
+				? [
+						{ etiqueta: 'Mayor peso', valor: `${numero.format(mejor.kg ?? 0)} kg × ${mejor.reps ?? 0}`, fecha },
+						{ etiqueta: 'Mayor volumen', valor: `${numero.format(vol)} kg`, fecha: fechaVol }
+					]
+				: e.tipo === 'reps'
+					? [{ etiqueta: 'Reps en una serie', valor: `${valor(mejor)} reps`, fecha }]
+					: e.tipo === 'tiempo'
+						? [{ etiqueta: 'Segundos en una serie', valor: `${valor(mejor)} s`, fecha }]
+						: [{ etiqueta: 'Minutos', valor: `${numero.format(valor(mejor))} min`, fecha }];
+		return [{ ejercicioId: e.id, marcas }];
+	});
+}
+
+export type Progreso = { ejercicioId: string; primera: number; ultima: number; pct: number };
+
+/** Ejercicios de peso hechos ≥ 2 veces con volumen > 0 la primera: % de la última vs la primera, de mayor a menor. */
+export function progreso(sesiones: readonly Sesion[], catalogo: readonly { id: string; tipo: Tipo }[]): Progreso[] {
+	return catalogo
+		.filter((e) => e.tipo === 'peso')
+		.flatMap((e) => {
+			const veces = evolucion(sesiones, e.id, 'peso');
+			const primera = veces[0]?.volumen ?? 0;
+			const ultima = veces.at(-1)?.volumen ?? 0;
+			const pct = veces.length >= 2 ? crecimiento(ultima, primera) : undefined;
+			return pct === undefined ? [] : [{ ejercicioId: e.id, primera, ultima, pct }];
+		})
+		.sort((a, b) => b.pct - a.pct);
+}

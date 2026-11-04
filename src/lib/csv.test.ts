@@ -44,7 +44,17 @@ describe('validar', () => {
 		expect(validar(leerCsv('Rutina;Dia\nR;D')).errores[0].linea).toBe(1);
 	});
 	it('acepta el encabezado sin tildes ni mayúsculas', () => {
-		expect(validar(leerCsv('rutina;dia;ejercicio;tipo;series;reps;kg;segundos;minutos;fecha')).errores).toEqual([]);
+		expect(validar(leerCsv('rutina;dia;ejercicio;tipo;series;reps;kg;segundos;minutos;fecha;descanso')).errores).toEqual([]);
+	});
+	it('archivo sin la columna Descanso (10 columnas): se importa igual, sin descanso', () => {
+		const { filas, errores } = validar(leerCsv('Rutina;Día;Ejercicio;Tipo;Series;Reps;Kg;Segundos;Minutos;Fecha\nR;D;Burpees;reps;3;15;;;;'));
+		expect(errores).toEqual([]);
+		expect(planImport(filas, vacio).ejercicios[0].descanso).toBeUndefined();
+	});
+	it('Descanso: entero de 15 a 300 segundos', () => {
+		const { filas, errores } = csv('R;D;Remo;peso;3;10;20;;;;90', 'R;D;Remo;peso;3;10;20;;;;1:30', 'R;D;Remo;peso;3;10;20;;;;400');
+		expect(filas.map((f) => f.descanso)).toEqual([90]);
+		expect(errores.map((e) => e.linea)).toEqual([3, 4]);
 	});
 });
 
@@ -93,7 +103,7 @@ describe('planImport', () => {
 });
 
 describe('escribirCsv', () => {
-	const ejercicios = [ej('pb', 'Press banca'), ej('pl', 'Plancha; frontal', 'tiempo'), ej('cal', 'Movilidad', 'calentamiento')];
+	const ejercicios = [{ ...ej('pb', 'Press banca'), descanso: 90 }, ej('pl', 'Plancha; frontal', 'tiempo'), ej('cal', 'Movilidad', 'calentamiento')];
 	const rutinas: Rutina[] = [
 		{ id: 'r0', nombre: 'Rutina 1', inicio: '2026-09-08', fin: '2026-09-15', estado: 'archivada', dias: [{ id: 'a1', nombre: 'Día 1', items: [{ ejercicioId: 'pb' }] }] },
 		{
@@ -121,7 +131,8 @@ describe('escribirCsv', () => {
 
 	it('BOM, «;», coma decimal y fecha DD/MM/AAAA', () => {
 		expect(texto.startsWith('﻿Rutina;Día;Ejercicio;')).toBe(true);
-		expect(texto).toContain('Rutina 1;Día 1;Press banca;peso;3;10;62,5;;;15/09/2026\r\n');
+		expect(texto).toContain('Rutina 1;Día 1;Press banca;peso;3;10;62,5;;;15/09/2026;\r\n');
+		expect(texto).toContain('Rutina 2;Día 1;Press banca;peso;4;10;;;;;90\r\n');
 		expect(texto).toContain('"Plancha; frontal"');
 	});
 
@@ -132,6 +143,8 @@ describe('escribirCsv', () => {
 		const nombre = (id: string) => ejercicios.find((e) => e.id === id)!.nombre;
 		const porNombre = (xs: { nombre: string; tipo: Tipo }[]) => xs.map((e) => [e.nombre, e.tipo]).sort();
 		expect(porNombre(plan.ejercicios)).toEqual(porNombre(ejercicios));
+		const descansos = (xs: { nombre: string; descanso?: number }[]) => xs.map((e) => [e.nombre, e.descanso]).sort();
+		expect(descansos(plan.ejercicios)).toEqual(descansos(ejercicios));
 		expect(plan.rutinas.map((r) => r.nombre)).toEqual(['Rutina 1', 'Rutina 2']);
 		for (const [i, r] of rutinas.entries()) {
 			expect(plan.rutinas[i].dias).toEqual(r.dias.map((d) => ({ nombre: d.nombre, items: d.items.map((it) => (it.objetivo ? { ejercicio: nombre(it.ejercicioId), objetivo: it.objetivo } : { ejercicio: nombre(it.ejercicioId) })) })));
@@ -181,6 +194,11 @@ describe('armarImport', () => {
 		expect([terminando.archivar, terminando.rutinas[0].estado]).toEqual([{ id: 'r1', fin: '2026-11-03' }, 'activa']);
 		const guardando = armarImport(plan, { ...base, activa: 'r1', terminarActiva: false });
 		expect([guardando.archivar, guardando.rutinas[0].estado, guardando.rutinas[0].fin]).toEqual([undefined, 'archivada', '2026-11-03']);
+	});
+	it('descanso: el ejercicio nuevo toma el primero no vacío; el existente conserva el suyo', () => {
+		const { filas } = csv('Rutina 5;Día 1;Burpees;reps;3;15;;;;;', 'Rutina 5;Día 1;Burpees;reps;3;15;;;;;60', 'Rutina 5;Día 2;Burpees;reps;3;15;;;;;90', 'Rutina 5;Día 1;Press banca;;4;10;;;;;120');
+		const e = armarImport(planImport(filas, { ...vacio, ejercicios: catalogo }), base);
+		expect(e.ejercicios.map((x) => [x.nombre, x.descanso])).toEqual([['Burpees', 60]]);
 	});
 	it('el Excel viejo: rutina archivada con sus sesiones terminadas en sus días', () => {
 		const { filas } = csv('Rutina 1;Día 1;Press banca;;3;10;60;;;08/09/2026', 'Rutina 1;Día 2;Plancha;;3;;;40;;10/09/2026');

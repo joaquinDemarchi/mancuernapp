@@ -18,7 +18,7 @@
 
 ## 4. CSV con Descanso (~7k)
 
-- [ ] 4.1 `Descanso` en `columnas`, `validar` (10 u 11 columnas, entero 15–300), `planImport`, `armarImport`, `escribirCsv` y la plantilla; tests: archivo sin la columna, descanso de un ejercicio nuevo, existente conserva el suyo, ida y vuelta con descanso; verificar `npm test` y `npm run check`; commit (~7k)
+- [x] 4.1 `Descanso` en `columnas`, `validar` (10 u 11 columnas, entero 15–300), `planImport`, `armarImport`, `escribirCsv` y la plantilla; tests: archivo sin la columna, descanso de un ejercicio nuevo, existente conserva el suyo, ida y vuelta con descanso; verificar `npm test` y `npm run check`; commit (~7k)
 
 ## 5. Cierre (~7k)
 

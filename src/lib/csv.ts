@@ -4,7 +4,7 @@ import type { Ejercicio, Tipo } from './catalogo';
 import type { Objetivo, Rutina } from './rutina';
 import { esDuplicado, normalizar, parecidos } from './texto';
 
-export const columnas = ['Rutina', 'Día', 'Ejercicio', 'Tipo', 'Series', 'Reps', 'Kg', 'Segundos', 'Minutos', 'Fecha'];
+export const columnas = ['Rutina', 'Día', 'Ejercicio', 'Tipo', 'Series', 'Reps', 'Kg', 'Segundos', 'Minutos', 'Fecha', 'Descanso'];
 const tiposValidos: Tipo[] = ['peso', 'reps', 'tiempo', 'cardio', 'calentamiento'];
 const numericas = ['series', 'reps', 'kg', 'segundos', 'minutos'] as const;
 
@@ -22,6 +22,7 @@ export type FilaValida = {
 	segundos?: number;
 	minutos?: number;
 	fecha?: string; // AAAA-MM-DD
+	descanso?: number; // segundos
 };
 
 /** Saca el BOM y separa por `;` respetando comillas; cada fila con la línea donde empieza. Saltea filas vacías. */
@@ -84,13 +85,16 @@ function fechaIso(s: string): string | null | undefined {
 /** Encabezado exacto (sin importar mayúsculas ni tildes), números, fechas y tipo de cada fila. */
 export function validar(filas: Fila[]): { filas: FilaValida[]; errores: ErrorFila[] } {
 	const [encabezado, ...resto] = filas;
-	if (!encabezado || columnas.some((c, i) => normalizar(encabezado.celdas[i] ?? '') !== normalizar(c))) {
+	// Descanso es opcional: los archivos de antes tienen 10 columnas.
+	const conDescanso = !!encabezado?.celdas[10]?.trim();
+	const esperadas = conDescanso ? columnas : columnas.slice(0, 10);
+	if (!encabezado || esperadas.some((c, i) => normalizar(encabezado.celdas[i] ?? '') !== normalizar(c))) {
 		return { filas: [], errores: [{ linea: encabezado?.linea ?? 1, mensaje: `El encabezado tiene que ser: ${columnas.join('; ')}` }] };
 	}
 	const validas: FilaValida[] = [];
 	const errores: ErrorFila[] = [];
 	for (const { linea, celdas } of resto) {
-		const [rutina, dia, ejercicio, tipo, series, reps, kg, segundos, minutos, fecha] = columnas.map((_, i) => (celdas[i] ?? '').trim());
+		const [rutina, dia, ejercicio, tipo, series, reps, kg, segundos, minutos, fecha, descanso] = columnas.map((_, i) => (celdas[i] ?? '').trim());
 		const error = (mensaje: string) => errores.push({ linea, mensaje });
 		if (!rutina) { error('Falta la rutina'); continue; }
 		if (!dia) { error('Falta el día'); continue; }
@@ -122,12 +126,19 @@ export function validar(filas: Fila[]): { filas: FilaValida[]; errores: ErrorFil
 				bien = false;
 			}
 		}
+		if (descanso) {
+			if (/^\d+$/.test(descanso) && +descanso >= 15 && +descanso <= 300) fila.descanso = +descanso;
+			else {
+				error(`Descanso tiene que ser un número entero de segundos entre 15 y 300 («${descanso}»)`);
+				bien = false;
+			}
+		}
 		if (bien) validas.push(fila);
 	}
 	return { filas: validas, errores };
 }
 
-export type PlanEjercicio = { nombre: string; tipo: Tipo; existente?: Ejercicio; parecidos: Ejercicio[] };
+export type PlanEjercicio = { nombre: string; tipo: Tipo; existente?: Ejercicio; parecidos: Ejercicio[]; descanso?: number };
 export type PlanDia = { nombre: string; items: { ejercicio: string; objetivo?: Objetivo }[] };
 export type PlanSesion = { fecha: string; dia: string; diaId?: string; registros: { ejercicio: string; bloques: Bloque[] }[] };
 export type PlanRutina = {
@@ -175,6 +186,8 @@ export function planImport(
 			e = { nombre: f.ejercicio, tipo: f.tipo, existente: delCatalogo, parecidos: delCatalogo ? [] : parecidos(f.ejercicio, datos.ejercicios) };
 			ejercicios.push(e);
 		}
+		// El primer descanso no vacío (solo se usa si el ejercicio es nuevo).
+		e.descanso ??= f.descanso;
 		const nombre = e.nombre;
 		const nombreDia = diaExistente?.nombre ?? buscar(r.dias, f.dia)?.nombre ?? f.dia;
 		if (!existente) {
@@ -229,7 +242,7 @@ export function escribirCsv(datos: { ejercicios: Ejercicio[]; rutinas: Rutina[];
 		for (const d of r.dias) {
 			for (const it of d.items) {
 				const o = it.objetivo;
-				filas.push([r.nombre, d.nombre, ej(it.ejercicioId)?.nombre, ej(it.ejercicioId)?.tipo, o?.series, o?.reps, undefined, o?.segundos, o?.minutos, '']);
+				filas.push([r.nombre, d.nombre, ej(it.ejercicioId)?.nombre, ej(it.ejercicioId)?.tipo, o?.series, o?.reps, undefined, o?.segundos, o?.minutos, '', ej(it.ejercicioId)?.descanso]);
 			}
 		}
 		const deLaRutina = datos.sesiones.filter((s) => s.rutinaId === r.id).sort((a, b) => a.fecha.localeCompare(b.fecha));
@@ -238,7 +251,7 @@ export function escribirCsv(datos: { ejercicios: Ejercicio[]; rutinas: Rutina[];
 			const fecha = s.fecha.split('-').reverse().join('/');
 			for (const reg of s.registros) {
 				for (const b of reg.bloques) {
-					filas.push([r.nombre, dia, ej(reg.ejercicioId)?.nombre, ej(reg.ejercicioId)?.tipo, b.series, b.reps, b.kg, b.segundos, b.minutos, fecha]);
+					filas.push([r.nombre, dia, ej(reg.ejercicioId)?.nombre, ej(reg.ejercicioId)?.tipo, b.series, b.reps, b.kg, b.segundos, b.minutos, fecha, undefined]);
 				}
 			}
 		}
@@ -248,9 +261,9 @@ export function escribirCsv(datos: { ejercicios: Ejercicio[]; rutinas: Rutina[];
 
 /** Encabezado y filas de ejemplo: los días de una rutina (sin fecha) y una sesión hecha (con fecha). */
 export function plantillaCsv(): string {
-	const ej = (id: string, nombre: string, tipo: Tipo): Ejercicio => ({ id, nombre, tipo, saltoKg: 2.5, saltoReps: 1, saltoSeg: 5, notas: '' });
+	const ej = (id: string, nombre: string, tipo: Tipo, descanso?: number): Ejercicio => ({ id, nombre, tipo, saltoKg: 2.5, saltoReps: 1, saltoSeg: 5, notas: '', ...(descanso && { descanso }) });
 	return escribirCsv({
-		ejercicios: [ej('pb', 'Press banca', 'peso'), ej('sen', 'Sentadilla', 'peso'), ej('pl', 'Plancha', 'tiempo')],
+		ejercicios: [ej('pb', 'Press banca', 'peso', 90), ej('sen', 'Sentadilla', 'peso', 120), ej('pl', 'Plancha', 'tiempo')],
 		rutinas: [
 			{
 				id: 'r',
@@ -298,7 +311,9 @@ export function armarImport(
 		if (id) ejercicioId[e.nombre] = id;
 		else {
 			ejercicioId[e.nombre] = o.nuevoId();
-			salida.ejercicios.push({ id: ejercicioId[e.nombre], nombre: e.nombre, tipo: e.tipo, saltoKg: 2.5, saltoReps: 1, saltoSeg: 5, notas: '' });
+			const nuevo: Ejercicio = { id: ejercicioId[e.nombre], nombre: e.nombre, tipo: e.tipo, saltoKg: 2.5, saltoReps: 1, saltoSeg: 5, notas: '' };
+			if (e.descanso) nuevo.descanso = e.descanso;
+			salida.ejercicios.push(nuevo);
 		}
 	}
 	// Una sola activa: la primera rutina nueva sin fechas, si no hay activa o se elige terminarla.

@@ -33,7 +33,7 @@
 ## 7. Cierre (~10k)
 
 - [x] 7.1 Verificar offline (import y export sin señal, terminar y nueva rutina); actualizar `openspec/config.yaml` y `docs/decisiones-diseno-mancuernapp.md` §4 y §7 si cambió algo; `npm run check`, `npm test`, `npm run build`; commit (~4k)
-- [ ] 7.2 Con OK de Joa, push a `main` y verificar el deploy de Vercel en verde; checklist en el celu de Joa (anotarla en `traspaso.md`): exportar todo y abrirlo en Excel, importar su Excel viejo pasado a la plantilla, terminar la rutina, nueva rutina copiando, ver una sesión archivada; commit (~6k)
+- [x] 7.2 Con OK de Joa, push a `main` y verificar el deploy de Vercel en verde; checklist en el celu de Joa (anotarla en `traspaso.md`): exportar todo y abrirlo en Excel, importar su Excel viejo pasado a la plantilla, terminar la rutina, nueva rutina copiando, ver una sesión archivada; commit (~6k)
 
 ## 8. Critique, accesibilidad y copy (~10k)
 

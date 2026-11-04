@@ -3,7 +3,13 @@
 ## Dónde quedó
 
 - 04/11/2026: propuesta creada (proposal, spec nueva `resumen`, delta de `metricas`, design, tasks). Decisiones de Joa antes de proponer: los cuatro bloques (volumen por semana, sesiones por semana + racha, mejores marcas, progreso por ejercicio); pantalla nueva `/resumen` (el inicio solo suma un enlace); selector de período Rutina activa / 3 meses / Todo; fuera 1RM y aviso de récords, grupos musculares y exportar/compartir. No marcó "solo peso" como fuera: los no-peso entran en sesiones y mejores marcas; volumen y % siguen siendo solo de peso.
-- Próxima tarea: 1.1 (mockups, sesión de diseño aparte del código).
+- 1.1 hecha (04/11/2026): mockups en el artifact Design https://claude.ai/artifact/Pm8cYCQe51qkh1nFvNNMkx (privado; fuente en el scratchpad de la sesión, no en el repo). Teléfonos de 390 px en tema oscuro, con datos de ejemplo de joa (rutina activa desde el 08/09, 9 semanas, una semana sin ir, la actual en curso):
+  - **A** tarjetas apiladas: período con chips, racha y promedio en una tarjeta, barras verticales de volumen con las sesiones como número abajo, progreso (fila → evolución) y mejores marcas (con el mayor volumen como detalle).
+  - **B** racha grande arriba (120 px, naranja), período como pestañas subrayadas, barras con un punto por sesión, y Progreso / Mejores marcas en pestañas (interactivo).
+  - **C** chips + dos tiles (racha, sesiones totales y promedio), semanas en filas con barra horizontal, kg y sesiones (la más nueva arriba: si gana, la spec "Volumen por semana" cambia el orden), y una sola lista "Ejercicios" que junta marca y %.
+  - Tablero "Todo (un año)": **1** una barra por semana (52, finas) vs **2** una barra por mes solo con "Todo" (para design §7).
+  - Tablero "Enlace y período vacío": enlace en el inicio como **1** link sutil junto a los de siempre o **2** fila propia debajo de la última sesión; y el estado vacío (la racha se sigue viendo).
+- Próxima tarea: 1.2 (con la elección de Joa, handoff a design.md §8).
 
 ## Gotchas
 

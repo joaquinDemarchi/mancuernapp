@@ -10,7 +10,8 @@
   - Tablero "Todo (un año)": **1** una barra por semana (52, finas) vs **2** una barra por mes solo con "Todo" (para design §7).
   - Tablero "Enlace y período vacío": enlace en el inicio como **1** link sutil junto a los de siempre o **2** fila propia debajo de la última sesión; y el estado vacío (la racha se sigue viendo).
 - 1.2 hecha (04/11/2026): Joa eligió **A** ("a"; tomé también lo del botón propuesto: barras por semana con "Todo" y enlace 1, link sutil en el inicio). Handoff en design.md §7 (barras con `div`, modo angosto con > 13 semanas) y §8 (pantalla por pantalla). Specs sin cambios; `openspec validate v2-dashboard-ampliado --strict` OK.
-- Próxima tarea: 2.1 (cálculos, en una sesión de código aparte).
+- 2.1 hecha (04/11/2026): `Periodo`, `desdePeriodo` ("rutina" sin rutina activa cae en "3m"), `lunes`, `porSemana(sesiones, tipoDe, desde, hasta)` (filtra por período adentro; `[]` si no hay sesiones) y `racha` en `calculos.ts`, con tests.
+- Próxima tarea: 2.2.
 
 ## Gotchas
 

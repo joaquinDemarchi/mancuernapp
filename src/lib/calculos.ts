@@ -168,3 +168,71 @@ export function formatear(tipo: Tipo, bloques: readonly Bloque[]) {
 export function copiarDias(dias: readonly Dia[]): Dia[] {
 	return dias.map((d) => ({ ...d, id: crypto.randomUUID() }));
 }
+
+// Resumen: período, semanas y racha.
+
+export type Periodo = 'rutina' | '3m' | 'todo';
+
+/** Fecha de inicio del período (`undefined` = todo); "rutina" sin rutina activa cae en "3m". */
+export function desdePeriodo(periodo: Periodo, rutinaActiva: { inicio: string } | null | undefined, f = new Date()) {
+	if (periodo === 'todo') return undefined;
+	if (periodo === 'rutina' && rutinaActiva) return rutinaActiva.inicio;
+	return diasAntes(90, f);
+}
+
+function fechaLocal(fecha: string) {
+	return new Date(Number(fecha.slice(0, 4)), Number(fecha.slice(5, 7)) - 1, Number(fecha.slice(8, 10)));
+}
+
+/** Lunes (`AAAA-MM-DD`) de la semana de esa fecha. */
+export function lunes(fecha: string) {
+	const d = fechaLocal(fecha);
+	d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+	return hoy(d);
+}
+
+function lunesSiguiente(l: string) {
+	const d = fechaLocal(l);
+	d.setDate(d.getDate() + 7);
+	return hoy(d);
+}
+
+export type Semana = { semana: string; volumen: number; sesiones: number };
+
+/** Volumen y sesiones por semana entre `desde` y `hasta`, de la primera semana con sesiones a la de `hasta`, con las vacías en 0. */
+export function porSemana(
+	sesiones: readonly Sesion[],
+	tipoDe: (ejercicioId: string) => Tipo | undefined,
+	desde: string | undefined,
+	hasta = hoy()
+): Semana[] {
+	const semanas = new Map<string, Semana>();
+	for (const s of sesiones) {
+		if ((desde && s.fecha < desde) || s.fecha > hasta) continue;
+		const l = lunes(s.fecha);
+		const sem = semanas.get(l) ?? { semana: l, volumen: 0, sesiones: 0 };
+		sem.volumen += volumen(s.registros, tipoDe);
+		sem.sesiones++;
+		semanas.set(l, sem);
+	}
+	if (!semanas.size) return [];
+	const lista: Semana[] = [];
+	const ultima = lunes(hasta);
+	for (let l = [...semanas.keys()].sort()[0]; l <= ultima; l = lunesSiguiente(l)) {
+		lista.push(semanas.get(l) ?? { semana: l, volumen: 0, sesiones: 0 });
+	}
+	return lista;
+}
+
+/** Semanas seguidas con sesión hasta la actual; si la actual no tiene, cuenta desde la anterior. */
+export function racha(sesiones: readonly Sesion[], fecha = hoy()) {
+	const con = new Set(sesiones.map((s) => lunes(s.fecha)));
+	const d = fechaLocal(lunes(fecha));
+	if (!con.has(hoy(d))) d.setDate(d.getDate() - 7);
+	let n = 0;
+	while (con.has(hoy(d))) {
+		n++;
+		d.setDate(d.getDate() - 7);
+	}
+	return n;
+}

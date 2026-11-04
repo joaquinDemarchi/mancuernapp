@@ -4,6 +4,7 @@ import {
 	anterior,
 	copiarDias,
 	crecimiento,
+	desdePeriodo,
 	desarmar,
 	desdeObjetivo,
 	diaMes,
@@ -15,6 +16,9 @@ import {
 	formatearVolumen,
 	hoy,
 	indicador,
+	lunes,
+	porSemana,
+	racha,
 	semana,
 	sesionDeHoy,
 	ultimaVez,
@@ -274,5 +278,74 @@ describe('copiarDias', () => {
 		expect(copia.map((d) => d.id)).not.toContain('d1');
 		expect(copia.map((d) => d.id)).not.toContain('d2');
 		expect(copia[0].id).not.toBe(copia[1].id);
+	});
+});
+
+describe('desdePeriodo', () => {
+	const f = new Date(2026, 10, 4, 9);
+	it('rutina, 3 meses y todo', () => {
+		expect(desdePeriodo('rutina', { inicio: '2026-10-06' }, f)).toBe('2026-10-06');
+		expect(desdePeriodo('3m', { inicio: '2026-10-06' }, f)).toBe('2026-08-06');
+		expect(desdePeriodo('todo', { inicio: '2026-10-06' }, f)).toBeUndefined();
+	});
+	it('rutina sin rutina activa = 3 meses', () => {
+		expect(desdePeriodo('rutina', null, f)).toBe('2026-08-06');
+	});
+});
+
+describe('lunes', () => {
+	it('domingo va a la semana anterior; lunes es su propia semana', () => {
+		expect(lunes('2026-11-02')).toBe('2026-11-02');
+		expect(lunes('2026-11-01')).toBe('2026-10-26');
+		expect(lunes('2026-11-03')).toBe('2026-11-02');
+	});
+	it('cruza mes y año', () => {
+		expect(lunes('2026-10-01')).toBe('2026-09-28');
+		expect(lunes('2027-01-01')).toBe('2026-12-28');
+	});
+});
+
+describe('porSemana', () => {
+	const tipoDe = (id: string): Tipo | undefined => (id === 'cinta' ? 'cardio' : 'peso');
+	const cinta: Registro = { ejercicioId: 'cinta', bloques: [{ series: 1, minutos: 20 }], hecho: true };
+	it('rellena semanas vacías hasta la actual y suma volumen y sesiones', () => {
+		const ss = [
+			s('d1', '2026-10-13', [r('sen', 3, 10, 50)]),
+			s('d2', '2026-10-15', [r('sen', 3, 10, 50), cinta]),
+			s('d1', '2026-10-27', [cinta]),
+			s('d1', '2026-09-01', [r('sen', 1, 1, 1)])
+		];
+		expect(porSemana(ss, tipoDe, '2026-10-06', '2026-11-04')).toEqual([
+			{ semana: '2026-10-12', volumen: 3000, sesiones: 2 },
+			{ semana: '2026-10-19', volumen: 0, sesiones: 0 },
+			{ semana: '2026-10-26', volumen: 0, sesiones: 1 },
+			{ semana: '2026-11-02', volumen: 0, sesiones: 0 }
+		]);
+	});
+	it('cruza el año sin período', () => {
+		const ss = [s('d1', '2026-12-31', [r('sen', 1, 10, 10)]), s('d1', '2027-01-05')];
+		expect(porSemana(ss, tipoDe, undefined, '2027-01-05').map((x) => x.semana)).toEqual(['2026-12-28', '2027-01-04']);
+	});
+	it('período sin sesiones', () => {
+		expect(porSemana([s('d1', '2026-09-01')], tipoDe, '2026-10-06', '2026-11-04')).toEqual([]);
+	});
+});
+
+describe('racha', () => {
+	it('semana actual sin sesión no corta', () => {
+		const ss = ['2026-10-06', '2026-10-14', '2026-10-21', '2026-10-31'].map((f) => s('d1', f));
+		expect(racha(ss, '2026-11-03')).toBe(4);
+	});
+	it('cuenta la actual si tiene sesión', () => {
+		const ss = ['2026-10-31', '2026-11-03'].map((f) => s('d1', f));
+		expect(racha(ss, '2026-11-04')).toBe(2);
+	});
+	it('cortada: ni la anterior ni la actual', () => {
+		const ss = ['2026-10-14', '2026-10-21'].map((f) => s('d1', f));
+		expect(racha(ss, '2026-11-04')).toBe(0);
+	});
+	it('un hueco corta', () => {
+		const ss = ['2026-10-06', '2026-10-20', '2026-10-27'].map((f) => s('d1', f));
+		expect(racha(ss, '2026-11-02')).toBe(2);
 	});
 });

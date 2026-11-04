@@ -5,7 +5,7 @@
 
 ## 1. Diseño (sesión de diseño, ~11k)
 
-- [ ] 1.1 Mockups en un Artifact Design (tokens de `design/tokens.css`, 390 px, tema oscuro) con 2–3 variantes numeradas de: el timer en `/sesion` (corriendo, con ±15 s y "Saltar", y "terminó") y el campo descanso en la ficha `/ejercicio` (vacío y con valor); verificar que Joa tiene el link; commit del link en `traspaso.md` (~8k)
+- [x] 1.1 Mockups en un Artifact Design (tokens de `design/tokens.css`, 390 px, tema oscuro) con 2–3 variantes numeradas de: el timer en `/sesion` (corriendo, con ±15 s y "Saltar", y "terminó") y el campo descanso en la ficha `/ejercicio` (vacío y con valor); verificar que Joa tiene el link; commit del link en `traspaso.md` (~8k)
 - [ ] 1.2 Con la elección de Joa, handoff a design.md §6 (pantalla por pantalla, textos y tokens); si cambia algo de las specs, actualizar los deltas y verificar `openspec validate v2-timer-descanso --strict`; commit (~3k)
 
 ## 2. Descanso en el catálogo (~5k)

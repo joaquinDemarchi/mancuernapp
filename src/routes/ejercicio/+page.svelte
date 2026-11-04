@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { crearEjercicio, ejercicios, guardarEjercicio, tipos, type Tipo } from '#lib/catalogo.ts';
+	import { crearEjercicio, ejercicios, guardarEjercicio, tipos, type DatosEjercicio, type Tipo } from '#lib/catalogo.ts';
+	import { formatearDescanso } from '#lib/descanso.ts';
 	import { esDuplicado } from '#lib/texto.ts';
 	import Boton from '#lib/componentes/Boton.svelte';
 	import BarraAccion from '#lib/componentes/BarraAccion.svelte';
@@ -18,6 +19,13 @@
 	let saltoReps: number | null = $state(1);
 	let saltoSeg: number | null = $state(5);
 	let notas = $state('');
+	let descanso: number | null = $state(null);
+
+	// Chips: valores en texto para `OpcionesChip`; "" = sin descanso. Un valor fuera de los chips (1:15) no marca ninguno.
+	const chipsDescanso = [
+		{ valor: '', etiqueta: 'Sin descanso' },
+		...[45, 60, 90, 120, 180].map((s) => ({ valor: String(s), etiqueta: formatearDescanso(s) }))
+	];
 
 	// Al entrar directo por URL el catálogo llega después: se completa una sola vez.
 	let cargado = false;
@@ -26,6 +34,7 @@
 		if (!e) return;
 		cargado = true;
 		({ nombre, tipo, saltoKg, saltoReps, saltoSeg, notas } = e);
+		descanso = e.descanso ?? null;
 	});
 
 	const duplicado = $derived($ejercicios?.find((e) => e.id !== id && esDuplicado(e.nombre, nombre)));
@@ -33,7 +42,9 @@
 
 	function guardar() {
 		if (!nombre.trim() || duplicado) return;
-		const datos = { nombre, tipo, saltoKg: saltoKg ?? 2.5, saltoReps: saltoReps ?? 1, saltoSeg: saltoSeg ?? 5, notas };
+		const datos: DatosEjercicio = { nombre, tipo, saltoKg: saltoKg ?? 2.5, saltoReps: saltoReps ?? 1, saltoSeg: saltoSeg ?? 5, notas };
+		// Escrito a mano puede no ser múltiplo de 15.
+		if (descanso !== null) datos.descanso = Math.min(300, Math.max(15, Math.round(descanso / 15) * 15));
 		// Sin await: Firestore lo aplica al instante en el store y confirma con el servidor después.
 		if (id) guardarEjercicio(id, datos).catch(console.error);
 		else crearEjercicio(nombre, tipo, datos);
@@ -75,6 +86,20 @@
 			</div>
 			{#if tipo === 'peso'}<p class="meta">Mancuernas: 1 kg. Barra y máquinas: 2,5 kg.</p>{/if}
 		{/if}
+
+		<div class="descanso">
+			<OpcionesChip
+				bind:valor={() => (descanso === null ? '' : String(descanso)), (v) => (descanso = v ? Number(v) : null)}
+				opciones={chipsDescanso}
+				leyenda="Descanso"
+			/>
+			{#if descanso === null}
+				<p class="meta tenue">Es el tiempo con el que abre el timer en la sesión.</p>
+			{:else}
+				<Stepper bind:valor={descanso} etiqueta="Descanso" sinEtiqueta paso={15} min={15} max={300} formatear={formatearDescanso} />
+				<p class="meta tenue">Con − / + afinás de a 15 s.</p>
+			{/if}
+		</div>
 
 		<label class="campo">
 			<span>Notas</span>
@@ -128,6 +153,13 @@
 	}
 	.error:empty {
 		display: none;
+	}
+	.descanso {
+		display: grid;
+		gap: var(--space-1);
+	}
+	.meta.tenue {
+		color: var(--ink-faint);
 	}
 	.saltos {
 		display: grid;

@@ -1,4 +1,4 @@
-import { collection, doc, onSnapshot, updateDoc, setDoc, type Unsubscribe } from 'firebase/firestore';
+import { collection, deleteField, doc, onSnapshot, updateDoc, setDoc, type Unsubscribe } from 'firebase/firestore';
 import { get, writable } from 'svelte/store';
 import { sesion } from './acceso';
 import { db } from './firebase';
@@ -20,6 +20,8 @@ export type DatosEjercicio = {
 	saltoReps: number;
 	saltoSeg: number;
 	notas: string;
+	/** Segundos (15–300, de a 15) con los que abre el timer; ausente = sin descanso. */
+	descanso?: number;
 };
 export type Ejercicio = DatosEjercicio & { id: string };
 
@@ -67,7 +69,8 @@ export function crearEjercicio(nombre: string, tipo: Tipo, datos: Partial<DatosE
 }
 
 export function guardarEjercicio(id: string, datos: DatosEjercicio) {
-	return updateDoc(doc(coleccion(), id), { ...datos, nombre: datos.nombre.trim() });
+	// Sin descanso se borra la clave (Firestore no acepta `undefined`).
+	return updateDoc(doc(coleccion(), id), { ...datos, nombre: datos.nombre.trim(), descanso: datos.descanso ?? deleteField() });
 }
 
 export function porId(id: string): Ejercicio | undefined {

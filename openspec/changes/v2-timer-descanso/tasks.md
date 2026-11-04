@@ -10,7 +10,7 @@
 
 ## 2. Descanso en el catálogo (~5k)
 
-- [ ] 2.1 `descanso?` en `DatosEjercicio` y el campo en `/ejercicio` según §6 (chips + `Stepper` que muestre M:SS; vacío borra la clave); `formatearDescanso` y `restante` en `src/lib/descanso.ts` con tests; verificar `npm test`, `npm run check` y en dev con stores falsos crear y editar un ejercicio con y sin descanso; commit (~5k)
+- [x] 2.1 `descanso?` en `DatosEjercicio` y el campo en `/ejercicio` según §6 (chips + `Stepper` que muestre M:SS; vacío borra la clave); `formatearDescanso` y `restante` en `src/lib/descanso.ts` con tests; verificar `npm test`, `npm run check` y en dev con stores falsos crear y editar un ejercicio con y sin descanso; commit (~5k)
 
 ## 3. Timer en la sesión (~12k)
 

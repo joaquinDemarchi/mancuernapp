@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
+	import { onDestroy, tick as despuesDeDibujar } from 'svelte';
 	import { formatearDescanso, restante } from '#lib/descanso.ts';
 
 	// Flotante de /sesion: botón que abre el mini timer. Vive con la pantalla (al salir se corta).
@@ -19,6 +19,13 @@
 	const termino = $derived(!!timer && falta === 0);
 
 	let tick: ReturnType<typeof setInterval> | undefined;
+	let raiz: HTMLElement;
+
+	// Cada estado reemplaza al anterior: el foco pasa al control equivalente para no caer al principio de la página.
+	async function enfocar(clase: string) {
+		await despuesDeDibujar();
+		raiz.querySelector<HTMLElement>(`.${clase}`)?.focus();
+	}
 	let lock: WakeLockSentinel | undefined;
 
 	function pedirPantalla() {
@@ -46,6 +53,7 @@
 		clearInterval(tick);
 		tick = setInterval(() => (ahora = Date.now()), 250);
 		pedirPantalla();
+		enfocar('saltar');
 	}
 
 	function ajustar(d: number) {
@@ -60,7 +68,13 @@
 		clearInterval(tick);
 		timer = undefined;
 		soltarPantalla();
+		enfocar('abrir');
 	}
+
+	// Antes de dibujar "Terminó": si el foco estaba en el timer, pasa a "Otra vez".
+	$effect.pre(() => {
+		if (termino && raiz?.contains(document.activeElement)) enfocar('otra-vez');
+	});
 
 	// Al llegar a 0: vibra una sola vez (si se puede) y suelta la pantalla.
 	$effect(() => {
@@ -85,6 +99,10 @@
 
 <svelte:document onvisibilitychange={alVolver} />
 
+<!-- Zona fija para que el lector de pantalla anuncie el fin una vez (una zona que aparece ya escrita no se anuncia) -->
+<p class="oculto" role="status">{termino ? 'Terminó el descanso' : ''}</p>
+<div class="timer" bind:this={raiz}>
+
 {#if !timer}
 	<button
 		type="button"
@@ -99,13 +117,13 @@
 		{formatearDescanso(sugerida.duracion)}
 	</button>
 {:else if termino}
-	<div class="flotante caja termino" role="status">
+	<div class="flotante caja termino">
 		<div class="arriba">
 			<span class="meta">Descanso de {formatearDescanso(timer.duracion)}</span>
 			<span class="tiempo">Terminó</span>
 		</div>
 		<div class="botones">
-			<button type="button" class="secundario" onclick={() => timer && arrancar(timer.nombre, timer.duracion)}>Otra vez</button>
+			<button type="button" class="secundario otra-vez" onclick={() => timer && arrancar(timer.nombre, timer.duracion)}>Otra vez</button>
 			<button type="button" class="de-texto" onclick={cerrar}>Cerrar</button>
 		</div>
 	</div>
@@ -116,7 +134,7 @@
 				<span class="meta">{timer.nombre ?? 'Descanso'}</span>
 				<span class="tiempo">{formatearDescanso(falta)}</span>
 			</div>
-			<button type="button" class="de-texto" onclick={cerrar}>Saltar</button>
+			<button type="button" class="de-texto saltar" onclick={cerrar}>Saltar</button>
 		</div>
 		<div class="botones">
 			<button type="button" class="secundario" aria-label="Restar 15 segundos" onclick={() => ajustar(-PASO)}>−15 s</button>
@@ -124,8 +142,21 @@
 		</div>
 	</div>
 {/if}
+</div>
 
 <style>
+	.timer {
+		display: contents;
+	}
+	.oculto {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: 0;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
 	/* Abajo a la derecha, arriba de la BarraAccion (su alto + space-2) */
 	.flotante {
 		position: fixed;
@@ -190,7 +221,8 @@
 		gap: var(--space-2);
 	}
 	.secundario {
-		border: 2px solid var(--control);
+		/* --control sobre --raised no llega a 3:1 */
+		border: 2px solid var(--ink-faint);
 		background: transparent;
 		color: var(--ink);
 	}
@@ -208,6 +240,9 @@
 	.termino .meta,
 	.termino .de-texto {
 		color: var(--ground);
+	}
+	.termino button:focus-visible {
+		outline-color: var(--ground);
 	}
 	.termino .secundario {
 		border-color: var(--ground);

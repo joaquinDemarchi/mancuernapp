@@ -27,7 +27,7 @@
 
 ## 6. Critique, accesibilidad y copy (~6k)
 
-- [ ] 6.1 `design-critique` + `accessibility-review` + `ux-copy` sobre el timer y el campo descanso (tiempo anunciado sin saturar al lector de pantalla, touch targets ≥ 48 px, contraste); aplicar lo que Joa apruebe; verificar en dev; commit (~6k)
+- [x] 6.1 `design-critique` + `accessibility-review` + `ux-copy` sobre el timer y el campo descanso (tiempo anunciado sin saturar al lector de pantalla, touch targets ≥ 48 px, contraste); aplicar lo que Joa apruebe; verificar en dev; commit (~6k)
 
 ## Workflow follow-up
 

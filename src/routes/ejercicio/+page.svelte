@@ -94,7 +94,7 @@
 				leyenda="Descanso"
 			/>
 			{#if descanso === null}
-				<p class="meta tenue">Es el tiempo con el que abre el timer en la sesión.</p>
+				<p class="meta tenue">Elegí uno y el timer de la sesión abre con ese tiempo.</p>
 			{:else}
 				<Stepper bind:valor={descanso} etiqueta="Descanso" sinEtiqueta paso={15} min={15} max={300} formatear={formatearDescanso} />
 				<p class="meta tenue">Con − / + afinás de a 15 s.</p>

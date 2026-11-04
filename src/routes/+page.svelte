@@ -6,6 +6,7 @@
 	import { ejercicios } from '#lib/catalogo.ts';
 	import { crearRutina, fechaCorta, nuevaRutina, rutinaActiva, rutinas } from '#lib/rutina.ts';
 	import { sesiones } from '#lib/sesion.ts';
+	import { ultimoImport } from '#lib/importar.ts';
 	import Boton from '#lib/componentes/Boton.svelte';
 	import BarraAccion from '#lib/componentes/BarraAccion.svelte';
 	import Cabecera from '#lib/componentes/Cabecera.svelte';
@@ -14,6 +15,13 @@
 	import OpcionesChip from '#lib/componentes/OpcionesChip.svelte';
 
 	let creando = $state(false);
+
+	// Confirmación del import: unos segundos y se va.
+	$effect(() => {
+		if (!$ultimoImport) return;
+		const t = setTimeout(() => ultimoImport.set(undefined), 5000);
+		return () => clearTimeout(t);
+	});
 
 	async function crear() {
 		creando = true;
@@ -127,6 +135,7 @@
 	>
 		{#snippet accion()}<button class="texto sutil" onclick={salir}>Salir</button>{/snippet}
 	</Cabecera>
+	<p class="importado" role="status">{$ultimoImport ?? ''}</p>
 	{#if $rutinaActiva}
 		{#if dia}
 			<section class="hoy" aria-label="Hoy">
@@ -295,6 +304,16 @@
 		display: inline-flex;
 		align-items: center;
 		text-decoration: none;
+	}
+	.importado:empty {
+		display: none;
+	}
+	.importado {
+		margin-bottom: var(--space-3);
+		padding: var(--space-2) var(--space-4);
+		border-radius: var(--radius);
+		background: var(--surface);
+		color: var(--ink);
 	}
 	.acciones {
 		display: grid;

@@ -178,10 +178,11 @@
 					{$rutinaActiva.nombre} pasa al historial con fin hoy y sus {sesionesRutina}
 					{sesionesRutina === 1 ? 'sesión queda' : 'sesiones quedan'}. Tocá de nuevo para terminarla.
 				</p>
-				<Boton variante="secundario" onclick={terminar}>Sí, terminar rutina</Boton>
-			{:else}
-				<button type="button" class="texto sutil" onclick={terminar}>Terminar rutina</button>
 			{/if}
+			<!-- Un solo botón que cambia de texto y estilo: el foco no se pierde entre los dos toques. -->
+			<button type="button" class={terminando ? 'si-terminar' : 'texto sutil'} onclick={terminar}>
+				{terminando ? 'Sí, terminar rutina' : 'Terminar rutina'}
+			</button>
 		</div>
 
 		<Hoja bind:abierta={renombrando} titulo="Renombrar día">
@@ -353,6 +354,20 @@
 		margin: 0;
 		color: var(--ink-muted);
 		font: 400 var(--fs-body) / var(--lh-body) var(--font-text);
+	}
+	/* Como el Boton secundario */
+	.si-terminar {
+		min-height: var(--touch-primary);
+		padding: 0 var(--space-6);
+		border: 2px solid var(--control);
+		border-radius: var(--radius);
+		background: transparent;
+		color: var(--ink);
+		font: 600 var(--fs-body) / var(--lh-body) var(--font-text);
+		cursor: pointer;
+	}
+	.si-terminar:active {
+		background: var(--raised);
 	}
 	.aviso {
 		margin: 0;

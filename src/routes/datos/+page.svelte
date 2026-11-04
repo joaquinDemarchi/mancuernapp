@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { diaMes, hoy } from '#lib/calculos.ts';
 	import { ejercicios } from '#lib/catalogo.ts';
 	import { armarImport, escribirCsv, leerCsv, planImport, plantillaCsv, validar, type ErrorFila, type Plan } from '#lib/csv.ts';
-	import { guardarImport } from '#lib/importar.ts';
+	import { guardarImport, ultimoImport } from '#lib/importar.ts';
 	import { rutinaActiva, rutinas } from '#lib/rutina.ts';
 	import { sesiones } from '#lib/sesion.ts';
 	import Boton from '#lib/componentes/Boton.svelte';
@@ -29,7 +30,7 @@
 	}
 
 	// Revisión: reemplaza el contenido de la pantalla; nada se escribe hasta "Importar".
-	let revision = $state<{ archivo: string; filas: number; errores: ErrorFila[]; plan?: Plan }>();
+	let revision = $state<{ archivo: string; filas: number; errores: ErrorFila[]; encabezadoMal: boolean; plan?: Plan }>();
 	let decisiones = $state<Record<string, 'mismo' | 'nuevo'>>({});
 	let terminarActiva = $state(true);
 	let abiertos = $state<string[]>([]);
@@ -43,10 +44,15 @@
 		const { filas, errores } = validar(leidas);
 		const plan = planImport(filas, { ejercicios: $ejercicios, rutinas: $rutinas, sesiones: $sesiones });
 		const todos = [...errores, ...plan.errores].sort((a, b) => a.linea - b.linea);
-		revision = { archivo: archivo.name, filas: Math.max(leidas.length - 1, 0), errores: todos, plan: todos.length ? undefined : plan };
+		// La única fila que puede fallar en la línea del encabezado es el encabezado: entonces no se revisó nada más.
+		const encabezadoMal = todos.some((e) => e.linea === leidas[0]?.linea);
+		revision = { archivo: archivo.name, filas: Math.max(leidas.length - 1, 0), errores: todos, encabezadoMal, plan: todos.length ? undefined : plan };
 		decisiones = {};
 		terminarActiva = true;
 		abiertos = [];
+		// El input que tenía el foco ya no está: el foco va al título de la revisión.
+		await tick();
+		document.querySelector<HTMLElement>('main h2')?.focus();
 	}
 
 	function cancelar() {
@@ -58,6 +64,7 @@
 		if (!revision?.plan) return;
 		const opciones = { decisiones, terminarActiva, activa: $rutinaActiva?.id, hoy: hoy(), nuevoId: () => crypto.randomUUID() };
 		guardarImport(armarImport(revision.plan, opciones));
+		ultimoImport.set(`Importado: ${titulo}`);
 		goto('/');
 	}
 
@@ -72,6 +79,7 @@
 	// Con una activa, una rutina nueva sin fechas obliga a elegir: terminar la activa o guardarla archivada.
 	const nuevaActiva = $derived(plan?.rutinas.find((r) => !r.existente && r.estado === 'activa'));
 	const lineasConError = $derived(new Set(revision?.errores.map((e) => e.linea)).size);
+	const nadaNuevo = $derived(!rutinasNuevas && !sesionesNuevas);
 
 	const titulo = $derived(
 		rutinasNuevas
@@ -103,21 +111,24 @@
 			etiquetaVolver="Cancelar"
 		/>
 		{#if revision.errores.length}
-			<h2 class="titulo-error" role="alert">{cantidad(lineasConError, 'fila con error', 'filas con error')}</h2>
+			<h2 class="titulo-error" role="alert" tabindex="-1">{cantidad(lineasConError, 'fila con error', 'filas con error')}</h2>
 			<p class="explica">Corregilas en el archivo y volvé a elegirlo. No se guardó nada.</p>
 			<ul class="errores">
 				{#each revision.errores as e, i (i)}
 					<li><span class="fila">Fila {e.linea}</span> {e.mensaje}</li>
 				{/each}
 			</ul>
-			{#if revision.filas > lineasConError}
+			{#if !revision.encabezadoMal && revision.filas > lineasConError}
 				<p class="meta">
 					{revision.filas - lineasConError === 1 ? 'La otra fila está bien.' : `Las otras ${revision.filas - lineasConError} filas están bien.`}
 				</p>
 			{/if}
 		{:else if plan}
 			<section class="resumen">
-				<h2>{titulo}</h2>
+				<h2 tabindex="-1">{nadaNuevo ? 'Nada para importar' : titulo}</h2>
+				{#if nadaNuevo}
+					<p class="meta">{salteadas.length ? 'Todas las fechas ya tienen sesión.' : 'El archivo no tiene filas para importar.'}</p>
+				{/if}
 				{#each plan.rutinas as r (r.nombre)}
 					<p class="meta">
 						<span class="nombre">{r.nombre}</span>
@@ -134,11 +145,14 @@
 
 			{#if dudosos.length || (nuevaActiva && $rutinaActiva)}
 				<section>
-					<h3>Para decidir</h3>
+					<h2 class="seccion">Para decidir</h2>
 					{#each dudosos as e (e.nombre)}
 						<div class="caja">
 							<span class="nombre">{e.nombre}</span>
 							<span class="meta">¿Es «{e.parecidos[0].nombre}» de tu catálogo?</span>
+							{#if e.parecidos.length > 1}
+								<span class="meta">También se parece a {e.parecidos.slice(1).map((p) => `«${p.nombre}»`).join(', ')}</span>
+							{/if}
 							<div class="chips">
 								<button type="button" aria-pressed={decisiones[e.nombre] === 'mismo'} onclick={() => (decisiones[e.nombre] = 'mismo')}>
 									Es el mismo
@@ -173,7 +187,7 @@
 
 			{#if detalle.length}
 				<section>
-					<h3>Detalle</h3>
+					<h2 class="seccion">Detalle</h2>
 					{#each detalle as d (d.id)}
 						{@const abierto = abiertos.includes(d.id)}
 						<button type="button" class="plegable" aria-expanded={abierto} aria-controls="detalle-{d.id}" onclick={() => plegar(d.id)}>
@@ -198,7 +212,7 @@
 		<Cabecera titulo="Importar y exportar" volver="/" />
 
 		<section>
-			<h3>Sacar tus datos</h3>
+			<h2 class="seccion">Sacar tus datos</h2>
 			<button type="button" class="dato" disabled={!cargado} onclick={exportar}>
 				<span class="textos">
 					<span class="titulo">Exportar todo</span>
@@ -213,7 +227,7 @@
 		</section>
 
 		<section>
-			<h3>Traer rutinas y sesiones</h3>
+			<h2 class="seccion">Traer rutinas y sesiones</h2>
 			<label class="dato" class:deshabilitado={!cargado}>
 				<input class="oculto" type="file" accept=".csv,text/csv" disabled={!cargado} onchange={elegir} />
 				<span class="textos">
@@ -252,7 +266,7 @@
 			{:else}
 				{#if faltan}<p class="meta falta">Falta decidir {cantidad(faltan, 'ejercicio', 'ejercicios')}</p>{/if}
 				<Boton variante="secundario" onclick={cancelar}>Cancelar</Boton>
-				<Boton disabled={faltan > 0} onclick={importar}>Importar</Boton>
+				<Boton disabled={faltan > 0 || nadaNuevo} onclick={importar}>Importar</Boton>
 			{/if}
 		</div>
 	</BarraAccion>
@@ -263,11 +277,6 @@
 		display: grid;
 		gap: var(--space-2);
 		margin-bottom: var(--space-4);
-	}
-	h3 {
-		margin: 0;
-		color: var(--ink-muted);
-		font: 600 var(--fs-meta) / var(--lh-meta) var(--font-text);
 	}
 	.dato,
 	.plegable {
@@ -339,6 +348,15 @@
 		margin: 0 0 var(--space-1);
 		font: 600 var(--fs-heading) / var(--lh-heading) var(--font-display);
 		font-stretch: var(--stretch-condensed);
+	}
+	h2:focus {
+		outline: none;
+	}
+	h2.seccion {
+		margin: 0;
+		color: var(--ink-muted);
+		font: 600 var(--fs-meta) / var(--lh-meta) var(--font-text);
+		font-stretch: normal;
 	}
 	.caja {
 		display: grid;

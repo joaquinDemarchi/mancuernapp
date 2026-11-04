@@ -37,7 +37,7 @@
 
 ## 8. Critique, accesibilidad y copy (~10k)
 
-- [ ] 8.1 `design-critique` + `accessibility-review` + `ux-copy` sobre revisión del import, export, terminar/nueva rutina e historial con archivadas (mensajes de error por fila, confirmaciones, touch targets ≥ 48 px, input de archivo accesible); aplicar lo que Joa apruebe; verificar en dev a 390 px; commit (~10k)
+- [x] 8.1 `design-critique` + `accessibility-review` + `ux-copy` sobre revisión del import, export, terminar/nueva rutina e historial con archivadas (mensajes de error por fila, confirmaciones, touch targets ≥ 48 px, input de archivo accesible); aplicar lo que Joa apruebe; verificar en dev a 390 px; commit (~10k)
 
 ## Workflow follow-up
 

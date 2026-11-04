@@ -1,8 +1,11 @@
 import { collection, doc, serverTimestamp, writeBatch, type WriteBatch } from 'firebase/firestore';
-import { get } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import { sesion } from './acceso';
 import type { Escrituras } from './csv';
 import { db } from './firebase';
+
+/** Texto de confirmación que el inicio muestra unos segundos al volver de importar. */
+export const ultimoImport = writable<string | undefined>();
 
 /**
  * Escribe el import en lotes de hasta 450 operaciones (el límite de Firestore es 500).

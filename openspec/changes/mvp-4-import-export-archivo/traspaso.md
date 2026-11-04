@@ -25,7 +25,8 @@
   3. Editar rutina → "Terminar rutina" (dos toques) → inicio "Sin rutina activa" → "Nueva rutina" copia los días.
   4. Historial → "Rutinas anteriores" → abrir una sesión archivada (solo lectura, volumen y %); "Volver a esta rutina" si hace falta.
   5. Modo avión: terminar/nueva rutina y exportar siguen andando; al volver la señal, sincroniza.
-  Con eso, marcar 7.2 y seguir con el grupo 8.
+  Con eso, marcar 7.2 (el grupo 8 ya está hecho; queda archivar el change).
+- 04/11/2026: 8.1 hecha (antes del checklist de la 7.2). Contraste de lo nuevo en ambos temas ≥ 4,65:1 (meta sobre `--raised`), errores `--alto` sobre `--alto-tint` 5,4:1; touch targets ≥ 48 px. Joa aprobó los 7 hallazgos: (1) al elegir el archivo el foco va al título de la revisión (`h2 tabindex="-1"`); (2) "Terminar rutina" es un solo botón que cambia a "Sí, terminar rutina" (no pierde el foco); (3) con el encabezado mal no dice "Las otras N filas están bien" (`encabezadoMal`: el error está en la línea del encabezado); (4) sin nada nuevo (CSV vacío o todas las fechas salteadas) "Nada para importar" e "Importar" deshabilitado; (5) títulos de sección de `/datos` como `h2.seccion` (antes `h3` sin `h2`); (6) con más de un parecido, "También se parece a «…»"; (7) al importar, el inicio muestra 5 s "Importado: …" (`ultimoImport` en `importar.ts`, `role="status"`). Verificado en dev con stores falsos (ancho forzado a 375 px: el pane estaba colapsado). Sin pushear.
 
 ## Gotchas
 

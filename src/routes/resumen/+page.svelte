@@ -6,6 +6,7 @@
 	import { rutinaActiva } from '#lib/rutina.ts';
 	import { sesiones } from '#lib/sesion.ts';
 	import Cabecera from '#lib/componentes/Cabecera.svelte';
+	import GraficoSemanas from '#lib/componentes/GraficoSemanas.svelte';
 	import Indicador from '#lib/componentes/Indicador.svelte';
 	import OpcionesChip from '#lib/componentes/OpcionesChip.svelte';
 
@@ -62,6 +63,11 @@
 		</section>
 
 		{#if delPeriodo.length}
+			<section class="tarjeta">
+				<h2>Volumen por semana</h2>
+				<GraficoSemanas {semanas} />
+			</section>
+
 			<section class="tarjeta">
 				<h2>Progreso por ejercicio</h2>
 				<p class="meta">Última vez vs primera vez del período</p>

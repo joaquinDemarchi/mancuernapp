@@ -16,7 +16,7 @@
 ## 3. Pantalla `/resumen` (~20k)
 
 - [x] 3.1 Ruta `src/routes/resumen/+page.svelte` con `Cabecera` (vuelve a `/`), selector de período en la URL (design §6), racha, mejores marcas, progreso (fila → `/evolucion?id=…`) y estado vacío según §8; enlace "Resumen" en el inicio (con y sin rutina activa); verificar en dev a 390 px con stores falsos: default, cambiar a "Todo", sin rutina activa, período vacío, tocar un ejercicio y volver con el período intacto; commit (~12k)
-- [ ] 3.2 `GraficoSemanas.svelte` (design §7) con volumen y sesiones por semana y su lista accesible; verificar en dev con 8 semanas, una semana vacía y "Todo" de un año, en tema oscuro y claro; `npm run check`; commit (~8k)
+- [x] 3.2 `GraficoSemanas.svelte` (design §7) con volumen y sesiones por semana y su lista accesible; verificar en dev con 8 semanas, una semana vacía y "Todo" de un año, en tema oscuro y claro; `npm run check`; commit (~8k)
 
 ## 4. Cierre (~6k)
 

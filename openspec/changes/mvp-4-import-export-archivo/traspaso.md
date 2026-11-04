@@ -20,7 +20,6 @@
 - Falta: probarlo con el Firestore real de Joa (solo con su OK y un CSV chico que después se borra). Va con el checklist de la 7.2 (importar su Excel viejo).
 - 03/11/2026: 7.1 hecha. Offline en el Browser pane con `disableNetwork(db)` (misma instancia de la app, uid falso): `terminarRutina`, `nuevaRutina` y `guardarImport` vuelven en ~1 ms y `getDocsFromCache` muestra Rutina 2 archivada con fin hoy, la nueva activa, y la rutina, el ejercicio y la sesión importados; ningún pedido externo. El export es un Blob local (sin red). Después se volvió a `enableNetwork` (el servidor rechaza esas escrituras del uid falso). No cubre modo avión real (service worker + Auth): va en el checklist de la 7.2. Actualizados `openspec/config.yaml` (modelo: rutinas, import/export) y `docs/decisiones-diseno-mancuernapp.md` §4 y §7. check, test (73), build y `openspec validate --strict` en verde.
 - Próxima tarea: 7.2 (push y deploy solo con OK de Joa; checklist en el celu).
-- 03/11/2026: 6.2 a medio camino (commit de avance, sin `[x]`). Escrito: `armarImport` en `csv.ts` (decisiones, una sola activa, ids) con 4 tests; `src/lib/importar.ts` con `guardarImport` (lotes de 450, archiva la activa primero, sin `await`); "Importar" en `/datos` llama a los dos y hace `goto('/')`. También `/evolucion` ya nombra las rutinas con `rutinas` (el pendiente menor de arriba). Check y tests en verde. Falta: verificar en dev con stores falsos "Rutina del profe", "El Excel viejo" y "Fecha repetida", y la prueba con Joa logueado (con su OK).
 
 ## Gotchas
 

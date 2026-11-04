@@ -59,7 +59,8 @@ Reglas:
 - Datos separados por usuario desde el día 1 (`users/{uid}/…`) y campo `rol` → multiusuario/profe sin migración.
 - **Catálogo de ejercicios**: un ejercicio existe una vez; las rutinas lo referencian → evolución comparable entre rutinas/meses. Al crear/importar, sugerir emparejamiento ("¿es el mismo que 'Camilla Isquio'?").
 - **Tipos de ejercicio**: `peso` (series×reps×kg), `reps` (banda / peso corporal), `tiempo` (series×segundos), `cardio` (minutos), `calentamiento` (solo check). Solo `peso` entra en volumen e indicador.
-- **Rutina = bloque con inicio/fin**, una sola **activa** a la vez. Al cerrarla pasa a **archivada** (solo lectura). "Desarchivar" escondido en Ajustes.
+- **Rutina = bloque con inicio/fin**, una sola **activa** a la vez. "Terminar rutina" (en Editar rutina) la pasa a **archivada** con `fin` hoy; sus sesiones quedan en el historial en solo lectura. "Nueva rutina" copia los días de la última archivada con **ids de día nuevos** (semana N y rotación arrancan de cero) y se llama "Rutina N+1". "Volver a esta rutina" vive en el grupo de la archivada en el historial (no hay Ajustes) y archiva la activa en el mismo `writeBatch` (MVP 4).
+- El cliente lee **todas** las rutinas en un store (`rutinas`); `rutinaActiva` se deriva de ese store (MVP 4).
 - **Sesión** con fecha automática; la "semana N" se calcula (N-ésima vez que se hace ese día en la rutina). Se permite agregar un ejercicio extra a una sesión.
 - Sesiones de la rutina activa: se pueden **editar y borrar** (con confirmación).
 - La sesión se crea con el **primer ejercicio cargado**, no al tocar "Empezar" (entrar y salir no deja sesiones vacías). `creada` (serverTimestamp) desempata y ordena; `terminada` la marca "Terminar sesión" (editarla después no la reabre). Solo se guardan los ejercicios hechos; un extra es un registro cuyo ejercicio no está en el día (MVP 2).
@@ -90,8 +91,8 @@ Saltos: **configurables por ejercicio**; default **2,5 kg**; mínimo y default p
 
 ## 7. Import / Export
 
-- **Import (MVP 4)**: plantilla propia **Excel/CSV** con columnas fijas (Rutina, Día, Ejercicio, Tipo, Series, Reps, Kg, Segundos, Minutos, Fecha opcional). Sirve para rutinas nuevas **y** para importar semanas/datos históricos. Paso obligatorio de **revisión antes de guardar** + emparejamiento con catálogo.
-- **Export (MVP 4)**: "Exportar todo" a Excel/CSV con el mismo formato (backup fuera de Firebase y análisis en Excel/R).
+- **Import (MVP 4)**: solo **CSV** propio (`;`, coma decimal, UTF-8 con BOM) con columnas fijas (Rutina, Día, Ejercicio, Tipo, Series, Reps, Kg, Segundos, Minutos, Fecha opcional). Fila sin fecha = objetivo de un ejercicio en un día; con fecha = un bloque hecho ese día. Sirve para rutinas nuevas **y** para importar semanas/datos históricos (rutina inexistente con fechas → archivada con inicio y fin en la primera y la última fecha; fecha que ya tiene sesión en esa rutina → se saltea). Paso obligatorio de **revisión antes de guardar** + emparejamiento con catálogo (mismo nombre normalizado = el mismo; parecidos se deciden a mano). Se escribe con `writeBatch` en lotes de 450 sin `await` (anda offline). Todo en la pantalla `/datos` ("Importar y exportar").
+- **Export (MVP 4)**: "Exportar todo" a CSV con el mismo formato (backup fuera de Firebase y análisis en Excel/R) y "Descargar plantilla". El CSV no guarda el estado de las rutinas: importar un backup en una cuenta vacía deja archivadas todas las que tienen sesiones (decisión de Joa).
 - v2: import con IA (foto/PDF/WhatsApp → rutina para revisar), vía Claude API.
 
 ## 8. UI/UX

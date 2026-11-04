@@ -6,7 +6,7 @@
 ## 1. Diseño (sesión de diseño, ~14k)
 
 - [x] 1.1 Mockups en un Artifact Design (tokens de `design/tokens.css`, 390 px, tema oscuro, datos de ejemplo de "joa") con 2–3 variantes numeradas de `/resumen`: selector de período, volumen y sesiones por semana (con 8 semanas y con "Todo" de un año), racha, mejores marcas, progreso por ejercicio y estado vacío; más el enlace "Resumen" en el inicio; verificar que Joa tiene el link; commit del link en `traspaso.md` (~10k)
-- [ ] 1.2 Con la elección de Joa, handoff a design.md §8 (pantalla por pantalla, textos y tokens) y cerrar en §7 cómo se ven muchas semanas; si cambia algo de las specs, actualizar los deltas y verificar `openspec validate v2-dashboard-ampliado --strict`; commit (~4k)
+- [x] 1.2 Con la elección de Joa, handoff a design.md §8 (pantalla por pantalla, textos y tokens) y cerrar en §7 cómo se ven muchas semanas; si cambia algo de las specs, actualizar los deltas y verificar `openspec validate v2-dashboard-ampliado --strict`; commit (~4k)
 
 ## 2. Cálculos (~16k)
 

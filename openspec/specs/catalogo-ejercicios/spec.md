@@ -18,7 +18,7 @@ El sistema SHALL mostrar en "Ejercicios" todos los ejercicios del usuario ordena
 - **THEN** ve un estado vacío y la acción "Nuevo ejercicio" en la barra inferior
 
 ### Requirement: Datos de un ejercicio
-Un ejercicio SHALL tener nombre (obligatorio, sin espacios sobrantes), tipo (peso, reps, tiempo, cardio o calentamiento), saltos de kg, reps y segundos, y notas opcionales; solo se SHALL pedir los saltos que usa su tipo.
+Un ejercicio SHALL tener nombre (obligatorio, sin espacios sobrantes), tipo (peso, reps, tiempo, cardio o calentamiento), saltos de kg, reps y segundos, notas opcionales y un descanso opcional; solo se SHALL pedir los saltos que usa su tipo. El descanso SHALL poder quedar vacío (sin timer) o ir de 15 s a 5 min en pasos de 15 s, para cualquier tipo.
 
 #### Scenario: Saltos según el tipo
 - **WHEN** el tipo elegido es "Peso"
@@ -31,6 +31,14 @@ Un ejercicio SHALL tener nombre (obligatorio, sin espacios sobrantes), tipo (pes
 #### Scenario: Nombre vacío
 - **WHEN** el nombre está vacío o solo tiene espacios
 - **THEN** "Guardar" queda deshabilitado
+
+#### Scenario: Sin descanso
+- **WHEN** el usuario crea un ejercicio sin tocar el descanso
+- **THEN** se guarda sin descanso y la ficha muestra "Sin descanso" marcado
+
+#### Scenario: Con descanso
+- **WHEN** el usuario pone 1:30 de descanso en Press banca y guarda
+- **THEN** la ficha muestra 1:30 y, cuando Press banca es el próximo ejercicio de la sesión, el timer de descanso abre con 1:30
 
 ### Requirement: Saltos por defecto
 Un ejercicio nuevo SHALL arrancar con salto de 2,5 kg, ±1 rep y ±5 s; el salto de kg SHALL poder bajarse hasta 0,5 kg en pasos de 0,5.

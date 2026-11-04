@@ -23,7 +23,7 @@
 ## 5. Cierre (~7k)
 
 - [x] 5.1 Verificar offline y que sin `wakeLock`/`vibrate` el timer anda igual; actualizar `openspec/config.yaml` y `docs/decisiones-diseno-mancuernapp.md` si cambió algo; `npm run check`, `npm test`, `npm run build`; commit (~4k)
-- [ ] 5.2 Con OK de Joa, push a `main` y verificar el deploy de Vercel en verde; checklist en el celu de Joa (anotarla en `traspaso.md`): poner descanso a un ejercicio, abrir el timer en la sesión entre series, ajustar, dejar que termine con la pantalla sin tocar (no se apaga, vibra si el celu puede), "Otra vez", saltar otro; commit (~3k)
+- [x] 5.2 Con OK de Joa, push a `main` y verificar el deploy de Vercel en verde; checklist en el celu de Joa (anotarla en `traspaso.md`): poner descanso a un ejercicio, abrir el timer en la sesión entre series, ajustar, dejar que termine con la pantalla sin tocar (no se apaga, vibra si el celu puede), "Otra vez", saltar otro; commit (~3k)
 
 ## 6. Critique, accesibilidad y copy (~6k)
 

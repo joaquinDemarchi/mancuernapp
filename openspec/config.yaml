@@ -17,7 +17,8 @@ context: |
 
   Modelo de dominio (Firestore, todo bajo users/{uid}):
   - users/{uid}: { email, nombre, rol: "usuario" | "profe" (futuro), ajustes }
-  - users/{uid}/ejercicios/{id}: catálogo personal { nombre, tipo, saltoKg, saltoReps, saltoSeg, notas }.
+  - users/{uid}/ejercicios/{id}: catálogo personal { nombre, tipo, saltoKg, saltoReps, saltoSeg, notas, descanso? }.
+    descanso = segundos (15–300, de a 15) con los que abre el timer de descanso; ausente = sin descanso.
     Un ejercicio existe una vez; las rutinas lo referencian (evolución comparable entre rutinas).
     Al crear/importar, sugerir emparejamiento con el catálogo.
   - users/{uid}/rutinas/{id}: { nombre, inicio, fin?, estado: "activa" | "archivada" }
@@ -27,7 +28,7 @@ context: |
     los días de la última archivada con ids de día nuevos; "Volver a esta rutina" está en el historial.
     El cliente lee todas las rutinas (store `rutinas`; `rutinaActiva` derivada).
   - Import/export: CSV propio en /datos (`src/lib/csv.ts`, funciones puras con tests): columnas fijas
-    Rutina;Día;Ejercicio;Tipo;Series;Reps;Kg;Segundos;Minutos;Fecha, `;`, coma decimal, BOM. Revisión antes de
+    Rutina;Día;Ejercicio;Tipo;Series;Reps;Kg;Segundos;Minutos;Fecha;Descanso (Descanso opcional: se aceptan archivos de 10 columnas), `;`, coma decimal, BOM. Revisión antes de
     guardar; se escribe con writeBatch en lotes de 450 sin await.
   - users/{uid}/sesiones/{id}: { rutinaId, diaId, fecha (AAAA-MM-DD local), creada (serverTimestamp), terminada, registros[] }
     La sesión se crea con el primer ejercicio cargado (no al tocar "Empezar"); una por día.
@@ -55,7 +56,9 @@ context: |
   - Antes de escribir código, preguntar lo no definido, con costo estimado en tokens de cada decisión.
   - Pedir OK antes de borrar, hacer git push o deploy. Lo demás (leer, editar, instalar, correr comandos) sin preguntar.
   - Explicar a nivel medio (uso real, no cursada).
-  - Fuera del MVP (v2, no implementar): sugerir progresión, timer de descanso, import con IA, varias rutinas
+  - Timer de descanso (v2, hecho): flotante solo en /sesion, lo abre un botón (nunca al marcar ✓); guarda la hora de fin
+    (src/lib/descanso.ts), Wake Lock mientras corre y vibración al terminar si existen. Sin notificaciones.
+  - Fuera del MVP (v2, no implementar): sugerir progresión, import con IA, varias rutinas
     activas, roles profe/alumno, umbrales configurables, 1RM/récords, dashboard ampliado.
 
 rules:

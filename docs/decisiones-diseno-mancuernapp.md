@@ -46,7 +46,7 @@ Los datos históricos del Excel **no se migran**: Lio los carga a mano.
 
 ```
 users/{uid}                      { email, nombre, rol: "usuario" | "profe" (futuro), ajustes }
-users/{uid}/ejercicios/{id}      catálogo personal: { nombre, tipo, saltoKg, saltoReps, saltoSeg, notas }
+users/{uid}/ejercicios/{id}      catálogo personal: { nombre, tipo, saltoKg, saltoReps, saltoSeg, notas, descanso? }
 users/{uid}/rutinas/{id}         { nombre, inicio, fin?, estado: "activa" | "archivada" }
    └─ dias[]                     { id, nombre: "Día 1", items[]: { ejercicioId, objetivo? } }
        └─ objetivo               { series?, reps?, segundos?, minutos? }  (como un bloque, sin kg)
@@ -91,7 +91,7 @@ Saltos: **configurables por ejercicio**; default **2,5 kg**; mínimo y default p
 
 ## 7. Import / Export
 
-- **Import (MVP 4)**: solo **CSV** propio (`;`, coma decimal, UTF-8 con BOM) con columnas fijas (Rutina, Día, Ejercicio, Tipo, Series, Reps, Kg, Segundos, Minutos, Fecha opcional). Fila sin fecha = objetivo de un ejercicio en un día; con fecha = un bloque hecho ese día. Sirve para rutinas nuevas **y** para importar semanas/datos históricos (rutina inexistente con fechas → archivada con inicio y fin en la primera y la última fecha; fecha que ya tiene sesión en esa rutina → se saltea). Paso obligatorio de **revisión antes de guardar** + emparejamiento con catálogo (mismo nombre normalizado = el mismo; parecidos se deciden a mano). Se escribe con `writeBatch` en lotes de 450 sin `await` (anda offline). Todo en la pantalla `/datos` ("Importar y exportar").
+- **Import (MVP 4)**: solo **CSV** propio (`;`, coma decimal, UTF-8 con BOM) con columnas fijas (Rutina, Día, Ejercicio, Tipo, Series, Reps, Kg, Segundos, Minutos, Fecha opcional, Descanso opcional en segundos: un archivo sin esa columna se importa igual; un ejercicio nuevo toma el primer descanso no vacío y uno del catálogo conserva el suyo). Fila sin fecha = objetivo de un ejercicio en un día; con fecha = un bloque hecho ese día. Sirve para rutinas nuevas **y** para importar semanas/datos históricos (rutina inexistente con fechas → archivada con inicio y fin en la primera y la última fecha; fecha que ya tiene sesión en esa rutina → se saltea). Paso obligatorio de **revisión antes de guardar** + emparejamiento con catálogo (mismo nombre normalizado = el mismo; parecidos se deciden a mano). Se escribe con `writeBatch` en lotes de 450 sin `await` (anda offline). Todo en la pantalla `/datos` ("Importar y exportar").
 - **Export (MVP 4)**: "Exportar todo" a CSV con el mismo formato (backup fuera de Firebase y análisis en Excel/R) y "Descargar plantilla". El CSV no guarda el estado de las rutinas: importar un backup en una cuenta vacía deja archivadas todas las que tienen sesiones (decisión de Joa).
 - v2: import con IA (foto/PDF/WhatsApp → rutina para revisar), vía Claude API.
 
@@ -132,7 +132,9 @@ Ciclo de diseño por MVP: **mockup → Lio elige → handoff a design.md → có
 
 Total estimado: **~180–220k tokens**. Desde el MVP 2 la app se usa de verdad en el gym.
 
-**v2 (fuera del MVP)**: sugerir progresión (+kg tras 2 🟢), timer de descanso, import con IA, varias rutinas activas, roles profe/alumno + invitaciones, umbrales configurables, 1RM estimado / récords, dashboard ampliado.
+**v2 (fuera del MVP)**: sugerir progresión (+kg tras 2 🟢), import con IA, varias rutinas activas, roles profe/alumno + invitaciones, umbrales configurables, 1RM estimado / récords, dashboard ampliado.
+
+**Timer de descanso (v2, `v2-timer-descanso`)**: botón flotante en `/sesion` que abre un mini timer (±15 s, "Saltar", "Terminó" con "Otra vez"); arranca solo con el botón, con el descanso del primer ejercicio sin hacer (si no tiene, el último usado; si no, 1:30). Cuenta con la hora de fin, pide Wake Lock y vibra si se puede; sin notificaciones.
 
 ## 10. Proceso de trabajo (para no quedarse sin uso a mitad de una tarea)
 

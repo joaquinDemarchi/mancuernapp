@@ -14,7 +14,7 @@
 
 ## 3. Timer en la sesión (~12k)
 
-- [ ] 3.1 Timer en `/sesion` según §2 y §6: botón flotante con la duración sugerida (descanso del primer ejercicio sin hacer, última usada o 1:30), mini timer con ±15 s y "Saltar", "terminó" con vibración y "Otra vez", Wake Lock (pedir, soltar y volver a pedir al volver a la pestaña), `padding-bottom` del `main` y corte al salir; verificar en dev a 390 px con stores falsos "Descanso del próximo ejercicio", "Próximo sin descanso", "Marcar no lo toca", "Ajustar", "Saltar", "Otra vez" y "Volver a la app" (fin calculado con el reloj); commit (~12k)
+- [x] 3.1 Timer en `/sesion` según §2 y §6: botón flotante con la duración sugerida (descanso del primer ejercicio sin hacer, última usada o 1:30), mini timer con ±15 s y "Saltar", "terminó" con vibración y "Otra vez", Wake Lock (pedir, soltar y volver a pedir al volver a la pestaña), `padding-bottom` del `main` y corte al salir; verificar en dev a 390 px con stores falsos "Descanso del próximo ejercicio", "Próximo sin descanso", "Marcar no lo toca", "Ajustar", "Saltar", "Otra vez" y "Volver a la app" (fin calculado con el reloj); commit (~12k)
 
 ## 4. CSV con Descanso (~7k)
 

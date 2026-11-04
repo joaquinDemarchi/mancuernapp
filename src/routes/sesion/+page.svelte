@@ -12,6 +12,7 @@
 	import HojaAgregar from '#lib/componentes/HojaAgregar.svelte';
 	import HojaAjustar from '#lib/componentes/HojaAjustar.svelte';
 	import Indicador from '#lib/componentes/Indicador.svelte';
+	import TimerDescanso from '#lib/componentes/TimerDescanso.svelte';
 
 	// `?rutina=` abre una sesión de otra rutina (por defecto la activa); si es archivada, solo para ver.
 	const rutinaPedida = page.url.searchParams.get('rutina');
@@ -44,6 +45,12 @@
 		return [...items, ...extras];
 	});
 	const hechos = $derived(deHoy?.registros.length ?? 0);
+	// El timer abre con el descanso del primer ejercicio sin hacer.
+	const proximo = $derived.by(() => {
+		const f = filas.find((f) => !registro(f.ejercicioId));
+		const e = f && ejercicio(f.ejercicioId);
+		return e && { nombre: e.nombre, descanso: e.descanso };
+	});
 
 	const ejercicio = (id: string) => $ejercicios?.find((e) => e.id === id);
 	const tipoDe = (id: string) => ejercicio(id)?.tipo;
@@ -139,7 +146,7 @@
 	}
 </script>
 
-<main class="pantalla">
+<main class="pantalla" class:con-timer={!soloLectura}>
 	{#if dia && rutina && soloLectura && $sesiones && $ejercicios}
 		<Cabecera
 			titulo="{dia.nombre} · {diaMes(fecha)}"
@@ -201,6 +208,7 @@
 			contexto="sesion"
 			onagregar={agregarExtra}
 		/>
+		<TimerDescanso {proximo} />
 
 		{#if ajustando && ejercicio(ajustando.ejercicioId)}
 			{@const f = ajustando}
@@ -296,6 +304,10 @@
 {/snippet}
 
 <style>
+	/* El flotante del timer tapa la columna de ✓: lugar extra para scrollear el último ejercicio */
+	.con-timer {
+		padding-bottom: calc(var(--touch-primary) + var(--space-3) * 2 + var(--space-4) + env(safe-area-inset-bottom, 0px) + 140px);
+	}
 	ul {
 		display: grid;
 		gap: var(--space-1);

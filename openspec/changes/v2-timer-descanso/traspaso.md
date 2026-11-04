@@ -14,7 +14,14 @@
 - Para la 6.1: al abrir/cerrar el timer el botón enfocado desaparece y el foco cae al `body` (no lo pide §6; evaluarlo en la revisión de accesibilidad).
 - 4.1 hecha (04/11/2026): `Descanso` al final de `columnas`; `validar` acepta encabezado de 10 columnas (si la 11ª está vacía) u 11, y el valor entero 15–300 (si no, error de fila). `planImport` guarda en `PlanEjercicio.descanso` el primer no vacío; `armarImport` lo pone solo en ejercicios nuevos (los del catálogo no se tocan). `escribirCsv` escribe el descanso del ejercicio en las filas sin fecha y vacío en las con fecha; la plantilla trae Press banca 90 y Sentadilla 120. Tests: archivo sin la columna, rango, descanso de un nuevo, existente conserva el suyo, ida y vuelta con descanso. `importar.ts` no cambió (escribe el objeto entero).
 - 5.1 hecha (04/11/2026): sin `wakeLock` ni `vibrate` el timer abre, baja y termina igual (probado en la 3.1 sacando las dos APIs). Offline: el timer no hace pedidos de red (estado en el componente, reloj local); el Browser pane no puede cortar la red, así que el modo avión real va en el checklist de la 5.2. `config.yaml` y `docs/decisiones-diseno-mancuernapp.md` anotan `descanso?`, la columna CSV y el timer (sale de la lista de v2 pendiente). check, test (80) y build en verde.
-- Próxima tarea: 5.2 (push y deploy: pedir OK a Joa antes).
+- 5.2 en curso: pusheado con OK de Joa (04/11/2026, ce71633); deploy de Vercel en verde, `/`, `/sesion`, `/ejercicio` y `/datos` responden 200 y el chunk de `/sesion` trae el timer. Falta que Joa haga el checklist en el celu; con eso, marcar 5.2 y seguir con la 6.1.
+  - [ ] Poner descanso a un ejercicio (chip y afinar con − / +); sacárselo con "Sin descanso".
+  - [ ] En la sesión, abrir el timer entre series: abre con el descanso del próximo ejercicio sin hacer.
+  - [ ] Ajustar con −15 s / +15 s.
+  - [ ] Dejarlo terminar sin tocar el celu: la pantalla no se apaga, vibra si el celu puede, dice "Terminó".
+  - [ ] "Otra vez" arranca con la misma duración; "Saltar" otro.
+  - [ ] Salir a otra app a mitad y volver: muestra lo que falta con el reloj real.
+  - [ ] En modo avión, el timer anda igual.
 
 ## Gotchas
 

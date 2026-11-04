@@ -8,11 +8,15 @@
   - Campo descanso en `/ejercicio` (vacío y con valor), después de los saltos: **1** stepper de 15 s ("–" = sin timer, link "Sin descanso" para vaciar); **2** chips (Sin descanso, 0:45, 1:00, 1:30, 2:00, 3:00) + stepper para afinar cuando hay valor.
 - 04/11/2026, cambio de rumbo de Joa al ver A/B/C (le gustaron A y B): quiere descansar también **entre series**, así que el timer pasa a ser un flotante que abre con un botón cuando quiere. Decisiones: **solo con el botón** (nunca arranca solo al marcar ✓); arranca con el **descanso del catálogo del primer ejercicio sin hacer** (si no tiene, el último usado), ±15 s; **solo en `/sesion`** (se corta al salir). El campo descanso del catálogo y la columna CSV siguen.
 - Fila "2ª ronda" en el mismo canvas (cerrado / corriendo / terminó): **D** botón "⏱ 1:30" en la barra al lado de "Terminar sesión" + franja como A; **E** botón flotante abajo a la derecha + mini timer flotante. Las dos suman "Otra vez" al terminar (repetir el mismo descanso para la próxima serie).
-- Próxima tarea: 1.2, cuando Joa elija timer (D/E) y campo (1/2). En la 1.2 hay que reescribir los deltas: `descanso` (requisito "Arranque al marcar hecho" → "Abrir con el botón", sin reemplazo al marcar), proposal (decisiones y supuesto de Ajustar ya no aplica), design §2 y tarea 3.1.
+- 1.2 hecha (04/11/2026): Joa eligió timer **E** (botón flotante + mini timer) y campo **2** (chips + stepper). Handoff en design.md §6; §2 reescrito (arranque solo con el botón, duración sugerida, "Otra vez"). Deltas actualizados: `descanso` ("Abrir con el botón" reemplaza "Arranque al marcar hecho"; escenario "Otra vez") y escenarios de `catalogo-ejercicios`. Proposal y tareas 2.1, 3.1 y 5.2 al día. `openspec validate v2-timer-descanso --strict` OK.
+- Próxima tarea: 2.1 (sesión de código).
 
 ## Gotchas
 
-- Supuesto sin confirmar con Joa: "Guardar" en Ajustar también arranca el timer (el ✓ de un ejercicio sin última vez abre Ajustar).
+- Ya no hay arranque automático: no tocar `tocarCheck` ni el `onguardar` de Ajustar para el timer.
+- El `Stepper` formatea números con `Intl.NumberFormat`; el descanso tiene que mostrarse en M:SS (decidir en la 2.1 si se suma una prop de formato o se arma aparte).
+- Los radios de chips de descanso tienen valores numéricos y "Sin descanso" = vacío; `OpcionesChip` es genérico de `string`: mapear o copiar su estilo.
+- El flotante va abajo a la derecha y tapa la columna de ✓: el `main` de `/sesion` necesita `padding-bottom` extra.
 - El timer guarda la hora de fin (`Date.now()` + descanso), no un contador: con la pantalla apagada los intervalos se frenan.
 - Archivos CSV de 10 columnas (exportados antes) tienen que seguir importándose.
 - Trucos de verificación con stores falsos: `openspec/changes/archive/2026-11-04-mvp-4-import-export-archivo/traspaso.md` (`localStorage.__setup` y `__importHelpers` en el Browser pane, que puede no emular 390 px: forzar el ancho con `document.body.style.width`).

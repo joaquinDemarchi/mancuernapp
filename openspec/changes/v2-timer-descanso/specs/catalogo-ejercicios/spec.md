@@ -19,8 +19,8 @@ Un ejercicio SHALL tener nombre (obligatorio, sin espacios sobrantes), tipo (pes
 
 #### Scenario: Sin descanso
 - **WHEN** el usuario crea un ejercicio sin tocar el descanso
-- **THEN** se guarda sin descanso y en la sesión no arranca ningún timer
+- **THEN** se guarda sin descanso y la ficha muestra "Sin descanso" marcado
 
 #### Scenario: Con descanso
 - **WHEN** el usuario pone 1:30 de descanso en Press banca y guarda
-- **THEN** la ficha muestra 1:30 y al marcarlo hecho en la sesión arranca un timer de 1:30
+- **THEN** la ficha muestra 1:30 y, cuando Press banca es el próximo ejercicio de la sesión, el timer de descanso abre con 1:30

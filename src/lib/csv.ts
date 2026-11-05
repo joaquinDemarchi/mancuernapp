@@ -277,10 +277,23 @@ export function escribirCsv(datos: { ejercicios: Ejercicio[]; rutinas: Rutina[];
 	return '﻿' + filas.map((f) => f.map(celda).join(';')).join('\r\n') + '\r\n';
 }
 
-/** Encabezado y filas de ejemplo: los días de una rutina (sin fecha) y una sesión hecha (con fecha). */
+/** Lo que hay que saber para llenar la plantilla; van como filas `#`, que el import ignora. */
+const instrucciones = [
+	'# MancuernApp: plantilla para importar. Las filas que empiezan con # se ignoran (se pueden borrar).',
+	'# Columnas en este orden y con este encabezado: Rutina, Día, Ejercicio, Tipo, Series, Reps, Kg, Segundos, Minutos, Fecha, Descanso.',
+	'# Separador: punto y coma (también se acepta coma). Decimales con coma (62,5). Guardar como CSV UTF-8.',
+	'# Fila sin Fecha = la rutina: el ejercicio en ese día con su objetivo (Kg se ignora). Días y ejercicios quedan en el orden de las filas.',
+	'# Fila con Fecha (DD/MM/AAAA o AAAA-MM-DD) = un bloque hecho ese día. Varias filas del mismo ejercicio y fecha son sus bloques en orden.',
+	'# Tipo: peso (Series, Reps, Kg) - reps, para banda o peso corporal (Series, Reps) - tiempo (Series, Segundos) - cardio (Minutos) - calentamiento (solo se marca). Vacío: peso si tiene Kg, si no reps.',
+	'# Descanso: segundos del timer del ejercicio, entero de 15 a 300. Vacío = sin descanso.',
+	'# Cada ejercicio se escribe siempre igual (mayúsculas y tildes no importan): «Remo» y «Remo con barra» son dos ejercicios distintos.',
+	'# Una rutina vale para todas las semanas: no hace falta una por semana, la app las cuenta sola.'
+];
+
+/** Instrucciones, encabezado y filas de ejemplo: los días de una rutina (sin fecha) y una sesión hecha (con fecha). */
 export function plantillaCsv(): string {
 	const ej = (id: string, nombre: string, tipo: Tipo, descanso?: number): Ejercicio => ({ id, nombre, tipo, saltoKg: 2.5, saltoReps: 1, saltoSeg: 5, notas: '', ...(descanso && { descanso }) });
-	return escribirCsv({
+	const csv = escribirCsv({
 		ejercicios: [ej('pb', 'Press banca', 'peso', 90), ej('sen', 'Sentadilla', 'peso', 120), ej('pl', 'Plancha', 'tiempo')],
 		rutinas: [
 			{
@@ -306,6 +319,8 @@ export function plantillaCsv(): string {
 			}
 		]
 	});
+	// Después del BOM, antes del encabezado.
+	return csv.replace('﻿', '﻿' + instrucciones.map(celda).join('\r\n') + '\r\n');
 }
 
 /** Lo que el import escribe, ya con ids (sin `creada`: la pone el servidor). */

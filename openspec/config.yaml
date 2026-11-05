@@ -28,7 +28,8 @@ context: |
     los días de la última archivada con ids de día nuevos; "Volver a esta rutina" está en el historial.
     El cliente lee todas las rutinas (store `rutinas`; `rutinaActiva` derivada).
   - Import/export: CSV propio en /datos (`src/lib/csv.ts`, funciones puras con tests): columnas fijas
-    Rutina;Día;Ejercicio;Tipo;Series;Reps;Kg;Segundos;Minutos;Fecha;Descanso (Descanso opcional: se aceptan archivos de 10 columnas), `;`, coma decimal, BOM. Revisión antes de
+    Rutina;Día;Ejercicio;Tipo;Series;Reps;Kg;Segundos;Minutos;Fecha;Descanso (Descanso opcional: se aceptan archivos de 10 columnas), `;` (el import acepta también `,` y
+    tolera el encabezado con mojibake), coma decimal, BOM; filas `#` = comentarios (la plantilla trae así las instrucciones). Revisión antes de
     guardar; se escribe con writeBatch en lotes de 450 sin await.
   - users/{uid}/sesiones/{id}: { rutinaId, diaId, fecha (AAAA-MM-DD local), creada (serverTimestamp), terminada, registros[] }
     La sesión se crea con el primer ejercicio cargado (no al tocar "Empezar"); una por día.

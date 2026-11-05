@@ -183,6 +183,9 @@ describe('plantillaCsv', () => {
 	it('es válida y arma una rutina con una sesión', () => {
 		const texto = plantillaCsv();
 		expect(texto).toContain('Rutina 1;Día 1;Press banca;peso;1;8;62,5;;;15/09/2026');
+		expect(texto).toMatch(/^﻿# MancuernApp/);
+		expect(texto).toContain(`\r\n${columnas.join(';')}\r\n`);
+		expect(texto.match(/﻿/g)).toHaveLength(1);
 		const { filas, errores } = validar(leerCsv(texto));
 		expect(errores).toEqual([]);
 		const [r] = planImport(filas, vacio).rutinas;

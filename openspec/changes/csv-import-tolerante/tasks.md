@@ -9,4 +9,4 @@
 
 ## 2. Plantilla con instrucciones (~10k)
 
-- [ ] 2.1 `plantillaCsv` con líneas `#` arriba del encabezado (columnas, tipos, separador, coma decimal, fechas, rutina vs sesión, Descanso, codificación); test de ida y vuelta; verificar en dev con stores falsos que la plantilla y el archivo de Joa pasan la revisión; `npm run build`; actualizar config.yaml; commit (~10k)
+- [x] 2.1 `plantillaCsv` con líneas `#` arriba del encabezado (columnas, tipos, separador, coma decimal, fechas, rutina vs sesión, Descanso, codificación); test de ida y vuelta; verificar en dev con stores falsos que la plantilla y el archivo de Joa pasan la revisión; `npm run build`; actualizar config.yaml; commit (~10k)

@@ -132,7 +132,9 @@ Ciclo de diseño por MVP: **mockup → Lio elige → handoff a design.md → có
 
 Total estimado: **~180–220k tokens**. Desde el MVP 2 la app se usa de verdad en el gym.
 
-**v2 (fuera del MVP)**: sugerir progresión (+kg tras 2 🟢), import con IA, varias rutinas activas, roles profe/alumno + invitaciones, umbrales configurables, 1RM estimado / récords, dashboard ampliado.
+**v2 (fuera del MVP)**: sugerir progresión (+kg tras 2 🟢), import con IA, varias rutinas activas, roles profe/alumno + invitaciones, umbrales configurables, 1RM estimado / récords.
+
+**Resumen (v2, `v2-dashboard-ampliado`)**: pantalla `/resumen` (enlace en el inicio) con período Rutina activa / 3 meses / Todo, racha de semanas seguidas (no depende del período), volumen y sesiones por semana en barras (lunes a domingo; más de 13 semanas = barras finas), progreso por ejercicio (última vs primera vez del período, abre la evolución) y mejores marcas por tipo. Todo calculado en el cliente.
 
 **Timer de descanso (v2, `v2-timer-descanso`)**: botón flotante en `/sesion` que abre un mini timer (±15 s, "Saltar", "Terminó" con "Otra vez"); arranca solo con el botón, con el descanso del primer ejercicio sin hacer (si no tiene, el último usado; si no, 1:30). Cuenta con la hora de fin, pide Wake Lock y vibra si se puede; sin notificaciones.
 

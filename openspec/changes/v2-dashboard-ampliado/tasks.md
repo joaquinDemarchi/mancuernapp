@@ -20,7 +20,7 @@
 
 ## 4. Cierre (~6k)
 
-- [ ] 4.1 Verificar offline (sin pedidos de red al abrir `/resumen`); actualizar `openspec/config.yaml` y `docs/decisiones-diseno-mancuernapp.md` (dashboard sale de la lista de v2 pendiente); `npm run check`, `npm test`, `npm run build`; commit (~3k)
+- [x] 4.1 Verificar offline (sin pedidos de red al abrir `/resumen`); actualizar `openspec/config.yaml` y `docs/decisiones-diseno-mancuernapp.md` (dashboard sale de la lista de v2 pendiente); `npm run check`, `npm test`, `npm run build`; commit (~3k)
 - [ ] 4.2 Con OK de Joa, push a `main` y verificar el deploy de Vercel en verde; checklist en el celu de Joa (anotarla en `traspaso.md`): abrir el resumen, cambiar de período, leer volumen y racha, abrir la evolución desde el progreso y volver, en modo avión; commit (~3k)
 
 ## 5. Critique, accesibilidad y copy (~8k)

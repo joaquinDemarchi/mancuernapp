@@ -58,8 +58,10 @@ context: |
   - Explicar a nivel medio (uso real, no cursada).
   - Timer de descanso (v2, hecho): flotante solo en /sesion, lo abre un botón (nunca al marcar ✓); guarda la hora de fin
     (src/lib/descanso.ts), Wake Lock mientras corre y vibración al terminar si existen. Sin notificaciones.
+  - Resumen (v2, hecho): /resumen con período en la URL (?periodo=rutina|3m|todo), racha, volumen y sesiones por
+    semana (lunes a domingo, GraficoSemanas), progreso por ejercicio y mejores marcas; cálculos puros en calculos.ts.
   - Fuera del MVP (v2, no implementar): sugerir progresión, import con IA, varias rutinas
-    activas, roles profe/alumno, umbrales configurables, 1RM/récords, dashboard ampliado.
+    activas, roles profe/alumno, umbrales configurables, 1RM/récords.
 
 rules:
   tasks:

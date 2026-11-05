@@ -5,7 +5,7 @@
 
 ## 1. Import tolerante (~10k)
 
-- [ ] 1.1 En `src/lib/csv.ts`: `leerCsv` detecta `;` o `,` en el encabezado e ignora filas `#`; `validar` arregla el mojibake del encabezado y dice qué columna falla (o que falta el separador); tests con el archivo de Joa (`,` + `DÃ­a`), comentarios y errores; `npm run check`, `npm test`; commit (~10k)
+- [x] 1.1 En `src/lib/csv.ts`: `leerCsv` detecta `;` o `,` en el encabezado e ignora filas `#`; `validar` arregla el mojibake del encabezado y dice qué columna falla (o que falta el separador); tests con el archivo de Joa (`,` + `DÃ­a`), comentarios y errores; `npm run check`, `npm test`; commit (~10k)
 
 ## 2. Plantilla con instrucciones (~10k)
 

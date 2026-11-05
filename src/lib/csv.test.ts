@@ -16,6 +16,13 @@ describe('leerCsv', () => {
 	it('numera las líneas y saltea las vacías', () => {
 		expect(leerCsv('a;b\n;\n"c\nd";e').map((f) => f.linea)).toEqual([1, 3]);
 	});
+	it('separa por «,» si el encabezado no tiene «;»', () => {
+		expect(leerCsv('a,b\nc,"1,5"\n').map((f) => f.celdas)).toEqual([['a', 'b'], ['c', '1,5']]);
+		expect(leerCsv('a;b,c\n').map((f) => f.celdas)).toEqual([['a', 'b,c']]);
+	});
+	it('saltea los comentarios «#» sin perder el número de línea', () => {
+		expect(leerCsv('# uno; dos\n"# tres; cuatro";;\na,b\nc,d').map((f) => [f.linea, f.celdas[0]])).toEqual([[3, 'a'], [4, 'c']]);
+	});
 });
 
 describe('validar', () => {
@@ -45,6 +52,16 @@ describe('validar', () => {
 	});
 	it('acepta el encabezado sin tildes ni mayúsculas', () => {
 		expect(validar(leerCsv('rutina;dia;ejercicio;tipo;series;reps;kg;segundos;minutos;fecha;descanso')).errores).toEqual([]);
+	});
+	it('el archivo de joa: «,», BOM y encabezado con mojibake', () => {
+		const texto = 'ï»¿Rutina,DÃ­a,Ejercicio,Tipo,Series,Reps,Kg,Segundos,Minutos,Fecha,Descanso\r\nBloque 1,Día 1,Dead hang pasivo,tiempo,1,,,20,,,\r\n';
+		const { filas, errores } = validar(leerCsv(texto));
+		expect(errores).toEqual([]);
+		expect(filas[0]).toMatchObject({ dia: 'Día 1', ejercicio: 'Dead hang pasivo', tipo: 'tiempo', series: 1, segundos: 20 });
+	});
+	it('dice qué columna del encabezado está mal', () => {
+		expect(validar(leerCsv('Rutina;Dias;Ejercicio')).errores[0].mensaje).toMatch(/^La columna 2 del encabezado dice «Dias» y tiene que ser «Día»/);
+		expect(validar(leerCsv('Rutina\tDía\tEjercicio')).errores[0].mensaje).toMatch(/^El encabezado no tiene columnas: separalas con «;» o «,»/);
 	});
 	it('archivo sin la columna Descanso (10 columnas): se importa igual, sin descanso', () => {
 		const { filas, errores } = validar(leerCsv('Rutina;Día;Ejercicio;Tipo;Series;Reps;Kg;Segundos;Minutos;Fecha\nR;D;Burpees;reps;3;15;;;;'));

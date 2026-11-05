@@ -25,7 +25,10 @@ export type FilaValida = {
 	descanso?: number; // segundos
 };
 
-/** Saca el BOM y separa por `;` respetando comillas; cada fila con la línea donde empieza. Saltea filas vacías. */
+/**
+ * Saca el BOM y separa por `;` o `,` (el que tenga el encabezado) respetando comillas; cada fila con la línea donde empieza.
+ * Saltea filas vacías y comentarios (primera celda que empieza con `#`).
+ */
 export function leerCsv(texto: string): Fila[] {
 	const filas: Fila[] = [];
 	let celdas: string[] = [];
@@ -34,9 +37,11 @@ export function leerCsv(texto: string): Fila[] {
 	let linea = 1;
 	let inicio = 1;
 	const t = texto.replace(/^﻿/, '');
+	const primera = t.split('\n').find((l) => l.trim() && !/^"?#/.test(l.trim())) ?? '';
+	const separador = !primera.includes(';') && primera.includes(',') ? ',' : ';';
 	const cerrarFila = () => {
 		celdas.push(celda);
-		if (celdas.some((c) => c.trim())) filas.push({ linea: inicio, celdas });
+		if (celdas.some((c) => c.trim()) && !celdas[0].trim().startsWith('#')) filas.push({ linea: inicio, celdas });
 		celdas = [];
 		celda = '';
 	};
@@ -52,7 +57,7 @@ export function leerCsv(texto: string): Fila[] {
 				celda += c;
 			}
 		} else if (c === '"') comillas = true;
-		else if (c === ';') {
+		else if (c === separador) {
 			celdas.push(celda);
 			celda = '';
 		} else if (c === '\n' || c === '\r') {
@@ -82,14 +87,27 @@ function fechaIso(s: string): string | null | undefined {
 	return `${a}-${String(mes).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 }
 
-/** Encabezado exacto (sin importar mayúsculas ni tildes), números, fechas y tipo de cada fila. */
+/** `DÃ­a` → `Día`: UTF-8 que se leyó como Latin-1 y se volvió a guardar. Si no se puede arreglar, queda igual. */
+function sinMojibake(s: string) {
+	if (!/[Â-ï][\x80-¿]/.test(s) || /[^\x00-ÿ]/.test(s)) return s;
+	const arreglado = new TextDecoder().decode(Uint8Array.from(s, (c) => c.charCodeAt(0)));
+	return arreglado.includes('�') ? s : arreglado;
+}
+
+/** Encabezado exacto (sin importar mayúsculas, tildes, BOM ni mojibake), números, fechas y tipo de cada fila. */
 export function validar(filas: Fila[]): { filas: FilaValida[]; errores: ErrorFila[] } {
 	const [encabezado, ...resto] = filas;
 	// Descanso es opcional: los archivos de antes tienen 10 columnas.
 	const conDescanso = !!encabezado?.celdas[10]?.trim();
 	const esperadas = conDescanso ? columnas : columnas.slice(0, 10);
-	if (!encabezado || esperadas.some((c, i) => normalizar(encabezado.celdas[i] ?? '') !== normalizar(c))) {
-		return { filas: [], errores: [{ linea: encabezado?.linea ?? 1, mensaje: `El encabezado tiene que ser: ${columnas.join('; ')}` }] };
+	const titulos = (encabezado?.celdas ?? []).map(sinMojibake);
+	const mal = esperadas.findIndex((c, i) => normalizar(titulos[i] ?? '') !== normalizar(c));
+	if (mal >= 0) {
+		const motivo =
+			titulos.length < 2
+				? 'El encabezado no tiene columnas: separalas con «;» o «,»'
+				: `La columna ${mal + 1} del encabezado dice «${titulos[mal]?.trim() ?? ''}» y tiene que ser «${columnas[mal]}»`;
+		return { filas: [], errores: [{ linea: encabezado?.linea ?? 1, mensaje: `${motivo}. El encabezado es: ${columnas.join('; ')}` }] };
 	}
 	const validas: FilaValida[] = [];
 	const errores: ErrorFila[] = [];

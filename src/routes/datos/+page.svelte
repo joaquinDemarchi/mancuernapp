@@ -229,7 +229,7 @@
 		<section>
 			<h2 class="seccion">Traer rutinas y sesiones</h2>
 			<label class="dato" class:deshabilitado={!cargado}>
-				<input class="oculto" type="file" accept=".csv,text/csv" disabled={!cargado} onchange={elegir} />
+				<input class="oculto" type="file" accept=".csv,text/csv,text/comma-separated-values,application/csv,application/vnd.ms-excel,text/plain" disabled={!cargado} onchange={elegir} />
 				<span class="textos">
 					<span class="titulo">Importar CSV</span>
 					<span class="meta">Antes de guardar ves qué se crea</span>
@@ -260,7 +260,7 @@
 			{#if revision.errores.length}
 				<Boton variante="secundario" onclick={cancelar}>Cancelar</Boton>
 				<label class="boton-archivo">
-					<input class="oculto" type="file" accept=".csv,text/csv" onchange={elegir} />
+					<input class="oculto" type="file" accept=".csv,text/csv,text/comma-separated-values,application/csv,application/vnd.ms-excel,text/plain" onchange={elegir} />
 					Elegir otro archivo
 				</label>
 			{:else}

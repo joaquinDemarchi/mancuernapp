@@ -13,3 +13,4 @@
 - Que Joa importe `semana_1_mancuernapp.csv` (o el original, después del push) y abra la plantilla nueva en Excel. Push solo con su OK. Después, archivar el change.
 - Ojo con su rutina: se llama "Bloque 1 - Semana 1"; la app cuenta las semanas sola, así que conviene "Bloque 1" para no crear una rutina por semana.
 - 05/11/2026: pusheado con OK de Joa (608db10).
+- 06/11/2026: en Android los .csv se veían grises en el selector (MIME text/comma-separated-values o application/vnd.ms-excel no entraba en accept=".csv,text/csv"); se amplió el accept de los dos inputs de /datos.
